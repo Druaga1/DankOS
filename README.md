@@ -1,5 +1,7 @@
 # DankOS
-It's dank and it's an OS
+"It's dank and it's an OS"
+
+A simple, real mode, OS just for the heck of it!
 
 # Building instructions
 (NASM is required)
