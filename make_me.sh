@@ -14,7 +14,7 @@ rm dankos.old 2> /dev/null
 mv dankos.img dankos.old 2> /dev/null
 
 printf "Assembling bootloader...\n"
-nasm bootloader.asm -f bin -o dankos.img
+nasm bootloader/bootloader.asm -f bin -o dankos.img
 
 printf "Expanding image...\n"
 dd bs=512 count=2879 status=none if=/dev/zero >> dankos.img
@@ -30,6 +30,9 @@ do
 	printf "Assembling '$asm_file'...\n"
     nasm "$asm_file" -f bin -o "tmp/${base_name}.bin"
 done
+
+printf "Renaming kernel...\n"
+mv tmp/kernel.bin tmp/kernel.sys
 
 printf "Creating mount point for image...\n"
 mkdir mnt

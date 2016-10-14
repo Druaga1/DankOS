@@ -1,8 +1,8 @@
 ; *********************************************************
-;     DankOS BOOTLOADER:  Loads STAGE2.BIN at 0000:0500
+;     DankOS BOOTLOADER:  Loads KERNEL.SYS at 8000:0000
 ; *********************************************************
 
-org 0x7C00						; BIOS loads us here
+org 0x7C00						; BIOS loads us here (0000:7C00)
 bits 16							; 16-bit real mode code
 
 jmp short code_start			; Jump to the start of the code
@@ -35,30 +35,41 @@ bsFileSystem				db 'FAT12   '
 
 code_start:
 
-cli								; Disable interrupts and initialise all segments to 0x0000
+cli								; Disable interrupts and initialise DS and SS to 0x0000
 jmp 0x0000:initialise_cs		; Initialise CS to 0x0000 with a long jump
 initialise_cs:
-xor ax, ax
-mov ds, ax
-mov es, ax
-mov fs, ax
-mov gs, ax
-mov ss, ax
+xor bx, bx						; NOTE: using register BX here to avoid having to change it to null later
+mov ds, bx
+mov ss, bx
 mov sp, 0xFFF0					; Stack at segment top (0000:FFF0)
 sti								; Restore interrupts
 
-mov si, stage2_name				; Load stage 2 file name pointer in SI, for use by FAT12 function
-mov bx, 0x0500					; And tell function to load the stage 2 at es:bx (0000:0500)
+mov ax, 0x8000					; Set destination segment (ES) to 0x8000
+mov es, ax
+mov si, kernel_name				; Load stage 2 file name pointer in SI, for use by FAT12 function
+;xor bx, bx (BX already 0x0000)	; And tell function to load the kernel at es:bx (8000:0000)
+								; DL is already loaded with the correct drive
 
 call fat12_load_file			; Call load file function
 
-jc $							; If error (the carry flag is set), cleanely halt the system
+jc loading_error				; If error (the carry flag is set), cleanely halt the system
 
-jmp 0x0000:0x0500				; Otherwise jump to the newly loaded stage 2 :D
+jmp 0x8000:0x0000				; Otherwise jump to the newly loaded kernel :D
 
-%include 'includes/boot_functions/boot_disk_functions.inc'	; Include disk and FAT12 functions
-%include 'includes/boot_functions/boot_fat12_functions.inc'
 
-stage2_name					db 'STAGE2  BIN'	; The full FAT12 name of stage 2
+loading_error:
+
+mov ah, 0x0E					; Print a '!' using the BIOS, then halt
+mov al, '!'
+int 0x10
+.halt:
+hlt
+jmp .halt
+
+
+%include 'bootloader/bootloader_functions/boot_disk_functions.inc'	; Include disk and FAT12 functions
+%include 'bootloader/bootloader_functions/boot_fat12_functions.inc'
+
+kernel_name					db 'KERNEL  SYS'	; The full FAT12 name of the kernel
 times 510-($-$$)			db 0x00				; Fill rest with 0x00
 bios_signature				dw 0xAA55			; BIOS signature

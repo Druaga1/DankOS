@@ -10,7 +10,7 @@ fat12_load_file:
 ; dl		-->		Drive number
 
 ; OUT:
-; Carry if error or file not found
+; Carry if file not found, (does not clear the carry flag if found)
 
 ; NOTES:
 ; This routine assumes 9000:0000 --> 9000:FFFF to be a usable buffer
@@ -127,8 +127,8 @@ mov word [.Cluster], ax			; Save starting cluster
 
 ; Let's load the FAT in the buffer now
 
-; FAT start = reserved_sectors (very simple)
-; FAT size = sectors_per_fat (also very simple)
+; FAT start = Reserved Sectors
+; FAT size = Sectors per FAT
 
 xor bx, bx
 mov ax, word [.ReservedSectors]			; Load from here
