@@ -3,7 +3,7 @@
 push es					; Point ES to segment 0x0000 to reach the Interrupt Vector Table
 xor ax, ax
 mov es, ax
-mov ax, 0x8000
+mov ax, 0x9000
 
 mov word [es:0x0100], terminate_process				; int 0x40  --  terminate process
 mov word [es:0x0102], ax

@@ -2,11 +2,11 @@
 ;     The DankOS kernel. It contains core drivers and routines.
 ; *****************************************************************
 
-org 0x0000							; Bootloader loads us here (8000:0000)
+org 0x0000							; Bootloader loads us here (9000:0000)
 bits 16								; 16-bit Real mode
 
-cli									; Disable interrupts and set segments to 0x8000
-mov ax, 0x8000
+cli									; Disable interrupts and set segments to 0x9000
+mov ax, 0x9000
 mov ds, ax
 mov es, ax
 mov fs, ax

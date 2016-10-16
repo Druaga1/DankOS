@@ -13,7 +13,7 @@ je .done						; Ignore
 mov bx, 0xB800							; Point ES to video memory
 mov es, bx
 
-mov bx, 0x8000							; Point FS to kernel space
+mov bx, 0x9000							; Point FS to kernel space
 mov fs, bx
 
 cmp al, 0x0A					; Is 0x0A?
@@ -162,7 +162,7 @@ push fs
 
 mov ax, 0xB800
 mov es, ax
-mov ax, 0x8000
+mov ax, 0x9000
 mov fs, ax
 
 xor bx, bx								; Point to video memory
@@ -199,7 +199,7 @@ video_set_attributes:
 push bx
 push fs
 
-mov bx, 0x8000
+mov bx, 0x9000
 mov fs, bx
 
 mov byte [fs:video_char_attributes], ah
@@ -221,7 +221,7 @@ video_disable_cursor:
 push ax
 push fs
 
-mov ax, 0x8000
+mov ax, 0x9000
 mov fs, ax
 
 call video_clear_cursor
@@ -237,7 +237,7 @@ video_enable_cursor:
 push ax
 push fs
 
-mov ax, 0x8000
+mov ax, 0x9000
 mov fs, ax
 
 call video_draw_cursor
@@ -259,7 +259,7 @@ push cx
 push dx
 push fs
 
-mov bx, 0x8000
+mov bx, 0x9000
 mov fs, bx
 
 cmp byte [fs:video_cursor_enabled], 0x01
@@ -303,7 +303,7 @@ push cx
 push dx
 push fs
 
-mov ax, 0x8000
+mov ax, 0x9000
 mov fs, ax
 
 mov ax, word [fs:video_cursor_location]
@@ -336,7 +336,7 @@ push fs
 
 mov ax, 0xB800
 mov es, ax
-mov ax, 0x8000
+mov ax, 0x9000
 mov fs, ax
 
 mov bx, word [fs:video_cursor_location]
@@ -361,7 +361,7 @@ push fs
 
 mov ax, 0xB800
 mov es, ax
-mov ax, 0x8000
+mov ax, 0x9000
 mov fs, ax
 
 mov bx, word [fs:video_cursor_location]

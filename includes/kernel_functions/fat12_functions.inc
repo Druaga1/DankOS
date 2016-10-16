@@ -14,7 +14,7 @@ fat12_load_file:
 ; Carry if error or file not found
 
 ; NOTES:
-; This routine assumes 9000:0000 --> 9000:FFFF to be a usable buffer
+; This routine assumes 9800:0000 --> A000:0000 to be a usable buffer
 
 push ax						; Save registers to prepare entering routine
 push bx
@@ -30,7 +30,7 @@ push cx
 push bx						; Save target offset for later
 push es						; Save target segment for later
 
-mov ax, 0x8000				; Point ES to kernel
+mov ax, 0x9000				; Point ES to kernel
 mov es, ax
 
 mov di, .ConvertedFilename	; Point DI to converted filename buffer
@@ -45,8 +45,8 @@ mov byte [.CurrentDrive], dl
 
 ;  Fetch metadata from floppy
 
-xor bx, bx					; Load in the buffer (9000:0000)
-mov ax, 0x9000
+xor bx, bx					; Load in the buffer (9800:0000)
+mov ax, 0x9800
 mov es, ax
 xor ax, ax					; Load LBA sector 0 (boot sector)
 call floppy_read_sector
@@ -165,7 +165,7 @@ mov word [.DataStart], ax
 pop es						; Restore target segment
 pop bx						; Restore target offset
 
-mov ax, 0x9000				; Now point FS to the buffer
+mov ax, 0x9800				; Now point FS to the buffer
 mov fs, ax
 
 mov ax, word [.Cluster]		; Load starting cluster

@@ -1,5 +1,7 @@
 ; ** init.bin **
 
+bits 16			; 16-bit real mode
+
 mov si, msg		; Print message
 int 0x42
 

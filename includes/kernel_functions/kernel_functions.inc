@@ -11,7 +11,7 @@ get_current_drive:
 push ax
 push ds
 
-mov ax, 0x8000
+mov ax, 0x9000
 mov ds, ax
 
 mov dl, byte [CurrentDrive]
@@ -44,7 +44,7 @@ push es
 push fs
 push gs
 
-mov ax, 0x8000				; Point GS to kernel
+mov ax, 0x9000				; Point GS to kernel
 mov gs, ax
 
 push word [gs:TopSegment]	; Save last top of memory in stack
@@ -105,7 +105,7 @@ terminate_process:
 
 cli							; Disable interrupts
 
-mov bx, 0x8000				; Point GS to kernel
+mov bx, 0x9000				; Point GS to kernel
 mov gs, bx
 
 mov bx, word [gs:StackSegment]	; Restore last stack

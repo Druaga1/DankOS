@@ -62,7 +62,7 @@ function_print_integer16:
 	push si
 	push ds
 
-	mov bx, 0x8000
+	mov bx, 0x9000
 	mov ds, bx				; Point to kernel space
 
 	cmp dl, 1
@@ -121,7 +121,7 @@ function_print_integer32:
 	push si
 	push ds
 
-	mov bx, 0x8000
+	mov bx, 0x9000
 	mov ds, bx				; Point to kernel space
 
 	cmp dl, 1
@@ -180,7 +180,7 @@ function_input_integer16:
 	push ds
 	push es
 
-	mov ax, 0x8000
+	mov ax, 0x9000
 	mov ds, ax
 	mov es, ax
 
@@ -248,7 +248,7 @@ function_input_integer32:
 	push ds
 	push es
 
-	mov ax, 0x8000
+	mov ax, 0x9000
 	mov ds, ax
 	mov es, ax
 
