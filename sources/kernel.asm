@@ -15,11 +15,7 @@ check_cs:
 pop ax								; Pop call offset into AX
 pop bx								; Pop call segment into BX
 cmp bx, 0x9000						; Check if CS was 0x9000
-je .ok								; If it was, continue execution
-mov si, KernelRunningMsg			; Otherwise print error and terminate execution
-int 0x42
-int 0x40
-.ok:
+jne start_fail						; If it wasn't, cleanely abort execution
 
 cli									; Disable interrupts and set segments to 0x9000
 mov ax, 0x9000
@@ -78,6 +74,21 @@ int 0x42
 int 0x58						; Pause
 
 jmp reload						; Reload shell
+
+
+start_fail:
+
+mov ax, 128						; Allocate 128 bytes of memory for stack
+int 0x59
+
+cli								; Prepare stack
+mov ss, cx
+mov sp, 128
+sti
+
+mov si, KernelRunningMsg		; Print error and terminate execution
+int 0x42
+int 0x40
 
 
 data:
