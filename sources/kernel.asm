@@ -19,7 +19,7 @@ mov byte [CurrentDrive], dl			; Set up the current drive variable
 
 ; **** Bootup routines ****
 
-%include 'includes/kernel_functions/syscalls.inc'		; Activate all system interrupts
+%include 'includes/kernel/syscalls.inc'		; Activate all system interrupts
 
 ; Prepare the screen
 
@@ -78,13 +78,13 @@ ProcessWarning2	db	0x0A, "        The kernel will now reload 'init.bin'."
 
 includes:
 
-%include 'includes/kernel_functions/kernel_functions.inc'
-%include 'includes/kernel_functions/video_driver.inc'
-%include 'includes/kernel_functions/io_functions.inc'
-%include 'includes/kernel_functions/fat12_functions.inc'
-%include 'includes/kernel_functions/disk_functions.inc'
+%include 'includes/kernel/kernel.inc'
+%include 'includes/kernel/video.inc'
+%include 'includes/kernel/io.inc'
+%include 'includes/kernel/fat12.inc'
+%include 'includes/kernel/disk.inc'
 
 
 global_variables:
 
-%include 'includes/kernel_functions/variables.inc'
+%include 'includes/kernel/variables.inc'
