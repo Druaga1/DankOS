@@ -80,4 +80,7 @@ mov word [es:0x015E], ax
 mov word [es:0x0160], function_pause				; int 0x58  --  pause
 mov word [es:0x0162], ax
 
+mov word [es:0x0164], allocate_memory				; int 0x59  --  allocate memory
+mov word [es:0x0166], ax
+
 pop es

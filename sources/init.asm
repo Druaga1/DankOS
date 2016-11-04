@@ -2,6 +2,14 @@
 
 bits 16							; 16-bit real mode
 
+mov ax, 128						; Allocate 128 bytes of memory for stack
+int 0x59
+
+cli								; Prepare stack
+mov ss, cx
+mov sp, 128
+sti
+
 mov si, intro					; Print intro
 int 0x42
 

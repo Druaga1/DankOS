@@ -73,7 +73,7 @@ mov fs, ax
 mov gs, ax
 mov ss, ax
 
-mov esp, 0x0000FFF0				; Set up new stack
+xor esp, esp					; Reset stack
 sti								; Restore interrupts
 
 push ax							; Prepare stack for retf
@@ -132,3 +132,29 @@ pop ecx
 pop ebx
 
 iret					; Return to calling program
+
+
+allocate_memory:
+
+; **********************************************
+;     Handles a program's request for memory
+; **********************************************
+
+; IN: AX --> Amount of memory to allocate
+
+; OUT: CX --> Allocated segment (for data segment registers)
+
+push ax
+push gs
+
+mov cx, 0x9000				; Point GS to kernel
+mov gs, cx
+
+mov cx, word [gs:TopSegment]	; Retrieve current top of used memory
+shr ax, 4					; Get memory size in 16 byte blocks
+inc ax						; Adjust AX
+add word [gs:TopSegment], ax	; Allocate memory
+
+pop gs
+pop ax
+iret
