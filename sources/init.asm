@@ -32,6 +32,10 @@ mov di, exit_msg				; Exit command
 int 0x48
 jc exit_cmd
 
+mov di, clear_msg				; Clear command
+int 0x48
+jc clear_cmd
+
 
 
 
@@ -66,8 +70,10 @@ prompt_input	times 201 db 0x00
 internal_commands:
 
 exit_msg			db	'exit', 0x00
+clear_msg			db	'clear', 0x00
 
 
 
 
 %include 'includes/shell/exit.inc'
+%include 'includes/shell/clear.inc'
