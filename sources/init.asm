@@ -13,8 +13,6 @@ sti
 mov si, intro					; Print intro
 int 0x42
 
-int 0x4C						; Enable cursor
-
 prompt_loop:
 
 mov si, prompt					; Draw prompt

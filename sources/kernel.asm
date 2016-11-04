@@ -55,8 +55,6 @@ mov al, 0x70
 int 0x51				; Set palette and reset screen
 int 0x4A
 
-int 0x4B				; Disable cursor
-
 mov si, LoadingMsg		; Display loading shell message
 int 0x42
 
