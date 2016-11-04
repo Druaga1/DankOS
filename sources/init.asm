@@ -1,4 +1,4 @@
-; ** DankOS basic shell **
+; ** DankOS shell **
 
 bits 16							; 16-bit real mode
 
@@ -11,12 +11,25 @@ prompt_loop:
 
 mov si, prompt					; Draw prompt
 int 0x42
-mov bx, 30						; Limit input to 30 characters
+mov bx, 200						; Limit input to 200 characters
 mov di, prompt_input			; Point to local buffer
 int 0x50						; Input string
 int 0x43						; New line
 cmp byte [prompt_input], 0x00	; If no input, restart loop
 je prompt_loop
+
+; ***** Check for internal commands *****
+
+mov si, prompt_input
+
+mov di, exit_msg				; Exit command
+int 0x48
+jc exit_cmd
+
+
+
+
+
 
 int 0x53						; Load current drive in DL
 mov si, prompt_input			; Prepare SI for start process function
@@ -32,13 +45,23 @@ jmp prompt_loop
 data:
 
 intro		db	0x0A
-			db	0x0A, 'DankOS basic shell, welcome!'
-			db	0x0A
-			db	0x0A, 'Enter the name of a valid executable file to run it.'
+			db	0x0A, 'DankOS shell, welcome!'
 			db	0x0A, 0x0A, 0x00
 
 prompt		db	'>> ', 0x00
 
 not_found	db	'File not found.', 0x0A, 0x00
 
-prompt_input	times 31 db 0x00
+prompt_input	times 201 db 0x00
+
+
+
+
+internal_commands:
+
+exit_msg			db	'exit', 0x00
+
+
+
+
+%include 'includes/shell/exit.inc'
