@@ -269,8 +269,7 @@ function_input_integer32:
 		cmp cl, 10
 		je .loop
 		inc cl
-		mov bp, 0x01
-		int 0x42
+		int 0x41
 		sub al, '0'
 		stosb
 		jmp .loop
