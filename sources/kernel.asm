@@ -5,6 +5,22 @@
 org 0x0000							; Bootloader loads us here (9000:0000)
 bits 16								; 16-bit Real mode
 
+; **** Check CS using a far call to verify that we're loaded in the proper spot by the bootloader ****
+; ** if not, use a 'terminate execution' interrupt to return to the caller
+
+call 0x9000:check_cs				; Far call to the check routine
+
+check_cs:
+
+pop ax								; Pop call offset into AX
+pop bx								; Pop call segment into BX
+cmp bx, 0x9000						; Check if CS was 0x9000
+je .ok								; If it was, continue execution
+mov si, KernelRunningMsg			; Otherwise print error and terminate execution
+int 0x42
+int 0x40
+.ok:
+
 cli									; Disable interrupts and set segments to 0x9000
 mov ax, 0x9000
 mov ds, ax
@@ -74,6 +90,7 @@ ProcessWarning1	db	0x0A, "Kernel: The root process has been terminated,"
 				db	0x0A, "        process exit code: ", 0x00
 ProcessWarning2	db	0x0A, "        The kernel will now reload 'init.bin'."
 				db	0x0A, "Press a key to continue...", 0x00
+KernelRunningMsg	db	"The kernel is already loaded.", 0x0A, 0x00
 
 
 includes:
