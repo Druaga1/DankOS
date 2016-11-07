@@ -17,16 +17,13 @@ mov word [es:0x010A], ax
 mov word [es:0x010C], video_new_line				; int 0x43  --  new line
 mov word [es:0x010E], ax
 
-mov word [es:0x0110], function_print_integer16		; int 0x44  --  print a 16-bit integer
+mov word [es:0x0110], function_string_to_integer	; int 0x44  --  string to integer
 mov word [es:0x0112], ax
 
-mov word [es:0x0114], function_input_integer16		; int 0x45  --  input a 16-bit integer
-mov word [es:0x0116], ax
-
-mov word [es:0x0118], function_print_integer32		; int 0x46  --  print a 32-bit integer
+mov word [es:0x0118], function_print_integer		; int 0x46  --  print an integer
 mov word [es:0x011A], ax
 
-mov word [es:0x011C], function_input_integer32		; int 0x47  --  input a 32-bit integer
+mov word [es:0x011C], function_input_integer		; int 0x47  --  input an integer
 mov word [es:0x011E], ax
 
 mov word [es:0x0120], function_compare_strings		; int 0x48  --  compare strings

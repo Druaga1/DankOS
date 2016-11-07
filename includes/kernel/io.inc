@@ -2,22 +2,13 @@
 ;**             BASIC I/O APIs             **
 ;********************************************
 
-; function_print_integer16:
-;   Prints a 16-bit integer number on screen.
-;     number in AX
-;     DL = 0 if not aligned or 1 if right aligned
-
-; function_print_integer32:
-;   Prints a 32-bit integer number on screen (386+ only).
+; function_print_integer:
+;   Prints a 32-bit integer number on screen.
 ;     number in EAX
 ;     DL = 0 if not aligned or 1 if right aligned
 
-; function_input_integer16:
-;   Gets a 16-bit integer from keyboard.
-;     returns number in AX
-
-; function_input_integer32:
-;   Gets a 32-bit integer from keyboard (386+ only).
+; function_input_integer:
+;   Gets a 32-bit integer from keyboard.
 ;     returns number in EAX
 
 ; function_input_string:
@@ -52,66 +43,12 @@
 ; function_pause:
 ;	Pause the system until a key is pressed.
 
-function_print_integer16:
+; function_string_to_integer:
+;	Converts a numeric string into an integer
+;		Input string in DS:SI (0x00 terminated)
+;		Output integer in EAX
 
-	push ax
-	push bx
-	push cx
-	push dx
-	push di
-	push si
-	push ds
-
-	mov bx, 0x9000
-	mov ds, bx				; Point to kernel space
-
-	cmp dl, 1
-	je .right_align
-
-	mov dl, 0xFF
-	jmp .clear_buffer
-
-	.right_align:
-	mov dl, ' '
-
-	.clear_buffer:
-		mov cx, 5
-		mov di, .buffer
-		.clear_buffer_loop:
-			mov byte [di], dl
-			inc di
-		loop .clear_buffer_loop
-		jmp .calculate
-
-	.calculate:
-	mov di, (.buffer+4)
-	mov byte [di], '0'
-	.loop:
-		xor dx, dx
-		mov bx, 10
-		cmp ax, 0x00
-		je .done
-		div bx
-		add dl, '0'
-		mov byte [di], dl
-		dec di
-		jmp .loop
-	.done:
-		mov si, .buffer
-		int 0x42
-
-		pop ds
-		pop si
-		pop di
-		pop dx
-		pop cx
-		pop bx
-		pop ax
-		iret
-	.buffer times 5 db 0x00
-					db 0x00
-
-function_print_integer32:
+function_print_integer:
 
 	push eax
 	push ebx
@@ -170,75 +107,7 @@ function_print_integer32:
 	.buffer times 10 db 0x00
 				     db 0x00
 
-function_input_integer16:
-
-	push bx
-	push cx
-	push dx
-	push si
-	push di
-	push ds
-	push es
-
-	mov ax, 0x9000
-	mov ds, ax
-	mov es, ax
-
-	xor cx, cx
-	xor dx, dx
-	mov di, .buffer
-	.loop:
-		mov ah, 0x00
-		int 0x16
-		cmp al, 0x08
-		je .backspace
-		cmp al, 0x0D
-		je .enter
-		cmp al, '0'
-		jl .loop
-		cmp al, '9'
-		jg .loop
-		cmp cl, 5
-		je .loop
-		inc cl
-		int 0x41
-		sub al, '0'
-		stosb
-		jmp .loop
-	.backspace:
-		cmp cl, 0
-		je .loop
-		mov al, 0x08
-		int 0x41
-		dec di
-		dec cl
-		jmp .loop
-	.enter:
-		mov si, .buffer
-		xor ax, ax
-	.ascii_to_integer:
-		cmp cl, 0x00
-		je .done
-		mov dx, 10
-		mul dx
-		xor dh, dh
-		mov dl, byte [si]
-		inc si
-		add ax, dx
-		dec cl
-		jmp .ascii_to_integer
-	.done:
-		pop es
-		pop ds
-		pop di
-		pop si
-		pop dx
-		pop cx
-		pop bx
-		iret
-	.buffer times 5 db 0x00
-
-function_input_integer32:
+function_input_integer:
 
 	push ebx
 	push ecx
@@ -356,8 +225,8 @@ function_compare_strings:
 		inc di
 		cmp al, ah
 		jne .not_equal
-		cmp al, 0x00
-		je .equal
+		test al, al
+		jz .equal
 		jmp .loop
 
 	.not_equal:
@@ -393,8 +262,8 @@ function_string_length:
 	xor cx, cx
 	.loop:
 		lodsb			; Byte from SI
-		cmp al, 0x00	; Is 0?
-		je .done
+		test al, al		; Is 0?
+		jz .done
 		inc cx
 		jmp .loop
 
@@ -410,8 +279,7 @@ function_lower_to_uppercase:
 
     .loop:
 		mov al, byte [es:di]	; Byte from DI
-		cmp al, 0x61
-		je .convert
+		cmp al, 0x60
 		jg .convert
 		cmp al, 0x00
 		je .done
@@ -438,8 +306,7 @@ function_upper_to_lowercase:
 
     .loop:
 		mov al, byte [es:di]	; Byte from DI
-		cmp al, 0x41
-		je .convert
+		cmp al, 0x40
 		jg .convert
 		cmp al, 0x00
 		je .done
@@ -546,3 +413,34 @@ function_pause:
 	
 	pop ax
 	iret
+
+function_string_to_integer:
+
+	push ebx
+	push ecx
+	push edx
+	push si
+
+	xor ecx, ecx			; Prepare ECX
+
+	.loop:
+		xor eax, eax		; Prepare EAX
+		lodsb				; Get byte from string
+		sub al, '0'			; Get integer value
+		mov dl, byte [si]	; Check whether this is the last byte in the string
+		test dl, dl			; Is the string terminated?
+		jz .done			; If yes, we're done
+		add ecx, eax		; Add new value to stored result
+		mov eax, 10
+		mul ecx				; Multiply result by 10
+		mov ecx, eax		; Store result back in ECX
+		jmp .loop			; Loop
+
+	.done:
+		add ecx, eax		; Add last unit
+		mov eax, ecx		; Move result into EAX
+		pop si
+		pop edx
+		pop ecx
+		pop ebx
+		iret
