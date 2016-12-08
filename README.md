@@ -13,6 +13,6 @@ It also automatically assembles and copies all ASM files in the 'sources'
 directory, and copies (just copy) all files from the 'extra' directory
 in the image.
 
-# Special credits
-A special thanks to @KoleckOLP (and his Pentium 4 machine) for helping
-me test this thing out!
+# Support
+To receive support, contribute, report bugs and more, feel free to join the
+official DankOS Discord server: https://discord.gg/zzxBagX
