@@ -1,5 +1,5 @@
 ; *********************************************************
-;     DankOS BOOTLOADER:  Loads KERNEL.SYS at 9000:0000
+;     DankOS BOOTLOADER:  Loads KERNEL.SYS at 9000:0100
 ; *********************************************************
 
 org 0x7C00						; BIOS loads us here (0000:7C00)
@@ -38,7 +38,7 @@ code_start:
 cli								; Disable interrupts and initialise DS and SS to 0x0000
 jmp 0x0000:initialise_cs		; Initialise CS to 0x0000 with a long jump
 initialise_cs:
-xor bx, bx						; NOTE: using register BX here to avoid having to change it to null later
+xor bx, bx
 mov ds, bx
 mov ss, bx
 mov sp, 0xFFF0					; Stack at segment top (0000:FFF0)
@@ -47,14 +47,14 @@ sti								; Restore interrupts
 mov ax, 0x9000					; Set destination segment (ES) to 0x9000
 mov es, ax
 mov si, kernel_name				; Load stage 2 file name pointer in SI, for use by FAT12 function
-;xor bx, bx (BX already 0x0000)	; And tell function to load the kernel at es:bx (9000:0000)
+mov bx, 0x0100					; And tell function to load the kernel at es:bx (9000:0100)
 								; DL is already loaded with the correct drive
 
 call fat12_load_file			; Call load file function
 
 jc loading_error				; If error (the carry flag is set), cleanely halt the system
 
-jmp 0x9000:0x0000				; Otherwise jump to the newly loaded kernel :D
+jmp 0x9000:0x0100				; Otherwise jump to the newly loaded kernel :D
 
 
 loading_error:

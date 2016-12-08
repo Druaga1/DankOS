@@ -53,7 +53,7 @@ mov word [.SectorsPerFAT], ax
 
 ; Number of fats * sector per fat in AX
 
-mov ax, word [.SectorsPerFAT]
+;mov ax, word [.SectorsPerFAT]
 mov bl, byte [.NumberOfFATs]
 xor bh, bh
 mul bx

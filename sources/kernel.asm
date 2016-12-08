@@ -2,7 +2,7 @@
 ;     The DankOS kernel. It contains core drivers and routines.
 ; *****************************************************************
 
-org 0x0000							; Bootloader loads us here (9000:0000)
+org 0x0100							; Bootloader loads us here (9000:0100)
 bits 16								; 16-bit Real mode
 
 ; **** Check CS using a far call to verify that we're loaded in the proper spot by the bootloader ****

@@ -1,4 +1,4 @@
-org 0x0000			; Program is loaded at offset 0x0000
+org 0x0100			; Program is loaded at offset 0x0100
 bits 16				; 16-bit real mode code
 
 mov si, hello		; Load SI with the pointer to the 0x00 terminated string

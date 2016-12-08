@@ -57,13 +57,14 @@ mov dword [gs:StackPointer], esp	; Save new stack pointer in RAM
 
 mov ax, word [gs:TopSegment]		; Prepare to load program
 mov es, ax
-xor bx, bx
+mov bx, 0x0100					; Load at offset 0x0100
 push 0x12
 int 0x80						; Load program
 jc .drop_out					; If file not found, drop out
 cmp ecx, 0x0000FFFF				; Test if program is too big (> 64KB)
 jg .drop_out					; If it is, drop out
 
+add cx, 0x0100					; Add the kernel reserved space to the file size
 shr cx, 4						; Shift CX right by 4 bits to get size in 16 bytes blocks
 inc cx							; Adjust CX
 add word [gs:TopSegment], cx		; Reduce available memory
@@ -82,7 +83,7 @@ mov fs, ax
 mov gs, ax
 
 push ax							; Prepare stack for retf
-push 0x0000
+push 0x0100
 
 xor eax, eax					; Flush all GPRs
 xor ebx, ebx

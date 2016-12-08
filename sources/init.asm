@@ -1,5 +1,7 @@
 ; ** DankOS shell **
 
+org 0x0100
+
 bits 16							; 16-bit real mode
 
 mov si, intro					; Print intro
@@ -60,7 +62,7 @@ intro		db	0x0A
 
 prompt		db	'>> ', 0x00
 
-not_found	db	'File not found.', 0x0A, 0x00
+not_found	db	'Invalid command or file name.', 0x0A, 0x00
 
 prompt_input	times 201 db 0x00
 
