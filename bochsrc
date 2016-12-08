@@ -1,0 +1,13 @@
+megs: 256
+
+clock: sync=realtime, time0=local
+
+floppya: 1_44=./dankos.img, status=inserted
+
+boot: floppy
+
+log: ./bochsout.txt
+
+mouse: enabled=0
+
+magic_break: enabled=1
