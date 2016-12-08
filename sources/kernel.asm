@@ -91,15 +91,6 @@ jmp reload						; Reload shell
 
 start_fail:
 
-mov ax, 128						; Allocate 128 bytes of memory for stack
-push 0x19
-int 0x80
-
-cli								; Prepare stack
-mov ss, cx
-mov sp, 128
-sti
-
 mov si, KernelRunningMsg		; Print error and terminate execution
 push 0x02
 int 0x80

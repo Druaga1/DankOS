@@ -2,15 +2,6 @@
 
 bits 16							; 16-bit real mode
 
-mov ax, 128						; Allocate 128 bytes of memory for stack
-push 0x19
-int 0x80
-
-cli								; Prepare stack
-mov ss, cx
-mov sp, 128
-sti
-
 mov si, intro					; Print intro
 push 0x02
 int 0x80

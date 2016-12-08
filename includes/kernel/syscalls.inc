@@ -180,4 +180,18 @@ cmp word [ss:(bp-2)], 0x19
 xchg sp, bp
 je allocate_memory
 
-jmp $
+
+; *** Invalid system call exception handler
+
+mov ax, 0x9000
+mov ds, ax
+mov si, .invalid_call_msg
+push 0x02
+int 0x80
+
+push 0x00
+int 0x80
+
+
+.invalid_call_msg		db	0x0A, "Kernel: An invalid system call has been issued by the program."
+						db	0x0A, "        Execution aborted.", 0x0A, 0x00

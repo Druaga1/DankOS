@@ -63,19 +63,23 @@ int 0x80						; Load program
 jc .drop_out					; If file not found, drop out
 cmp ecx, 0x0000FFFF				; Test if program is too big (> 64KB)
 jg .drop_out					; If it is, drop out
+
 shr cx, 4						; Shift CX right by 4 bits to get size in 16 bytes blocks
-inc cx							; Add 1 to CX to leave a small buffer
+inc cx							; Adjust CX
 add word [gs:TopSegment], cx		; Reduce available memory
 
 cli								; Disable interrupts
+mov cx, word [gs:TopSegment]		; Prepare the stack segment
+mov ss, cx
+mov esp, 0x1f0						; Prepare the stack pointer
+sti								; Restore interrupts
+
+add word [gs:TopSegment], 0x20		; Allocate 512 more bytes for the stack
+
 mov ds, ax						; Prepare all segment registers (AX was already correctly loaded)
 mov es, ax
 mov fs, ax
 mov gs, ax
-mov ss, ax
-
-xor esp, esp					; Reset stack
-sti								; Restore interrupts
 
 push ax							; Prepare stack for retf
 push 0x0000
