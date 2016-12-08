@@ -39,12 +39,14 @@ call video_draw_cursor				; Draw cursor
 jmp .done
 
 .next_line:
-int 0x4D								; Get cursor coordinates
+push 0x0D
+int 0x80								; Get cursor coordinates
 xor ah, ah								; Set X to 0
 cmp al, 24								; Last line?
 je .scroll_screen_down					; Scroll screen
 inc al									; Y + 1
-int 0x4E								; Move cursor!
+push 0x0E
+int 0x80								; Move cursor!
 jmp .done								; Done
 
 .backspace:
@@ -116,7 +118,8 @@ push si
 lodsb							; Byte from SI
 cmp al, 0x00					; Is 0x00?
 je .done						; If yes, done
-int 0x41
+push 0x01
+int 0x80
 jmp .loop						; Loop
 
 .done:
@@ -132,7 +135,8 @@ push bx
 push cx
 push dx
 
-int 0x49				; Find length of string
+push 0x09
+int 0x80				; Find length of string
 
 mov ax, 80				; 80 - length
 sub ax, cx
@@ -140,10 +144,13 @@ xor dx, dx
 mov bx, 2
 div bx					; divide / 2
 mov dx, ax
-int 0x4D
+push 0x0D
+int 0x80
 mov ah, dl
-int 0x4E
-int 0x42
+push 0x0E
+int 0x80
+push 0x02
+int 0x80
 
 .done:
 
@@ -382,7 +389,8 @@ video_new_line:
 push ax
 
 mov al, 0x0A
-int 0x41
+push 0x01
+int 0x80
 
 pop ax
 iret

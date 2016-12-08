@@ -31,7 +31,12 @@ mov byte [CurrentDrive], dl			; Set up the current drive variable
 
 ; **** Bootup routines ****
 
-%include 'includes/kernel/syscalls.inc'		; Activate all system interrupts
+push ds								; Enable the interrupt 0x80 for the system API
+xor ax, ax
+mov ds, ax
+mov word [0x0200], system_call
+mov word [0x0202], 0x9000
+pop ds
 
 ; Prepare the screen
 
@@ -48,30 +53,38 @@ int 0x10				; Disable BIOS cursor
 
 mov ah, 0x02
 mov al, 0x70
-int 0x51				; Set palette and reset screen
-int 0x4A
+push 0x11
+int 0x80				; Set palette and reset screen
+push 0x0A
+int 0x80
 
 mov si, LoadingMsg		; Display loading shell message
-int 0x42
+push 0x02
+int 0x80
 
 reload:
 
 mov dl, byte [CurrentDrive]		; Get current drive
 mov si, InitName				; Use the default 'init.bin'
-int 0x54						; Launch process #1
+push 0x14
+int 0x80						; Launch process #1
 
 ; Since process #1 is never supposed to quit, add an exception handler here
 
 mov si, ProcessWarning1			; Print warning message (part 1)
-int 0x42
+push 0x02
+int 0x80
 
 xor dl, dl
-int 0x46						; Print exit code
+push 0x06
+int 0x80						; Print exit code
 
 mov si, ProcessWarning2			; Print second part of message
-int 0x42
+push 0x02
+int 0x80
 
-int 0x58						; Pause
+push 0x18
+int 0x80						; Pause
 
 jmp reload						; Reload shell
 
@@ -79,7 +92,8 @@ jmp reload						; Reload shell
 start_fail:
 
 mov ax, 128						; Allocate 128 bytes of memory for stack
-int 0x59
+push 0x19
+int 0x80
 
 cli								; Prepare stack
 mov ss, cx
@@ -87,8 +101,10 @@ mov sp, 128
 sti
 
 mov si, KernelRunningMsg		; Print error and terminate execution
-int 0x42
-int 0x40
+push 0x02
+int 0x80
+push 0x00
+int 0x80
 
 
 data:
@@ -104,6 +120,7 @@ KernelRunningMsg	db	"The kernel is already loaded.", 0x0A, 0x00
 
 includes:
 
+%include 'includes/kernel/syscalls.inc'
 %include 'includes/kernel/kernel.inc'
 %include 'includes/kernel/video.inc'
 %include 'includes/kernel/io.inc'

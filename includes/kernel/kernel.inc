@@ -58,7 +58,8 @@ mov dword [gs:StackPointer], esp	; Save new stack pointer in RAM
 mov ax, word [gs:TopSegment]		; Prepare to load program
 mov es, ax
 xor bx, bx
-int 0x52						; Load program
+push 0x12
+int 0x80						; Load program
 jc .drop_out					; If file not found, drop out
 cmp ecx, 0x0000FFFF				; Test if program is too big (> 64KB)
 jg .drop_out					; If it is, drop out
@@ -92,7 +93,8 @@ retf							; Launch program :D
 .drop_out:
 
 mov eax, 0xFFFFFFFF		; Set EAX to 0xFFFFFFFF
-int 0x40				; Terminate process instantly
+push 0x00
+int 0x80				; Terminate process instantly
 
 
 terminate_process:

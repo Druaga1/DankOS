@@ -94,7 +94,8 @@ function_print_integer:
 		jmp .loop
 	.done:
 		mov si, .buffer
-		int 0x42
+		push 0x02
+		int 0x80
 
 		pop ds
 		pop si
@@ -138,7 +139,8 @@ function_input_integer:
 		cmp cl, 10
 		je .loop
 		inc cl
-		int 0x41
+		push 0x01
+		int 0x80
 		sub al, '0'
 		stosb
 		jmp .loop
@@ -146,7 +148,8 @@ function_input_integer:
 		cmp cl, 0
 		je .loop
 		mov al, 0x08
-		int 0x41
+		push 0x01
+		int 0x80
 		dec di
 		dec cl
 		jmp .loop
@@ -193,14 +196,16 @@ function_input_string:
 		cmp cx, bx
 		je .loop
 		inc cx
-		int 0x41
+		push 0x01
+		int 0x80
 		stosb
 		jmp .loop
 	.backspace:
 		cmp cx, 0
 		je .loop
 		mov al, 0x08
-		int 0x41
+		push 0x01
+		int 0x80
 		dec di
 		dec cx
 		jmp .loop
@@ -395,7 +400,8 @@ function_string_to_fat_name:
 		add di, 11
 		mov byte [es:di], 0x00	; Add 0x00 terminator
 		sub di, 11
-		int 0x55		; Lower to uppercase
+		push 0x15
+		int 0x80		; Lower to uppercase
 
 	.done:
 		pop di

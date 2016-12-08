@@ -34,7 +34,8 @@ mov ax, 0x9000				; Point ES to kernel
 mov es, ax
 
 mov di, .ConvertedFilename	; Point DI to converted filename buffer
-int 0x57					; Use int 0x57 to convert file name
+push 0x17
+int 0x80					; Use function 0x17 to convert file name
 
 mov ds, ax					; Point DS to kernel
 mov si, .ConvertedFilename	; Point SI to the converted file name

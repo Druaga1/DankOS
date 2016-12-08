@@ -3,7 +3,8 @@
 bits 16							; 16-bit real mode
 
 mov ax, 128						; Allocate 128 bytes of memory for stack
-int 0x59
+push 0x19
+int 0x80
 
 cli								; Prepare stack
 mov ss, cx
@@ -11,16 +12,20 @@ mov sp, 128
 sti
 
 mov si, intro					; Print intro
-int 0x42
+push 0x02
+int 0x80
 
 prompt_loop:
 
 mov si, prompt					; Draw prompt
-int 0x42
+push 0x02
+int 0x80
 mov bx, 200						; Limit input to 200 characters
 mov di, prompt_input			; Point to local buffer
-int 0x50						; Input string
-int 0x43						; New line
+push 0x10
+int 0x80						; Input string
+push 0x03
+int 0x80						; New line
 cmp byte [prompt_input], 0x00	; If no input, restart loop
 je prompt_loop
 
@@ -29,27 +34,31 @@ je prompt_loop
 mov si, prompt_input
 
 mov di, exit_msg				; Exit command
-int 0x48
+push 0x08
+int 0x80
 jc exit_cmd
 
 mov di, clear_msg				; Clear command
-int 0x48
+push 0x08
+int 0x80
 jc clear_cmd
 
 
 
 
 
-
-int 0x53						; Load current drive in DL
+push 0x13
+int 0x80						; Load current drive in DL
 mov si, prompt_input			; Prepare SI for start process function
 xor eax, eax					; Reset EAX
-int 0x54						; Try to start new process
+push 0x14
+int 0x80						; Try to start new process
 cmp eax, 0xFFFFFFFF				; If fail, print error message
 jne prompt_loop					; Otherwise restart the loop
 
 mov si, not_found
-int 0x42
+push 0x02
+int 0x80
 jmp prompt_loop
 
 data:

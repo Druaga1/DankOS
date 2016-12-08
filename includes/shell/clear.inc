@@ -2,5 +2,6 @@
 
 clear_cmd:
 
-int 0x4A			; Reinitialise screen
+push 0x0A
+int 0x80			; Reinitialise screen
 jmp prompt_loop		; Return to prompt
