@@ -34,7 +34,7 @@ lodsb							; Byte from SI
 cmp al, ' '						; Is it space?
 je .get_switches				; If it is, save switches
 test al, al						; Is it 0x00?
-jz .done						; If it is, we're done
+jz .no_switches					; If it is, write a 0x00 in the buffer, and quit
 jmp .find_space_loop			; Otherwise loop
 
 .get_switches:
@@ -46,6 +46,9 @@ stosb							; Save it in DI
 test al, al						; Is it 0x00?
 jz .done						; If yes, we're done
 jmp .get_switches_loop			; Otherwise loop
+
+.no_switches:
+mov byte [di], 0x00
 
 .done:
 
