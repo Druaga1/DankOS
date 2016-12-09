@@ -117,6 +117,7 @@ includes:
 %include 'includes/kernel/io.inc'
 %include 'includes/kernel/fat12.inc'
 %include 'includes/kernel/disk.inc'
+%include 'includes/kernel/timer.inc'
 
 
 global_variables:
