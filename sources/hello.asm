@@ -6,6 +6,12 @@ mov si, hello		; Load SI with the pointer to the 0x00 terminated string
 push 0x02			; DankOS API function 0x02 is print
 int 0x80			; Execute function
 
+push 0x21			; Print clock
+int 0x80
+
+push 0x03			; New line
+int 0x80
+
 push 0x00			; Function 0x00 is terminate execution
 int 0x80			; Execute function
 

@@ -80,7 +80,6 @@ cmp word [ss:(bp-2)], 0x04
 xchg sp, bp
 je function_string_to_integer
 
-
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x06
 xchg sp, bp
