@@ -56,8 +56,7 @@ jmp prompt_loop
 
 data:
 
-intro		db	0x0A
-			db	0x0A, 'DankOS shell, welcome!'
+intro		db	0x0A, 'DankOS shell, welcome!'
 			db	0x0A, 0x0A, 0x00
 
 prompt		db	'>> ', 0x00
