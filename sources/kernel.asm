@@ -51,10 +51,7 @@ mov bh, 0x00
 mov ah, 0x02
 int 0x10				; Disable BIOS cursor
 
-mov ah, [COLOR_GREEN]
-mov [CURSOR_COLOR],ah	;Set up the cursor color
-
-mov ah, [CURSOR_COLOR]
+mov ah, 0x02
 mov al, 0x70
 push 0x11
 int 0x80				; Set palette and reset screen
@@ -121,7 +118,6 @@ includes:
 %include 'includes/kernel/fat12.inc'
 %include 'includes/kernel/disk.inc'
 %include 'includes/kernel/timer.inc'
-%include 'includes/kernel/graphics.inc'
 
 
 global_variables:

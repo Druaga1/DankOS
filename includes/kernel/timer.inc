@@ -52,50 +52,32 @@ timer_print_time:
 	push bx
 	push cx
 	push dx
-	push ah
 	
 	push 0x20				;Read RTC
 	int 0x80
 	
-	mov ah, [CURSOR_COLOR]	; Get the current palette and store it for later use
-	push ah
-	mov ah, [COLOR_WHITE]
-	mov [CURSOR_COLOR],ah	; Set up the cursor color
-	
-	mov ah, [CURSOR_COLOR]
-	mov al, 0x70
-	push 0x11
-	int 0x80				; Set palette
-	
 	xor eax, eax
 
 	mov al, ch
-	push 0x06				; Print out the hours
+	push 0x06			; Print out the hours
 	int 0x80
 	
 	mov al, ':'
-	push 0x01				; Print divider
+	push 0x01			; Print divider
 	int 0x80
 	
 	mov al, cl
-	push 0x06				; Print out the minutes
+	push 0x06			; Print out the minutes
 	int 0x80
 	
 	mov al, ':'
-	push 0x01				; Print divider
+	push 0x01			; Print divider
 	int 0x80
 	
 	mov al, dh
-	push 0x06				; Print out the seconds
+	push 0x06			; Print out the seconds
 	int 0x80
 
-	pop ah
-	mov ah, [CURSOR_COLOR]
-	mov al, 0x70
-	push 0x11
-	int 0x80				; Restore the previous palette
-	
-	pop ah
 	pop dx
 	pop cx
 	pop bx
