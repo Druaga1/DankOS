@@ -80,6 +80,7 @@ cmp word [ss:(bp-2)], 0x04
 xchg sp, bp
 je function_string_to_integer
 
+
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x06
 xchg sp, bp
@@ -179,6 +180,17 @@ xchg sp, bp
 cmp word [ss:(bp-2)], 0x19
 xchg sp, bp
 je allocate_memory
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x20
+xchg sp, bp
+je timer_read
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x21
+xchg sp, bp
+je timer_print_time
+
 
 
 ; *** Invalid system call exception handler
