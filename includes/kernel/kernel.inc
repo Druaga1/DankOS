@@ -28,6 +28,7 @@ start_new_program:
 ; ******************************************
 
 ; IN: DS:SI --> Name of new program
+;     DS:DI --> Command line switches
 ;     DL --> Drive number
 
 ; OUT: EAX = 0xFFFFFFFF if error or not found
@@ -69,6 +70,22 @@ shr cx, 4						; Shift CX right by 4 bits to get size in 16 bytes blocks
 inc cx							; Adjust CX
 add word [gs:TopSegment], cx		; Reduce available memory
 
+mov si, di						; Copy command line switches location in DS:DI
+mov es, ax						; Prepare ES:DI to copy the switches
+xor di, di
+
+push ax							; Save AX for later
+
+.copy_switches_loop:
+lodsb							; Byte from DS:SI
+stosb							; Copy to ES:DI
+test al, al						; Test for terminator
+jz .copy_switches_done
+jmp .copy_switches_loop
+.copy_switches_done:
+
+pop ax							; Restore AX
+
 cli								; Disable interrupts
 mov cx, word [gs:TopSegment]		; Prepare the stack segment
 mov ss, cx
@@ -78,7 +95,6 @@ sti								; Restore interrupts
 add word [gs:TopSegment], 0x20		; Allocate 512 more bytes for the stack
 
 mov ds, ax						; Prepare all segment registers (AX was already correctly loaded)
-mov es, ax
 mov fs, ax
 mov gs, ax
 

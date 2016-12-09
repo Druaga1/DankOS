@@ -13,7 +13,7 @@ prompt_loop:
 mov si, prompt					; Draw prompt
 push 0x02
 int 0x80
-mov bx, 200						; Limit input to 200 characters
+mov bx, 0xFF					; Limit input to 0xFF characters
 mov di, prompt_input			; Point to local buffer
 push 0x10
 int 0x80						; Input string
@@ -21,6 +21,33 @@ push 0x03
 int 0x80						; New line
 cmp byte [prompt_input], 0x00	; If no input, restart loop
 je prompt_loop
+
+; *** Extract command line switches from the input ***
+
+extract_switches:
+
+mov si, prompt_input			; Setup destination and source indexes
+mov di, command_line_switches
+
+.find_space_loop:
+lodsb							; Byte from SI
+cmp al, ' '						; Is it space?
+je .get_switches				; If it is, save switches
+test al, al						; Is it 0x00?
+jz .done						; If it is, we're done
+jmp .find_space_loop			; Otherwise loop
+
+.get_switches:
+mov byte [si-1], 0x00			; Add a terminator to the input
+
+.get_switches_loop:
+lodsb							; Byte from SI
+stosb							; Save it in DI
+test al, al						; Is it 0x00?
+jz .done						; If yes, we're done
+jmp .get_switches_loop			; Otherwise loop
+
+.done:
 
 ; ***** Check for internal commands *****
 
@@ -48,7 +75,7 @@ jc help_cmd
 push 0x13
 int 0x80						; Load current drive in DL
 mov si, prompt_input			; Prepare SI for start process function
-xor eax, eax					; Reset EAX
+mov di, command_line_switches	; Prepare to pass the switches
 push 0x14
 int 0x80						; Try to start new process
 cmp eax, 0xFFFFFFFF				; If fail, print error message
@@ -68,9 +95,9 @@ prompt		db	'>> ', 0x00
 
 not_found	db	'Invalid command or file name.', 0x0A, 0x00
 
-prompt_input	times 201 db 0x00
+prompt_input	times 0x100 db 0x00
 
-
+command_line_switches	times 0x100 db 0x00
 
 
 internal_commands:
