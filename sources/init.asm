@@ -36,6 +36,11 @@ push 0x08
 int 0x80
 jc clear_cmd
 
+mov di, help_msg				; Help command
+push 0x08
+int 0x80
+jc help_cmd
+
 
 
 
@@ -72,9 +77,11 @@ internal_commands:
 
 exit_msg			db	'exit', 0x00
 clear_msg			db	'clear', 0x00
+help_msg			db	'help', 0x00
 
 
 
 
 %include 'includes/shell/exit.inc'
 %include 'includes/shell/clear.inc'
+%include 'includes/shell/help.inc'
