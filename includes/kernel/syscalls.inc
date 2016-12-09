@@ -80,6 +80,7 @@ cmp word [ss:(bp-2)], 0x04
 xchg sp, bp
 je function_string_to_integer
 
+
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x06
 xchg sp, bp
@@ -189,6 +190,16 @@ xchg sp, bp
 cmp word [ss:(bp-2)], 0x21
 xchg sp, bp
 je timer_print_time
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x22
+xchg sp, bp
+je graphics_set_mode
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x23
+xchg sp, bp
+je graphics_write_pixel
 
 
 
