@@ -119,6 +119,7 @@ includes:
 %include 'includes/kernel/fat12.inc'
 %include 'includes/kernel/disk.inc'
 %include 'includes/kernel/timer.inc'
+%include 'includes/kernel/speaker.inc'
 
 %include 'includes/kernel/splash.inc'
 
