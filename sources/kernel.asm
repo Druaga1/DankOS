@@ -110,20 +110,24 @@ KernelRunningMsg	db	"The kernel is already loaded.", 0x0A, 0x00
 ShellSwitches	db	0x00
 
 
-includes:
+;Includes
 
 %include 'includes/kernel/syscalls.inc'
 %include 'includes/kernel/kernel.inc'
 %include 'includes/kernel/video.inc'
 %include 'includes/kernel/io.inc'
-%include 'includes/kernel/fat12.inc'
 %include 'includes/kernel/disk.inc'
 %include 'includes/kernel/timer.inc'
 %include 'includes/kernel/speaker.inc'
 
+;File systems
+
+%include 'includes/kernel/file_systems/fat12.inc'
+
+;ASCII splash screen
+
 %include 'includes/kernel/splash.inc'
 
-
-global_variables:
+;Global variables
 
 %include 'includes/kernel/variables.inc'

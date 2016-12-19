@@ -93,7 +93,8 @@ xor bx, bx
 mov ax, word [.StartOfRoot]			; Load from here
 mov cx, word [.SizeOfRoot]			; Load this many sectors
 mov dl, byte [.CurrentDrive]			; Retrieve drive
-call floppy_read_sectors
+push 0x23
+int 0x80
 
 ; Browse root dir for a matching name to the one in SI
 
@@ -152,7 +153,8 @@ xor bx, bx
 mov ax, word [.ReservedSectors]			; Load from here
 mov cx, word [.SectorsPerFAT]			; Load this many sectors
 mov dl, byte [.CurrentDrive]				; Retrieve current drive
-call floppy_read_sectors
+push 0x23
+int 0x80
 
 ; Start of data = (Start of root - 2) + size of root
 

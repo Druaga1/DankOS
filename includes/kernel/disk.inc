@@ -1,8 +1,8 @@
 floppy_read_sector:
 
-; *************************************************
-;     Reads a floppy sector with an LBA address
-; *************************************************
+; ********************************************************************
+;     Reads a floppy sector with an LBA address (internal routine)
+; ********************************************************************
 
 ; IN:
 ; AX = LBA sector to load
@@ -90,17 +90,19 @@ floppy_read_sectors:
 ; BX = Buffer offset
 ; CX = Sectors count
 
-; OUT:
-; Carry if error
-
 push ax									; Save GPRs
 push bx
 push cx
+push dx
+push ds									; Save DS
+
+mov dx, 0x9000							; Point DS to kernel space
+mov ds, dx
 
 .loop:
 
 call floppy_read_sector					; Read sector
-jc .done								; If carry exit with flag
+jc .done								; If carry, exit routine
 
 inc ax									; Increment sector
 add bx, 512								; Add 512 to the buffer
@@ -108,7 +110,102 @@ add bx, 512								; Add 512 to the buffer
 loop .loop								; Loop!
 
 .done:
+pop ds
+pop dx
 pop cx									; Restore GPRs
 pop bx
 pop ax
-ret										; Exit routine
+iret									; Exit routine
+
+
+floppy_read_byte:
+
+; ***********************************************************
+;     Reads a byte from a specific location from a floppy
+; ***********************************************************
+
+; IN:
+; EBX = Byte address
+; DL = Drive number
+
+; OUT:
+; AL = Byte read
+
+push ebx
+push ecx
+push edx
+push ds
+push es
+
+mov cx, 0x9000			; Prepare DS and ES
+mov ds, cx
+mov es, cx
+
+push eax				; Save EAX to save the other parts of the register
+
+push dx					; Save target drive for later
+
+; Calculate the sector where the byte is found
+
+xor edx, edx			; Prepare EDX
+mov eax, ebx			; Put the address in EAX
+mov ebx, 512			; Prepare to divide by 512
+div ebx					; Divide!
+
+mov word [.target_sector], ax
+mov word [.target_offset], dx
+
+pop dx
+
+; Check if the cache if useful
+
+cmp byte [floppy_cache_status], 0xFF
+jne .cache_miss
+cmp ax, word [floppy_sector_in_cache]
+jne .cache_miss
+cmp dl, byte [floppy_drive_in_cache]
+jne .cache_miss
+
+.cache_hit:
+
+; The sector is already loaded in the cache, read the byte and return
+
+mov bx, word [.target_offset]
+pop eax							; Restore the rest of EAX
+add bx, floppy_cache
+mov al, byte [bx]
+jmp .done
+
+.cache_miss:
+
+; The cache is not useful, we need to fetch the sector from the drive
+
+mov byte [floppy_cache_status], 0xFF		; Flag cache as enabled
+mov ax, word [.target_sector]
+mov bx, floppy_cache						; Target buffer is cache
+mov cx, 1									; Read 1 sector
+push 0x23
+int 0x80									; Read sector
+mov word [floppy_sector_in_cache], ax		; Set cache metadata
+mov byte [floppy_drive_in_cache], dl
+jmp .cache_hit								; Now we can use the cache
+
+.done:
+
+pop es
+pop ds
+pop edx
+pop ecx
+pop ebx
+iret
+
+.target_sector		dw	0x0000
+.target_offset		dw	0x0000
+
+
+; Global variables
+
+floppy_cache_status			db 0x00
+floppy_drive_in_cache		db 0x00
+floppy_sector_in_cache		dw 0x0000
+floppy_cache				times 512 db 0x00

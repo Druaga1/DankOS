@@ -195,6 +195,16 @@ cmp word [ss:(bp-2)], 0x22
 xchg sp, bp
 je speaker_beep_frequency
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x23
+xchg sp, bp
+je floppy_read_sectors
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x24
+xchg sp, bp
+je floppy_read_byte
+
 
 
 ; *** Invalid system call exception handler
