@@ -205,6 +205,16 @@ cmp word [ss:(bp-2)], 0x24
 xchg sp, bp
 je floppy_read_byte
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x25
+xchg sp, bp
+je floppy_read_word
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x26
+xchg sp, bp
+je floppy_read_dword
+
 
 
 ; *** Invalid system call exception handler

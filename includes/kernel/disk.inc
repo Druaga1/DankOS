@@ -209,3 +209,60 @@ floppy_cache_status			db 0x00
 floppy_drive_in_cache		db 0x00
 floppy_sector_in_cache		dw 0x0000
 floppy_cache				times 512 db 0x00
+
+
+floppy_read_word:
+
+; ***********************************************************
+;     Reads a word from a specific location from a floppy
+; ***********************************************************
+
+; IN:
+; EBX = Word address
+; DL = Drive number
+
+; OUT:
+; AX = Word read
+
+inc ebx					; Read last to first byte, since it's little endian
+push 0x24				; Read byte call
+int 0x80
+mov ah, al				; Put the higher byte in AH
+dec ebx					; Next byte
+push 0x24				; Read byte call
+int 0x80
+
+iret
+
+
+floppy_read_dword:
+
+; ************************************************************
+;     Reads a dword from a specific location from a floppy
+; ************************************************************
+
+; IN:
+; EBX = Dword address
+; DL = Drive number
+
+; OUT:
+; EAX = Dword read
+
+push ebx
+push cx					; Save regs
+
+add ebx, 3				; Read last to first byte, since it's little endian
+
+mov cx, 4				; Loop 4 times
+
+.loop:
+shl eax, 8				; Rotate EAX left
+push 0x24				; Read byte call
+int 0x80
+dec ebx					; Next byte
+loop .loop				; Loop!
+
+pop cx					; Restore regs
+pop ebx
+
+iret
