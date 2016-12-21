@@ -2,7 +2,20 @@
 ;     This file contains all the global Kernel variables
 ; **********************************************************
 
-CurrentDrive			db	0x00		; The default drive of the kernel
-TopSegment				dw	0x0050		; The bottom of the free space (segment), when the kernel is started is 0050:0000
-StackPointer			dd	0x00000000	; Stack pointer
-StackSegment			dw	0x0000		; Stack segment
+; File system
+
+CurrentDrive			db	0x00
+CurrentPartitionOffset	dd	0x00000000
+
+; Kernel
+
+TopSegment				dw	0x0050
+StackPointer			dd	0x00000000
+StackSegment			dw	0x0000
+
+; Disk
+
+CacheStatus				db	0x00
+DriveInCache			db	0x00
+SectorInCache			dw	0x0000
+DiskCache				times 512 db 0x00

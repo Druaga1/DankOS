@@ -159,11 +159,11 @@ pop dx
 
 ; Check if the cache if useful
 
-cmp byte [floppy_cache_status], 0xFF
+cmp byte [CacheStatus], 0xFF
 jne .cache_miss
-cmp ax, word [floppy_sector_in_cache]
+cmp ax, word [SectorInCache]
 jne .cache_miss
-cmp dl, byte [floppy_drive_in_cache]
+cmp dl, byte [DriveInCache]
 jne .cache_miss
 
 .cache_hit:
@@ -172,7 +172,7 @@ jne .cache_miss
 
 mov bx, word [.target_offset]
 pop eax							; Restore the rest of EAX
-add bx, floppy_cache
+add bx, DiskCache
 mov al, byte [bx]
 jmp .done
 
@@ -180,14 +180,14 @@ jmp .done
 
 ; The cache is not useful, we need to fetch the sector from the drive
 
-mov byte [floppy_cache_status], 0xFF		; Flag cache as enabled
+mov byte [CacheStatus], 0xFF				; Flag cache as enabled
 mov ax, word [.target_sector]
-mov bx, floppy_cache						; Target buffer is cache
+mov bx, DiskCache							; Target buffer is cache
 mov cx, 1									; Read 1 sector
 push 0x23
 int 0x80									; Read sector
-mov word [floppy_sector_in_cache], ax		; Set cache metadata
-mov byte [floppy_drive_in_cache], dl
+mov word [SectorInCache], ax				; Set cache metadata
+mov byte [DriveInCache], dl
 jmp .cache_hit								; Now we can use the cache
 
 .done:
@@ -201,14 +201,6 @@ iret
 
 .target_sector		dw	0x0000
 .target_offset		dw	0x0000
-
-
-; Global variables
-
-floppy_cache_status			db 0x00
-floppy_drive_in_cache		db 0x00
-floppy_sector_in_cache		dw 0x0000
-floppy_cache				times 512 db 0x00
 
 
 floppy_read_word:
