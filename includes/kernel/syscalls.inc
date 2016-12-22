@@ -221,6 +221,19 @@ xchg sp, bp
 je floppy_read_dword
 
 
+; Debug calls: (must be removed after debugging)
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x80
+xchg sp, bp
+je fat12_load_chain
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x81
+xchg sp, bp
+je fat12_load_root
+
+
 
 ; *** Invalid system call exception handler
 

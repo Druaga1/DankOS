@@ -5,9 +5,8 @@
 ; File system
 
 CurrentDrive			db	0x00
-CurrentPartitionOffset	dd	0x00000000
 CurrentDirectoryPath	times 512 db 0x00
-CurrentDirectoryCache	times 0x4000 db 0x00
+CurrentDirectoryCache	equ 0xC000
 
 ; Kernel
 
