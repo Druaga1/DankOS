@@ -13,8 +13,6 @@ load_file:
 
 ; OUT: File size in ECX, 0x00 if not found
 
-xchg bx, bx
-
 push eax
 push ebx
 push edx
@@ -56,6 +54,7 @@ jmp .name_loop
 
 .load_directory:
 
+push si
 push ds
 mov ax, 0x9000
 mov ds, ax
@@ -67,6 +66,7 @@ int 0x80
 mov si, .ConvertedName
 call fat_get_starting_cluster_dir
 pop ds
+pop si
 
 test ax, ax
 jz .not_found
@@ -183,8 +183,10 @@ loop .check_name_loop
 
 .check_if_directory:
 
-and ah, 0x10		; Test for directory flag
-jz .skip_entry		; If not a dir, skip
+mov ah, byte [es:di]
+and ah, 0x10
+cmp ah, 0x10		; Test for directory flag
+jne .skip_entry		; If not a dir, skip
 
 .retrieve_cluster:
 
