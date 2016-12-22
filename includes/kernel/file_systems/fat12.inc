@@ -166,7 +166,7 @@ pop ecx
 pop ebx
 pop eax
 
-iret		;	(delete iret and put ret later)
+ret
 
 
 .DataStart					dw	0x0000

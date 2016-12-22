@@ -42,7 +42,7 @@ mount dankos.img ./mnt
 sleep 3
 
 printf "Copying files to image...\n"
-cp extra/* mnt/
+cp -r extra/* mnt/ 2> /dev/null
 cp tmp/* mnt/
 sleep 1
 

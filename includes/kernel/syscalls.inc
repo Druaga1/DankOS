@@ -226,12 +226,7 @@ je floppy_read_dword
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x80
 xchg sp, bp
-je fat12_load_chain
-
-xchg sp, bp
-cmp word [ss:(bp-2)], 0x81
-xchg sp, bp
-je fat_load_root
+je load_file
 
 
 
