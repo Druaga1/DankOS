@@ -3,7 +3,7 @@ bits 16				; 16-bit real mode code
 
 
 
-mov si, file
+mov si, file2
 mov bx, buffer
 push 0x80
 int 0x80
@@ -20,7 +20,7 @@ int 0x80
 
 
 file db '/test/hallo.txt', 0x00
-file2 db 'hello.txt', 0x00
-file3 db 'test/weed/weed.420', 0x00
+file2 db '/hello.txt', 0x00
+file3 db '/test/weed/weed.420', 0x00
 
 buffer times 200 db 0x00

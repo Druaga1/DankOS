@@ -9,7 +9,7 @@ load_file:
 ;     Loads a file from a specified path
 ; ******************************************
 
-; IN: Path in DS:SI, buffer in ES:BX
+; IN: Path in DS:SI (0x00 terminated), buffer in ES:BX
 
 ; OUT: File size in ECX, 0x00 if not found
 
@@ -99,13 +99,15 @@ jz .not_found
 
 mov dword [gs:.FileSize], ecx
 
-mov ax, word [gs:.TargetSegment]
-mov es, ax
+mov bx, word [gs:.TargetSegment]
+mov es, bx
 
 mov bx, word [gs:.TargetBuffer]
 push 0x13
 int 0x80
 call fat12_load_chain
+
+jmp .done
 
 .absolute_path:
 
@@ -135,7 +137,6 @@ iret
 .TargetBuffer		dw 0x0000
 .TargetSegment		dw 0x0000
 .FileSize			dd 0x00000000
-
 
 
 
@@ -228,12 +229,12 @@ ret
 
 fat_get_starting_cluster_file:
 
-; *********************************************************************
-;     Returns the starting cluster of the file in DS:SI in fat name
-; *********************************************************************
+; ***************************************************************************************
+;     Returns the starting cluster of the file chain of the file in DS:SI in fat name
+; ***************************************************************************************
 
 ; IN: DS:DI file fat name
-; OUT: AX starting cluster, 0x00 if not found, ECX = File size
+; OUT: AX starting cluster, 0x00 if not found, file size in ECX
 
 push bx
 push cx
@@ -268,16 +269,25 @@ cmp al, ah
 jne .skip_entry
 loop .check_name_loop
 
-.check_if_file:
+.check_if_directory:
 
-and ah, 0x10		; Test for file flag
-jnz .skip_entry		; If not a file, skip
+mov ah, byte [es:di]
+and ah, 0x10
+cmp ah, 0x10		; Test for directory flag
+je .skip_entry		; If a dir, skip
 
 .retrieve_cluster:
 
 add di, 15
 mov ax, word [es:di]	; Retrieve starting cluster
 mov word [es:.Cluster], ax
+
+; Get file size
+
+add di, 2
+mov eax, dword [es:di]
+mov dword [es:.FileSize], eax
+
 jmp .done
 
 .skip_entry:
@@ -296,6 +306,7 @@ mov word [es:.Cluster], 0x0000
 .done:
 
 mov ax, word [es:.Cluster]
+mov ecx, dword [es:.FileSize]
 
 pop es
 pop di
@@ -308,6 +319,7 @@ ret
 .EntryCounter	dw	0x0000
 .Cluster		dw	0x0000
 .FileName		dw	0x0000
+.FileSize		dd	0x00000000
 
 
 
