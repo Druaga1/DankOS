@@ -7,8 +7,6 @@ int 0x80
 push 0x03
 int 0x80
 
-xchg bx, bx
-
 mov bx, buffer
 mov dl, 0x00
 push 0x80
@@ -19,7 +17,7 @@ int 0x80
 
 mov si, buffer
 
-mov cx, 256
+mov cx, 1024
 
 loops:
 

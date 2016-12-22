@@ -122,6 +122,7 @@ ShellSwitches	db	0x00
 
 ;File systems
 
+%include 'includes/kernel/file_systems/fat_global.inc'
 %include 'includes/kernel/file_systems/fat12_legacy.inc'
 %include 'includes/kernel/file_systems/fat12.inc'
 
