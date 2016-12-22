@@ -3,6 +3,213 @@
 ; ****************************************************************************
 
 
+get_current_directory:
+
+; ***********************************************************
+;     Returns the present working directory of the kernel
+; ***********************************************************
+
+; OUT: ES:DI = Target buffer to dump path in, must be 128 bytes large.
+
+push ax
+push si
+push di
+push ds
+
+mov ax, 0x9000
+mov ds, ax
+
+mov si, CurrentDirectoryPath
+
+.loop:
+lodsb
+stosb
+test al, al
+jz .done
+jmp .loop
+
+.done:
+
+pop ds
+pop di
+pop si
+pop ax
+iret
+
+
+set_current_directory:
+
+; ***********************************************************
+;     Sets a new present working directory for the kernel
+; ***********************************************************
+
+; IN: DS:SI = Path of the directory
+
+; OUT: DL = 0 if not found, 1 if found and loaded
+
+push eax
+push ebx
+push ecx
+push si
+push di
+push es
+
+push edx
+
+mov ax, 0x9000							; ES to kernel space
+mov es, ax
+
+mov word [es:.NewPathAddress], si
+
+; Check if the caller only wants to load the root directory
+
+push si
+lodsw
+pop si
+cmp ax, 0x002F		; Check for / + 0x00
+je .only_load_root
+
+; Check if the path is absolute or relative
+
+lodsb
+cmp al, '/'
+je .absolute_path
+dec si
+.root_loaded:
+
+; Check if this is the last name in the path (the file name), and extract the name
+
+mov di, .ExtractedName
+
+.name_loop:
+lodsb
+cmp al, '/'
+je .load_directory
+test al, al
+jz .file_name
+stosb
+jmp .name_loop
+
+.load_directory:
+
+push si
+push ds
+mov ax, 0x9000
+mov ds, ax
+mov si, .ExtractedName
+mov di, .ConvertedName
+push 0x17
+int 0x80
+
+mov si, .ConvertedName
+call fat_get_starting_cluster_dir
+pop ds
+pop si
+
+test ax, ax
+jz .not_found
+
+mov bx, CurrentDirectoryCache
+push 0x13
+int 0x80
+call fat12_load_chain
+
+mov di, .ExtractedName
+
+jmp .name_loop
+
+.file_name:
+
+push ds
+mov ax, 0x9000
+mov ds, ax
+mov si, .ExtractedName
+mov di, .ConvertedName
+push 0x17
+int 0x80
+
+mov si, .ConvertedName
+call fat_get_starting_cluster_dir
+pop ds
+
+test ax, ax
+jz .not_found
+
+jmp .found
+
+.absolute_path:
+
+call fat_load_root			; Load the root directory
+jmp .root_loaded
+
+.not_found:
+
+; Reset back the old directory
+
+push ds
+mov ax, 0x9000
+mov ds, ax
+
+mov si, CurrentDirectoryPath		; Call function recursively
+push 0x83
+int 0x80
+pop ds
+
+pop edx
+xor dl, dl
+jmp .done
+
+.found:
+
+; Load directory in the buffer
+
+mov bx, CurrentDirectoryCache
+push 0x13
+int 0x80
+call fat12_load_chain
+
+; Save new pwd path
+
+mov si, word [es:.NewPathAddress]
+mov di, CurrentDirectoryPath
+
+.store_dir_loop:
+lodsb
+stosb
+test al, al
+jz .store_dir_done
+jmp .store_dir_loop
+.store_dir_done:
+
+pop edx
+mov dl, 1
+jmp .done
+
+.only_load_root:
+
+call fat_load_root			; Load the root directory
+
+mov word [es:CurrentDirectoryPath], 0x002F
+
+pop edx
+mov dl, 1
+
+.done:
+
+pop es
+pop di
+pop si
+pop ecx
+pop ebx
+pop eax
+iret
+
+
+.NewPathAddress				dw	0x0000
+.ExtractedName		times 13 db 0x00
+.ConvertedName		times 12 db 0x00
+
+
 load_file:
 
 ; ******************************************
@@ -137,6 +344,129 @@ iret
 .TargetBuffer		dw 0x0000
 .TargetSegment		dw 0x0000
 .FileSize			dd 0x00000000
+
+
+
+file_exists:
+
+; *******************************
+;     Checks if a file exists
+; *******************************
+
+; IN: Path in DS:SI (0x00 terminated)
+
+; OUT: DL = 1 if it exists, 0 if it doesnt
+
+push eax
+push ebx
+push ecx
+push si
+push di
+push es
+
+push edx
+
+mov ax, 0x9000
+mov es, ax
+
+; Check if the path is absolute or relative
+
+lodsb
+cmp al, '/'
+je .absolute_path
+dec si
+.root_loaded:
+
+; Check if this is the last name in the path (the file name), and extract the name
+
+mov di, .ExtractedName
+
+.name_loop:
+lodsb
+cmp al, '/'
+je .load_directory
+test al, al
+jz .file_name
+stosb
+jmp .name_loop
+
+.load_directory:
+
+push si
+push ds
+mov ax, 0x9000
+mov ds, ax
+mov si, .ExtractedName
+mov di, .ConvertedName
+push 0x17
+int 0x80
+
+mov si, .ConvertedName
+call fat_get_starting_cluster_dir
+pop ds
+pop si
+
+test ax, ax
+jz .not_found
+
+mov bx, CurrentDirectoryCache
+push 0x13
+int 0x80
+call fat12_load_chain
+
+mov di, .ExtractedName
+
+jmp .name_loop
+
+.file_name:
+
+push ds
+mov ax, 0x9000
+mov ds, ax
+mov si, .ExtractedName
+mov di, .ConvertedName
+push 0x17
+int 0x80
+
+mov si, .ConvertedName
+call fat_get_starting_cluster_file
+pop ds
+
+test ax, ax
+jz .not_found
+
+jmp .found
+
+.absolute_path:
+
+call fat_load_root			; Load the root directory
+jmp .root_loaded
+
+.not_found:
+
+pop edx
+xor dl, dl
+jmp .done
+
+.found:
+
+pop edx
+mov dl, 1
+
+.done:
+
+pop es
+pop di
+pop si
+pop ecx
+pop ebx
+pop eax
+iret
+
+
+.ExtractedName		times 13 db 0x00
+.ConvertedName		times 12 db 0x00
+
 
 
 
