@@ -247,6 +247,11 @@ cmp word [ss:(bp-2)], 0x83
 xchg sp, bp
 je set_current_directory
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x85
+xchg sp, bp
+je path_relative_to_absolute
+
 
 
 ; *** Invalid system call exception handler
