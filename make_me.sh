@@ -44,7 +44,7 @@ sleep 3
 printf "Copying files to image...\n"
 cp -r extra/* mnt/ 2> /dev/null
 cp tmp/* mnt/
-sleep 1
+sleep 3
 
 printf "Unmounting image...\n"
 umount ./mnt

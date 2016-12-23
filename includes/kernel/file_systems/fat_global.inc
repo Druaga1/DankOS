@@ -268,6 +268,7 @@ push ebx
 push ecx
 push si
 push di
+push ds
 push es
 
 push edx
@@ -275,7 +276,13 @@ push edx
 mov ax, 0x9000							; ES to kernel space
 mov es, ax
 
-mov word [es:.NewPathAddress], si
+mov di, .ConvertedPath			; Convert to absolute path
+push 0x85
+int 0x80
+
+mov ds, ax					; DS to kernel space
+
+mov si, .ConvertedPath
 
 ; Check if the caller only wants to load the root directory
 
@@ -386,7 +393,7 @@ call fat12_load_chain
 
 ; Save new pwd path
 
-mov si, word [es:.NewPathAddress]
+mov si, .ConvertedPath
 mov di, CurrentDirectoryPath
 
 .store_dir_loop:
@@ -413,6 +420,7 @@ mov dl, 1
 .done:
 
 pop es
+pop ds
 pop di
 pop si
 pop ecx
@@ -424,6 +432,7 @@ iret
 .NewPathAddress				dw	0x0000
 .ExtractedName		times 13 db 0x00
 .ConvertedName		times 12 db 0x00
+.ConvertedPath		times 128 db 0x00
 
 
 load_file:
