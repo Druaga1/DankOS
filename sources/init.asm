@@ -86,8 +86,49 @@ mov si, prompt_input			; Prepare SI for start process function
 mov di, command_line_switches	; Prepare to pass the switches
 push 0x14
 int 0x80						; Try to start new process
+cmp eax, 0xFFFFFFFF				; If fail, add .bin and try again
+jne prompt_loop					; Otherwise restart the loop
+
+
+; Try to add a .bin and load the file again
+
+add_bin:
+
+push 0x08
+int 0x80
+cmp cx, 12
+jg invalid_command
+
+mov di, bin_added_buffer
+push 0x27
+int 0x80
+
+mov si, bin_added_buffer
+.loop:
+mov al, byte [ds:si]
+test al, al
+jz .add_bin
+inc si
+jmp .loop
+
+.add_bin:
+mov di, si
+mov si, bin_msg
+push 0x27
+int 0x80
+
+; Try to load again
+
+push 0x13
+int 0x80						; Load current drive in DL
+mov si, bin_added_buffer		; Prepare SI for start process function
+mov di, command_line_switches	; Prepare to pass the switches
+push 0x14
+int 0x80						; Try to start new process
 cmp eax, 0xFFFFFFFF				; If fail, print error message
 jne prompt_loop					; Otherwise restart the loop
+
+invalid_command:
 
 mov si, not_found
 push 0x02
@@ -105,7 +146,11 @@ not_found	db	'Invalid command or file name.', 0x0A, 0x00
 
 prompt_input	times 0x100 db 0x00
 
+bin_added_buffer	times 13 db 0x00
+
 command_line_switches	times 0x100 db 0x00
+
+bin_msg		db	'.bin', 0x00
 
 
 internal_commands:

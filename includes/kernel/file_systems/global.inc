@@ -54,12 +54,17 @@ call fat_get_cluster			; Get starting cluster and size
 test ax, ax
 jz .failure						; Check for success
 
+push cx
+
 mov cx, word [.TargetSegment]
 mov es, cx
 
 mov bx, word [.TargetBuffer]
 mov dl, byte [.DriveNumber]
 call fat12_load_chain			; Load chain into the buffer
+
+pop cx
+
 jmp .success
 
 .failure:
