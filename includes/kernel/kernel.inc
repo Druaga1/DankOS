@@ -21,6 +21,31 @@ pop ax
 iret
 
 
+set_current_drive:
+
+; ******************************
+;     Sets the current drive
+; ******************************
+
+; IN: DL = drive number
+
+; OUT: nothing
+
+push ax
+push ds
+
+mov ax, 0x9000
+mov ds, ax
+
+mov byte [CurrentDrive], dl			; Set up the current drive variable
+
+call fat_load_root					; Load the root directory
+
+pop ds
+pop ax
+iret
+
+
 start_new_program:
 
 ; ******************************************

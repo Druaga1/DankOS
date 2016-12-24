@@ -27,8 +27,6 @@ mov ss, ax
 mov sp, 0xFFF0						; Move stack to 0xFFF0
 sti									; Enable interrupts back
 
-mov byte [CurrentDrive], dl			; Set up the current drive variable
-
 ; **** Bootup routines ****
 
 push ds								; Enable the interrupt 0x80 for the system API
@@ -37,6 +35,9 @@ mov ds, ax
 mov word [0x0200], system_call
 mov word [0x0202], 0x9000
 pop ds
+
+push 0x29				; Set current drive
+int 0x80
 
 ; Prepare the screen
 

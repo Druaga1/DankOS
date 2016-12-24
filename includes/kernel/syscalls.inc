@@ -230,6 +230,11 @@ cmp word [ss:(bp-2)], 0x28
 xchg sp, bp
 je directory_scanner
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x29
+xchg sp, bp
+je set_current_drive
+
 
 
 

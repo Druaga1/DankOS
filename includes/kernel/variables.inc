@@ -5,7 +5,6 @@
 ; File system
 
 CurrentDrive			db	0x00
-CurrentDirectoryPath	times 128 db 0x00
 CurrentDirectoryCache	equ 0xC000
 
 ; Kernel

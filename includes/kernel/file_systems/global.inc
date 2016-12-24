@@ -105,13 +105,12 @@ iret
 
 directory_scanner:
 
-; ******************************************
-;     Scans the content of the directory
-; ******************************************
+; **********************************************************
+;     Scans the content of the directory (current drive)
+; **********************************************************
 
 ; IN:
 ; ax		-->		Directory entry number
-; dl		-->		Drive number
 
 ; OUT:
 ; es:di		-->		File name
@@ -134,13 +133,11 @@ mov word [.EntryNumber], ax
 mov word [.TargetBuffer], di
 mov word [.EntryCounter], 0x0000
 
-call fat_load_root				; Load the root directory
-
 mov si, CurrentDirectoryCache
 
 .next_entry:
 
-mov di, [.TargetBuffer]
+mov di, word [.TargetBuffer]
 lodsb	; Byte from the directory table, first of entry
 dec si
 test al, al		; End of table?
@@ -151,12 +148,22 @@ rep movsb
 xor al, al
 stosb
 
-add si, 21		; Get to the next entry
+; Check for special reserved entries
+
+mov al, byte [si]		; Check for a vfat entry (ignore it)
+cmp al, 0x0F
+je .skip_entry
+
 
 mov ax, word [.EntryNumber]
 cmp word [.EntryCounter], ax
 je .success
+
 inc word [.EntryCounter]
+
+.skip_entry:
+
+add si, 21		; Get to the next entry
 jmp .next_entry
 
 
