@@ -235,6 +235,11 @@ cmp word [ss:(bp-2)], 0x29
 xchg sp, bp
 je set_current_drive
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x2A
+xchg sp, bp
+je function_fat_name_to_string
+
 
 
 

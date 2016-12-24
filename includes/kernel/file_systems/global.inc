@@ -125,19 +125,24 @@ push si
 push di
 push bp
 push ds
+push es
 
 mov bx, 0x9000
 mov ds, bx
 
 mov word [.EntryNumber], ax
 mov word [.TargetBuffer], di
+mov ax, es
+mov word [.TargetSegment], ax
 mov word [.EntryCounter], 0x0000
+
+mov es, bx
 
 mov si, CurrentDirectoryCache
 
 .next_entry:
 
-mov di, word [.TargetBuffer]
+mov di, .FatNameBuffer
 lodsb	; Byte from the directory table, first of entry
 dec si
 test al, al		; End of table?
@@ -170,7 +175,7 @@ jmp .next_entry
 .failure:
 
 mov bp, sp
-add sp, 20		; Get to the flags
+add sp, 22		; Get to the flags
 pop dx			; Pop and set carry flag
 or dx, 0000000000000001b
 push dx			; Put flags back in stack
@@ -180,15 +185,23 @@ jmp .done
 .success:
 
 mov bp, sp
-add sp, 20		; Get to the flags
+add sp, 22		; Get to the flags
 pop dx			; Pop and clear carry flag
 and dx, 1111111111111110b
 push dx			; Put flags back in stack
 mov sp, bp		; Restore stack
 
+mov si, .FatNameBuffer				; Convert name
+mov di, word [.TargetBuffer]
+mov ax, word [.TargetSegment]
+mov es, ax
+
+push 0x2A
+int 0x80
 
 .done:
 
+pop es
 pop ds
 pop bp
 pop di
@@ -204,6 +217,8 @@ iret
 .EntryNumber		dw	0x0000
 .EntryCounter		dw	0x0000
 .TargetBuffer		dw	0x0000
+.TargetSegment		dw	0x0000
+.FatNameBuffer		times 12 db 0x00
 
 
 
