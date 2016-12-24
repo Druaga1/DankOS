@@ -220,6 +220,12 @@ cmp word [ss:(bp-2)], 0x26
 xchg sp, bp
 je floppy_read_dword
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x27
+xchg sp, bp
+je function_string_copy
+
+
 
 
 

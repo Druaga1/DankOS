@@ -50,8 +50,12 @@
 
 ; function_string_to_integer:
 ;	Converts a numeric string into an integer
-;		Input string in DS:SI (0x00 terminated)
-;		Output integer in EAX
+;     Input string in DS:SI (0x00 terminated)
+;     Output integer in EAX
+
+; function_string_copy:
+;   Copies a string
+;     Input string in DS:SI, copies into ES:DI (0x00 terminated)
 
 function_print_integer:
 
@@ -520,4 +524,19 @@ function_string_to_integer:
 		pop edx
 		pop ecx
 		pop ebx
+		iret
+
+function_string_copy:
+
+	push ax
+
+	.loop:
+		lodsb
+		stosb
+		test al, al
+		jz .done
+		jmp .loop
+
+	.done:
+		pop ax
 		iret

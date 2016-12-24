@@ -129,9 +129,10 @@ RootDir			db	'/', 0x00
 
 ;File systems
 
-%include 'includes/kernel/file_systems/fat_global.inc'
-%include 'includes/kernel/file_systems/fat12_legacy.inc'
-%include 'includes/kernel/file_systems/fat12.inc'
+%include 'includes/kernel/file_systems/global/paths.inc'
+%include 'includes/kernel/file_systems/global/global.inc'
+%include 'includes/kernel/file_systems/legacy/fat12_legacy.inc'
+%include 'includes/kernel/file_systems/fat12/fat12.inc'
 
 ;ASCII splash screen
 
