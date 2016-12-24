@@ -14,6 +14,7 @@ jmp prompt_loop			; Return to prompt
 db	"DankOS shell, list of internal commands.", 0x0A
 db	0x0A
 db	" clear     --     Clears the screen.", 0x0A
+db	" ls        --     Lists the files in the drive.", 0x0A
 db	" help      --     Shows this list.", 0x0A
 db	" exit      --     Closes the shell.", 0x0A
 db	0x00

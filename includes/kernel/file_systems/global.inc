@@ -109,14 +109,94 @@ directory_scanner:
 ;     Scans the content of the directory
 ; ******************************************
 
+; IN:
+; ax		-->		Directory entry number
+; dl		-->		Drive number
+
+; OUT:
+; es:di		-->		File name
+
+; Carry if entry not found
+
+push ax
+push bx
+push cx
+push dx
+push si
+push di
+push bp
+push ds
+
+mov bx, 0x9000
+mov ds, bx
+
+mov word [.EntryNumber], ax
+mov word [.TargetBuffer], di
+mov word [.EntryCounter], 0x0000
+
+call fat_load_root				; Load the root directory
+
+mov si, CurrentDirectoryCache
+
+.next_entry:
+
+mov di, [.TargetBuffer]
+lodsb	; Byte from the directory table, first of entry
+dec si
+test al, al		; End of table?
+jz .failure
+
+mov cx, 11
+rep movsb
+xor al, al
+stosb
+
+add si, 21		; Get to the next entry
+
+mov ax, word [.EntryNumber]
+cmp word [.EntryCounter], ax
+je .success
+inc word [.EntryCounter]
+jmp .next_entry
+
+
+.failure:
+
+mov bp, sp
+add sp, 20		; Get to the flags
+pop dx			; Pop and set carry flag
+or dx, 0000000000000001b
+push dx			; Put flags back in stack
+mov sp, bp		; Restore stack
+jmp .done
+
+.success:
+
+mov bp, sp
+add sp, 20		; Get to the flags
+pop dx			; Pop and clear carry flag
+and dx, 1111111111111110b
+push dx			; Put flags back in stack
+mov sp, bp		; Restore stack
+
+
+.done:
+
+pop ds
+pop bp
+pop di
+pop si
+pop dx
+pop cx
+pop bx
+pop ax
+iret
 
 
 
-
-
-
-
-
+.EntryNumber		dw	0x0000
+.EntryCounter		dw	0x0000
+.TargetBuffer		dw	0x0000
 
 
 

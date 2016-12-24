@@ -225,6 +225,11 @@ cmp word [ss:(bp-2)], 0x27
 xchg sp, bp
 je function_string_copy
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x28
+xchg sp, bp
+je directory_scanner
+
 
 
 
