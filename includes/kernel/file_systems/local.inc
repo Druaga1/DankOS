@@ -1,118 +1,95 @@
-; ****************************************************************************
-;     This file contains routines that are global for both FAT12 and FAT16
-; ****************************************************************************
+; *************************************************************************************
+;     This file contains FAT routines that are only callable from within the kernel
+; *************************************************************************************
 
 
-get_current_directory:
+fat_get_cluster:
 
-; ***********************************************************
-;     Returns the present working directory of the kernel
-; ***********************************************************
+; ******************************************************
+;     Returns the starting cluster of the file chain
+; ******************************************************
 
-; OUT: ES:DI = Target buffer to dump path in, must be 128+1 bytes long to avoid overflows.
+; IN: DS:DI file fat name
+; OUT: AX starting cluster, 0x00 if not found, file size in ECX
 
-push ax
-push si
-push ds
-
-mov ax, 0x9000
-mov ds, ax
-
-mov si, CurrentDirectoryPath
-
-push 0x27
-int 0x80
-
-.done:
-
-pop ds
-pop si
-pop ax
-iret
-
-set_current_directory:
-
-; ********************************************************
-;     Sets the present working directory of the kernel
-; ********************************************************
-
-; IN: DS:SI = New path
-
-; OUT: DL = 0 if dir not found, 1 if found
-
-push ax
+push bx
+push dx
 push si
 push di
-push ds
 push es
 
 mov ax, 0x9000
 mov es, ax
 
-; Check if the path only points to the root
+mov di, CurrentDirectoryCache
+mov word [es:.EntryCounter], 0x0000
+mov word [es:.FileName], si
 
-push si
-lodsw
-pop si
-cmp ax, 0x002F		; Check for / + 0x00
-je .just_root
+.next_entry:
 
-push 0x13		; Get current drive
-int 0x80
+inc word [es:.EntryCounter]
 
-mov dh, 1		; Look for a dir entry
-
-call fat_path_resolver
-
-test ax, ax
+mov ah, byte [es:di]	; Byte from the directory table, first of entry
+test ah, ah		; End of table?
 jz .not_found
 
-mov di, .ConvertedPath
+mov cx, 11
 
-call fat_path_converter
+.check_name_loop:
 
-mov ax, 0x9000
-mov ds, ax
-mov si, .ConvertedPath
-mov di, CurrentDirectoryPath
+lodsb			; Byte from the file name
+mov ah, byte [es:di]	; Byte from table
+inc di
+cmp al, ah
+jne .skip_entry
+loop .check_name_loop
 
-push 0x27
-int 0x80
+; FILE FOUND!!!
 
-.found:
-mov dl, 1
+add di, 15
+mov ax, word [es:di]	; Retrieve starting cluster
+mov word [es:.Cluster], ax
+
+; Get file size
+
+add di, 2
+mov eax, dword [es:di]
+mov dword [es:.FileSize], eax
+
 jmp .done
+
+.skip_entry:
+
+mov ax, 32
+mov di, CurrentDirectoryCache
+mul word [es:.EntryCounter]
+add di, ax
+mov si, word [es:.FileName]
+jmp .next_entry
 
 .not_found:
-xor dl, dl
-jmp .done
 
-.just_root:
-mov dl, 1
-mov word [es:CurrentDirectoryPath], 0x002F
+mov word [es:.Cluster], 0x0000
 
 .done:
 
-pop ds
+mov ax, word [es:.Cluster]
+mov ecx, dword [es:.FileSize]
+
 pop es
 pop di
 pop si
-pop ax
-iret
+pop dx
+pop bx
+ret
 
 
-.ConvertedPath		times 129 db 0x00
+.EntryCounter	dw	0x0000
+.Cluster		dw	0x0000
+.FileName		dw	0x0000
+.FileSize		dd	0x00000000
 
 
-
-load_file:
-
-iret
-
-file_exists:
-
-
-iret
 
 fat_load_root:
 

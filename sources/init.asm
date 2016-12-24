@@ -10,14 +10,6 @@ int 0x80
 
 prompt_loop:
 
-mov di, current_dir
-push 0x82						; Get current directory
-int 0x80
-
-mov si, current_dir				; Draw current directory
-push 0x02
-int 0x80
-
 mov si, prompt					; Draw prompt
 push 0x02
 int 0x80
@@ -79,11 +71,6 @@ push 0x08
 int 0x80
 jc help_cmd
 
-mov di, cd_msg					; Cd command
-push 0x08
-int 0x80
-jc cd_cmd
-
 
 
 
@@ -107,7 +94,7 @@ data:
 intro		db	0x0A, 'DankOS shell, welcome!'
 			db	0x0A, 0x0A, 0x00
 
-prompt		db	'# ', 0x00
+prompt		db	'>> ', 0x00
 
 not_found	db	'Invalid command or file name.', 0x0A, 0x00
 
@@ -115,15 +102,12 @@ prompt_input	times 0x100 db 0x00
 
 command_line_switches	times 0x100 db 0x00
 
-current_dir		times 128 db 0x00
-
 
 internal_commands:
 
 exit_msg			db	'exit', 0x00
 clear_msg			db	'clear', 0x00
 help_msg			db	'help', 0x00
-cd_msg				db	'cd', 0x00
 
 
 
@@ -131,4 +115,3 @@ cd_msg				db	'cd', 0x00
 %include 'includes/shell/exit.inc'
 %include 'includes/shell/clear.inc'
 %include 'includes/shell/help.inc'
-%include 'includes/shell/cd.inc'

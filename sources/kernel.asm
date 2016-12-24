@@ -38,12 +38,6 @@ mov word [0x0200], system_call
 mov word [0x0202], 0x9000
 pop ds
 
-; Load the root directory
-
-mov si, RootDir
-push 0x83
-int 0x80
-
 ; Prepare the screen
 
 mov ax, 0x1003
@@ -114,7 +108,6 @@ ProcessWarning2	db	0x0A, "        The kernel will now reload 'init.bin'."
 				db	0x0A, "Press a key to continue...", 0x00
 KernelRunningMsg	db	"The kernel is already loaded.", 0x0A, 0x00
 ShellSwitches	db	0x00
-RootDir			db	'/', 0x00
 
 
 ;Includes
@@ -129,12 +122,9 @@ RootDir			db	'/', 0x00
 
 ;File systems
 
-%include 'includes/kernel/file_systems/global/path_converter.inc'
-%include 'includes/kernel/file_systems/global/path_resolver.inc'
-%include 'includes/kernel/file_systems/global/browser.inc'
-%include 'includes/kernel/file_systems/global/global.inc'
-%include 'includes/kernel/file_systems/legacy/fat12_legacy.inc'
-%include 'includes/kernel/file_systems/fat12/fat12.inc'
+%include 'includes/kernel/file_systems/global.inc'
+%include 'includes/kernel/file_systems/local.inc'
+%include 'includes/kernel/file_systems/fat12.inc'
 
 ;ASCII splash screen
 

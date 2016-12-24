@@ -148,7 +148,7 @@ je video_set_attributes
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x12
 xchg sp, bp
-je fat12_load_file
+je load_file
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x13
@@ -230,28 +230,6 @@ je function_string_copy
 
 
 
-
-; File system call (new driver)
-
-xchg sp, bp
-cmp word [ss:(bp-2)], 0x80
-xchg sp, bp
-je load_file
-
-xchg sp, bp
-cmp word [ss:(bp-2)], 0x81
-xchg sp, bp
-je file_exists
-
-xchg sp, bp
-cmp word [ss:(bp-2)], 0x82
-xchg sp, bp
-je get_current_directory
-
-xchg sp, bp
-cmp word [ss:(bp-2)], 0x83
-xchg sp, bp
-je set_current_directory
 
 
 
