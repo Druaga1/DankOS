@@ -129,7 +129,9 @@ RootDir			db	'/', 0x00
 
 ;File systems
 
-%include 'includes/kernel/file_systems/global/paths.inc'
+%include 'includes/kernel/file_systems/global/path_converter.inc'
+%include 'includes/kernel/file_systems/global/path_resolver.inc'
+%include 'includes/kernel/file_systems/global/browser.inc'
 %include 'includes/kernel/file_systems/global/global.inc'
 %include 'includes/kernel/file_systems/legacy/fat12_legacy.inc'
 %include 'includes/kernel/file_systems/fat12/fat12.inc'
