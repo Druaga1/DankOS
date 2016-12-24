@@ -65,23 +65,24 @@ jmp .success
 .failure:
 
 mov bp, sp
-add sp, 18		; Get to the flags
-pop ax			; Pop and set carry flag
-or ax, 0000000000000001b
-push ax			; Put flags back in stack
+add sp, 20		; Get to the flags
+pop dx			; Pop and set carry flag
+or dx, 0000000000000001b
+push dx			; Put flags back in stack
 mov sp, bp		; Restore stack
 jmp .done
 
 .success:
 
 mov bp, sp
-add sp, 18		; Get to the flags
-pop ax			; Pop and clear carry flag
-and ax, 1111111111111110b
-push ax			; Put flags back in stack
+add sp, 20		; Get to the flags
+pop dx			; Pop and clear carry flag
+and dx, 1111111111111110b
+push dx			; Put flags back in stack
 mov sp, bp		; Restore stack
 
 .done:
+
 pop es
 pop ds
 pop bp
@@ -102,6 +103,11 @@ iret
 
 
 
+directory_scanner:
+
+; ******************************************
+;     Scans the content of the directory
+; ******************************************
 
 
 
