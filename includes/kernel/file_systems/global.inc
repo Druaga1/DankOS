@@ -257,6 +257,10 @@ stosb
 
 ; Check for special reserved entries
 
+mov al, byte [si-11]	; Check for deleted entry
+cmp al, 0xE5
+je .skip_entry
+
 mov al, byte [si]		; Check for a vfat entry (ignore it)
 cmp al, 0x0F
 je .skip_entry
