@@ -15,9 +15,14 @@ int 0x80
 
 jc prompt_loop			; Return to prompt
 
+cmp dl, 0xFF
+je .add_brackets
+
 mov si, .FileName
 push 0x02
 int 0x80
+
+.done:
 
 push 0x03
 int 0x80
@@ -25,6 +30,18 @@ int 0x80
 inc ax
 jmp .loop
 
+.add_brackets:
+
+mov al, '['
+push 0x01
+int 0x80
+mov si, .FileName
+push 0x02
+int 0x80
+mov al, ']'
+push 0x01
+int 0x80
+jmp .done
 
 
 

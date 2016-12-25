@@ -216,18 +216,20 @@ directory_scanner:
 
 ; OUT:
 ; es:di		-->		File name
+; dl		-->		Directory flag (0x00 if file, 0xFF if directory)
 
 ; Carry if entry not found
 
 push ax
 push bx
 push cx
-push dx
 push si
 push di
 push bp
 push ds
 push es
+
+push dx
 
 mov bx, 0x9000
 mov ds, bx
@@ -264,6 +266,15 @@ je .skip_entry
 mov al, byte [si]		; Check for a vfat entry (ignore it)
 cmp al, 0x0F
 je .skip_entry
+
+mov al, byte [si]		; Check for a dir entry
+and al, 0x10
+jz .no_directory
+mov byte [.DirectoryFlag], 0xFF
+jmp .directory_check_done
+.no_directory:
+mov byte [.DirectoryFlag], 0x00
+.directory_check_done:
 
 
 mov ax, word [.EntryNumber]
@@ -307,12 +318,15 @@ int 0x80
 
 .done:
 
+pop dx
+
+mov dl, byte [.DirectoryFlag]
+
 pop es
 pop ds
 pop bp
 pop di
 pop si
-pop dx
 pop cx
 pop bx
 pop ax
@@ -320,6 +334,7 @@ iret
 
 
 
+.DirectoryFlag		db	0x00
 .EntryNumber		dw	0x0000
 .EntryCounter		dw	0x0000
 .TargetBuffer		dw	0x0000
