@@ -240,6 +240,16 @@ cmp word [ss:(bp-2)], 0x2A
 xchg sp, bp
 je function_fat_name_to_string
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x2B
+xchg sp, bp
+je fat_get_metadata
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x2C
+xchg sp, bp
+je function_fat_time_to_integer
+
 
 
 
