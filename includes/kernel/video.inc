@@ -10,6 +10,9 @@ push fs
 cmp al, 0xFF					; Is 0xFF (null)?
 je .done						; Ignore
 
+test al, al						; Is 0x00 (null)?
+jz .done						; Ignore
+
 mov bx, 0xB800							; Point ES to video memory
 mov es, bx
 
@@ -21,6 +24,9 @@ je .next_line
 
 cmp al, 0x08					; Is 0x08?
 je .backspace
+
+cmp al, 0x09					; Is 0x09?
+je .tab
 
 mov bx, word [fs:video_cursor_location]
 inc bx
@@ -36,6 +42,27 @@ mov word [fs:video_cursor_location], bx
 cmp byte [fs:video_cursor_enabled], 1	; Check if cursor is enabled
 jne .done
 call video_draw_cursor				; Draw cursor
+jmp .done
+
+.tab:
+push 0x0D
+int 0x80								; Get cursor coordinates
+
+xor al, al
+shr ax, 8
+mov bx, 8								; Divide X by 8 to get the cell number
+xor dx, dx
+div bx
+
+mov cx, 8
+sub cx, dx								; Retrieve %
+mov al, ' '								; Fill space with spaces
+
+.add_tab_loop:
+push 0x01
+int 0x80
+loop .add_tab_loop
+
 jmp .done
 
 .next_line:
@@ -103,10 +130,13 @@ pop bx
 pop ax
 iret
 
+.tab_loop_flag					db 0x00
+
 video_cursor_location			dw 0x0000
 video_char_attributes			db 0x07
 video_cursor_attributes			db 0x70
 video_cursor_enabled			db 0x01
+
 
 video_print_string:
 
