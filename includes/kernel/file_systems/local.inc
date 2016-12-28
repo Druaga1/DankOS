@@ -104,3 +104,34 @@ ret
 .SizeOfRoot				dw	0x0000
 .RootEntries			dw	0x0000
 .BytesPerSector			dw	512
+
+
+
+
+
+
+
+fat_load_chain:
+
+; ******************************************************************************
+;     Decides whether to use the FAT12 or FAT16 routine, then passes control
+; ******************************************************************************
+
+
+call fat12_load_chain
+ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

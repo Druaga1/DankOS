@@ -52,7 +52,7 @@ mov bx, word [gs:.TargetBuffer]
 push 0x13						; Get current drive
 int 0x80
 
-call fat12_load_chain			; Load chain into the buffer
+call fat_load_chain				; Load chain into the buffer
 
 pop cx
 
@@ -215,14 +215,14 @@ directory_scanner:
 ; ax		-->		Directory entry number
 
 ; OUT:
+; ax		-->		Raw time
+; bx		-->		Raw date
 ; es:di		-->		File name
+; ecx		-->		Size
 ; dl		-->		Directory flag (0x00 if file, 0xFF if directory)
 
 ; Carry if entry not found
 
-push ax
-push bx
-push cx
 push si
 push di
 push bp
@@ -276,6 +276,14 @@ jmp .directory_check_done
 mov byte [.DirectoryFlag], 0x00
 .directory_check_done:
 
+mov ax, word [si+11]	; Get time
+mov word [.RawTime], ax
+
+mov ax, word [si+13]	; Get date
+mov word [.RawDate], ax
+
+mov eax, dword [si+17]	; Get size
+mov dword [.FileSize], eax
 
 mov ax, word [.EntryNumber]
 cmp word [.EntryCounter], ax
@@ -292,7 +300,7 @@ jmp .next_entry
 .failure:
 
 mov bp, sp
-add sp, 22		; Get to the flags
+add sp, 16		; Get to the flags
 pop dx			; Pop and set carry flag
 or dx, 0000000000000001b
 push dx			; Put flags back in stack
@@ -302,7 +310,7 @@ jmp .done
 .success:
 
 mov bp, sp
-add sp, 22		; Get to the flags
+add sp, 16		; Get to the flags
 pop dx			; Pop and clear carry flag
 and dx, 1111111111111110b
 push dx			; Put flags back in stack
@@ -321,15 +329,15 @@ int 0x80
 pop dx
 
 mov dl, byte [.DirectoryFlag]
+mov ax, word [.RawTime]
+mov bx, word [.RawDate]
+mov ecx, dword [.FileSize]
 
 pop es
 pop ds
 pop bp
 pop di
 pop si
-pop cx
-pop bx
-pop ax
 iret
 
 
@@ -339,6 +347,9 @@ iret
 .EntryCounter		dw	0x0000
 .TargetBuffer		dw	0x0000
 .TargetSegment		dw	0x0000
+.RawDate			dw	0x0000
+.RawTime			dw	0x0000
+.FileSize			dd	0x00000000
 .FatNameBuffer		times 12 db 0x00
 
 

@@ -621,7 +621,7 @@ function_fat_time_to_integer:
 
 	and ax, 0000000000011111b		; Extract seconds/2
 	mov bx, 2						; Seconds*2
-	mul ax
+	mul bx
 
 	mov byte [.Seconds], al			; Save
 

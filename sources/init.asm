@@ -140,7 +140,7 @@ data:
 intro		db	0x0A, 'DankOS shell, welcome!'
 			db	0x0A, 0x0A, 0x00
 
-prompt		db	'>> ', 0x00
+prompt		db	'# ', 0x00
 
 not_found	db	'Invalid command or file name.', 0x0A, 0x00
 
