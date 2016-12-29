@@ -66,7 +66,7 @@ int 0x80
 reload:
 
 mov dl, byte [CurrentDrive]		; Get current drive
-mov si, InitName				; Use the default 'init.bin'
+mov si, ShellName				; Use the default 'shell.bin'
 mov di, ShellSwitches			; No switches
 push 0x14
 int 0x80						; Launch process #1
@@ -102,7 +102,7 @@ int 0x80
 
 data:
 
-InitName		db	'init.bin', 0x00
+ShellName		db	'shell.bin', 0x00
 ProcessWarning1	db	0x0A, "Kernel: The root process has been terminated,"
 				db	0x0A, "        process exit code: ", 0x00
 ProcessWarning2	db	0x0A, "        The kernel will now reload 'init.bin'."
