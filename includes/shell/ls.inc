@@ -61,6 +61,7 @@ int 0x80				; Set cursor coordinates
 cmp byte [.Directory], 0xFF		; Check if the entry is a directory
 je .skip_size
 
+xor cl, cl
 mov eax, dword [.Size]	; Print size, right align
 mov dl, 0x01
 push 0x06
@@ -81,6 +82,7 @@ int 0x80				; Set cursor coordinates
 
 xor dl, dl				; Left align
 
+mov cl, 2
 xor eax, eax			; Print days
 mov al, byte [.Days]
 push 0x06
@@ -99,6 +101,7 @@ mov al, '/'				; Print separator
 push 0x01
 int 0x80
 
+mov cl, 4
 xor eax, eax			; Print years
 mov ax, word [.Years]
 push 0x06
@@ -112,6 +115,7 @@ add ah, 1				; X = X + 1
 push 0x0E
 int 0x80				; Set cursor coordinates
 
+mov cl, 2
 xor eax, eax			; Print hours
 mov al, byte [.Hours]
 push 0x06

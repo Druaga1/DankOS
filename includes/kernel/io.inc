@@ -5,7 +5,8 @@
 ; function_print_integer:
 ;   Prints a 32-bit integer number on screen.
 ;     number in EAX
-;     DL = 0 if not aligned or 1 if right aligned
+;     DL = 1 if right align, 0 if left
+;     CL = minimum number of digits to display (pads with ASCII 0s)
 
 ; function_print_integer_hex:
 ;   Prints a 32-bit integer number on screen in hexadecimal notation.
@@ -87,14 +88,18 @@ function_print_integer:
 	mov bx, 0x9000
 	mov ds, bx				; Point to kernel space
 
+	xor ch, ch
 	cmp dl, 1
 	je .right_align
 
 	mov dl, 0xFF
-	jmp .clear_buffer
+	jmp .main
 
 	.right_align:
 	mov dl, ' '
+
+	.main:
+	push cx
 
 	.clear_buffer:
 		mov cx, 10
@@ -103,7 +108,17 @@ function_print_integer:
 			mov byte [di], dl
 			inc di
 		loop .clear_buffer_loop
-		jmp .calculate
+
+; Pad with 0s
+
+	pop cx
+	test cl, cl
+	jz .calculate
+	mov di, (.buffer+9)
+	.pad:
+	mov byte [di], '0'
+	dec di
+	loop .pad
 
 	.calculate:
 	mov di, (.buffer+9)
