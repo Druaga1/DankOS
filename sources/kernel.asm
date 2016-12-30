@@ -65,7 +65,6 @@ int 0x80
 
 reload:
 
-mov dl, byte [CurrentDrive]		; Get current drive
 mov si, ShellName				; Use the default 'shell.bin'
 mov di, ShellSwitches			; No switches
 push 0x14

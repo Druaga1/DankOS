@@ -6,9 +6,9 @@
 
 load_file:
 
-; *********************************************
-;     Loads a file from the specified drive
-; *********************************************
+; ***********************************************
+;     Loads a file from the current directory
+; ***********************************************
 
 ; IN:
 ; es:bx		-->		Target segment:offset
