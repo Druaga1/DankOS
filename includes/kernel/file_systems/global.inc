@@ -211,17 +211,13 @@ directory_scanner:
 ; bx		-->		Raw date
 ; es:di		-->		File name
 ; ecx		-->		Size
-; dl		-->		Directory flag (0x00 if file, 0xFF if directory)
-
-; Carry if entry not found
+; dh		-->		Directory flag (0x00 if file, 0xFF if directory)
+; dl		-->		0xFF if entry not found, 0x00 if found
 
 push si
 push di
-push bp
 push ds
 push es
-
-push dx
 
 mov bx, 0x9000
 mov ds, bx
@@ -291,12 +287,8 @@ jmp .next_entry
 
 .failure:
 
-mov bp, sp
-add sp, 16		; Get to the flags
-pop dx			; Pop and set carry flag
-or dx, 0000000000000001b
-push dx			; Put flags back in stack
-mov sp, bp		; Restore stack
+xor dl, dl
+not dl
 jmp .done
 
 .success:
@@ -309,25 +301,17 @@ mov es, ax
 push 0x2A
 int 0x80
 
-mov bp, sp
-add sp, 16		; Get to the flags
-pop dx			; Pop and clear carry flag
-and dx, 1111111111111110b
-push dx			; Put flags back in stack
-mov sp, bp		; Restore stack
+xor dl, dl
 
 .done:
 
-pop dx
-
-mov dl, byte [.DirectoryFlag]
+mov dh, byte [.DirectoryFlag]
 mov ax, word [.RawTime]
 mov bx, word [.RawDate]
 mov ecx, dword [.FileSize]
 
 pop es
 pop ds
-pop bp
 pop di
 pop si
 iret

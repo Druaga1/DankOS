@@ -13,12 +13,13 @@ mov ax, word [.EntryCounter]
 push 0x28
 int 0x80
 
-jc prompt_loop			; If end of table, return to prompt
+test dl, dl
+jnz prompt_loop			; If end of table, return to prompt
 
 inc word [.EntryCounter]
 
 mov dword [.Size], ecx	; Save size
-mov byte [.Directory], dl
+mov byte [.Directory], dh
 
 push 0x2C				; Convert to standard time
 int 0x80
