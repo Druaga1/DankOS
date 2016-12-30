@@ -39,13 +39,9 @@ jmp .find_space_loop			; Otherwise loop
 
 .get_switches:
 mov byte [si-1], 0x00			; Add a terminator to the input
-
-.get_switches_loop:
-lodsb							; Byte from SI
-stosb							; Save it in DI
-test al, al						; Is it 0x00?
-jz .done						; If yes, we're done
-jmp .get_switches_loop			; Otherwise loop
+push 0x27
+int 0x80
+jmp .done
 
 .no_switches:
 mov byte [di], 0x00
@@ -59,33 +55,36 @@ mov si, prompt_input
 mov di, exit_msg				; Exit command
 push 0x08
 int 0x80
-jc exit_cmd
+test dl, dl
+jz exit_cmd
 
 mov di, clear_msg				; Clear command
 push 0x08
 int 0x80
-jc clear_cmd
+test dl, dl
+jz clear_cmd
 
 mov di, help_msg				; Help command
 push 0x08
 int 0x80
-jc help_cmd
+test dl, dl
+jz help_cmd
 
 mov di, ls_msg					; Ls command
 push 0x08
 int 0x80
-jc ls_cmd
+test dl, dl
+jz ls_cmd
 
 
 
 
 
-push 0x13
-int 0x80						; Load current drive in DL
 mov si, prompt_input			; Prepare SI for start process function
 mov di, command_line_switches	; Prepare to pass the switches
 push 0x14
 int 0x80						; Try to start new process
+
 cmp eax, 0xFFFFFFFF				; If fail, add .bin and try again
 jne prompt_loop					; Otherwise restart the loop
 
@@ -94,12 +93,13 @@ jne prompt_loop					; Otherwise restart the loop
 
 add_bin:
 
-push 0x08
+push 0x09
 int 0x80
 cmp cx, 12
 jg invalid_command
 
 mov di, bin_added_buffer
+
 push 0x27
 int 0x80
 
@@ -119,8 +119,6 @@ int 0x80
 
 ; Try to load again
 
-push 0x13
-int 0x80						; Load current drive in DL
 mov si, bin_added_buffer		; Prepare SI for start process function
 mov di, command_line_switches	; Prepare to pass the switches
 push 0x14

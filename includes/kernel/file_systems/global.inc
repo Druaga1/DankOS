@@ -16,17 +16,16 @@ load_file:
 
 ; OUT:
 ; ecx		-->		File size (in bytes)
-
-; Carry if failure
+; dl		-->		0xFF if failure, cleared on success
 
 push ax
 push bx
-push dx
 push si
 push di
-push bp
 push es
 push gs
+
+push dx
 
 mov cx, es
 
@@ -60,31 +59,24 @@ jmp .success
 
 .failure:
 
-mov bp, sp
-add sp, 20		; Get to the flags
-pop dx			; Pop and set carry flag
-or dx, 0000000000000001b
-push dx			; Put flags back in stack
-mov sp, bp		; Restore stack
+pop dx
+
+xor dl, dl
+not dl
 jmp .done
 
 .success:
 
-mov bp, sp
-add sp, 20		; Get to the flags
-pop dx			; Pop and clear carry flag
-and dx, 1111111111111110b
-push dx			; Put flags back in stack
-mov sp, bp		; Restore stack
+pop dx
+
+xor dl, dl
 
 .done:
 
 pop gs
 pop es
-pop bp
 pop di
 pop si
-pop dx
 pop bx
 pop ax
 iret
@@ -97,9 +89,9 @@ iret
 
 fat_get_metadata:
 
-; ****************************************
-;     Returns the metadata of an entry
-; ****************************************
+; *****************************************************************
+;     Returns the metadata of an entry in the current directory
+; *****************************************************************
 
 ; IN: DS:SI file name
 
@@ -207,9 +199,9 @@ iret
 
 directory_scanner:
 
-; **********************************************************
-;     Scans the content of the directory (current drive)
-; **********************************************************
+; **************************************************
+;     Scans the content of the current directory
+; **************************************************
 
 ; IN:
 ; ax		-->		Directory entry number
@@ -309,13 +301,6 @@ jmp .done
 
 .success:
 
-mov bp, sp
-add sp, 16		; Get to the flags
-pop dx			; Pop and clear carry flag
-and dx, 1111111111111110b
-push dx			; Put flags back in stack
-mov sp, bp		; Restore stack
-
 mov si, .FatNameBuffer				; Convert name
 mov di, word [.TargetBuffer]
 mov ax, word [.TargetSegment]
@@ -323,6 +308,13 @@ mov es, ax
 
 push 0x2A
 int 0x80
+
+mov bp, sp
+add sp, 16		; Get to the flags
+pop dx			; Pop and clear carry flag
+and dx, 1111111111111110b
+push dx			; Put flags back in stack
+mov sp, bp		; Restore stack
 
 .done:
 

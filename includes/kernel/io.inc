@@ -5,7 +5,7 @@
 ; function_print_integer:
 ;   Prints a 32-bit integer number on screen.
 ;     number in EAX
-;     DL = 1 if right align, 0 if left
+;     DL = 1 if right align, 0 if not
 ;     CL = minimum number of digits to display (pads with ASCII 0s)
 
 ; function_print_integer_hex:
@@ -25,7 +25,7 @@
 ; function_compare_strings:
 ;   Compares 2 strings (0x00 terminated).
 ;     strings in DS:SI and ES:DI
-;     returns carry if the strings are equal
+;     returns DL = 0x00 if equal 0xFF if not
 
 ; function_string_length:
 ;   Returns the length of a string (0x00 terminated).
@@ -330,7 +330,6 @@ function_compare_strings:
 	push ax
 	push si
 	push di
-	push bp
 	.loop:
 		lodsb
 		mov ah, byte [es:di]
@@ -342,25 +341,14 @@ function_compare_strings:
 		jmp .loop
 
 	.not_equal:
-		mov bp, sp
-		add sp, 12		; Get to the flags
-		pop ax			; Pop and clear carry flag
-		and ax, 1111111111111110b
-		push ax			; Put flags back in stack
-		mov sp, bp		; Restore stack
+		xor dl, dl
+		not dl
 		jmp .done
 
 	.equal:
-		mov bp, sp
-		add sp, 12		; Get to the flags
-		pop ax			; Pop and set carry flag
-		or ax, 0000000000000001b
-		push ax			; Put flags back in stack
-		mov sp, bp		; Restore stack
-		jmp .done
+		xor dl, dl
 
 	.done:
-		pop bp
 		pop di
 		pop si
 		pop ax
@@ -608,6 +596,8 @@ function_string_to_integer:
 function_string_copy:
 
 	push ax
+	push si
+	push di
 
 	.loop:
 		lodsb
@@ -617,6 +607,8 @@ function_string_copy:
 		jmp .loop
 
 	.done:
+		pop di
+		pop si
 		pop ax
 		iret
 

@@ -85,7 +85,8 @@ mov es, ax
 mov bx, 0x0100					; Load at offset 0x0100
 push 0x12
 int 0x80						; Load program
-jc .drop_out					; If file not found, drop out
+cmp dl, 0xFF
+je .drop_out					; If file not found, drop out
 cmp ecx, 0x0000FFFF				; Test if program is too big (> 64KB)
 jg .drop_out					; If it is, drop out
 
