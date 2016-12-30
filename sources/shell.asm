@@ -4,6 +4,11 @@ org 0x0100
 
 bits 16							; 16-bit real mode
 
+mov ax, 8192					; Reserve an 8kb segment of memory for cat
+push 0x19
+int 0x80
+mov word [CatBuffer], cx		; Save segment
+
 mov si, intro					; Print intro
 push 0x02
 int 0x80
@@ -75,6 +80,12 @@ push 0x08
 int 0x80
 test dl, dl
 jz ls_cmd
+
+mov di, cat_msg					; Cat command
+push 0x08
+int 0x80
+test dl, dl
+jz cat_cmd
 
 
 
@@ -157,6 +168,7 @@ exit_msg			db	'exit', 0x00
 clear_msg			db	'clear', 0x00
 help_msg			db	'help', 0x00
 ls_msg				db	'ls', 0x00
+cat_msg				db	'cat', 0x00
 
 
 
@@ -165,3 +177,4 @@ ls_msg				db	'ls', 0x00
 %include 'includes/shell/clear.inc'
 %include 'includes/shell/help.inc'
 %include 'includes/shell/ls.inc'
+%include 'includes/shell/cat.inc'
