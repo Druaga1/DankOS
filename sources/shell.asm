@@ -87,6 +87,12 @@ int 0x80
 test dl, dl
 jz cat_cmd
 
+mov di, cd_msg					; Cd command
+push 0x08
+int 0x80
+test dl, dl
+jz cd_cmd
+
 
 
 
@@ -169,6 +175,7 @@ clear_msg			db	'clear', 0x00
 help_msg			db	'help', 0x00
 ls_msg				db	'ls', 0x00
 cat_msg				db	'cat', 0x00
+cd_msg				db	'cd', 0x00
 
 
 
@@ -178,3 +185,4 @@ cat_msg				db	'cat', 0x00
 %include 'includes/shell/help.inc'
 %include 'includes/shell/ls.inc'
 %include 'includes/shell/cat.inc'
+%include 'includes/shell/cd.inc'

@@ -430,8 +430,32 @@ function_string_to_fat_name:
 
 	push ax
 	push cx
+	push dx
 	push si
 	push di
+
+	push di
+	push es
+
+	mov ax, 0x9000
+	mov es, ax
+
+	mov di, .dot_dot_entry
+	push 0x08
+	int 0x80
+
+	test dl, dl
+	jz .ignore
+
+	mov di, .dot_entry
+	push 0x08
+	int 0x80
+
+	test dl, dl
+	jz .ignore
+
+	pop es
+	pop di
 
 	mov cl, 11
 
@@ -501,9 +525,35 @@ function_string_to_fat_name:
 	.done:
 		pop di
 		pop si
+		pop dx
 		pop cx
 		pop ax
 		iret
+
+	.ignore:
+
+		pop es
+		pop di
+
+	mov cx, 11
+
+	.clear_buffer1:
+		mov al, ' '
+		stosb
+		loop .clear_buffer1
+
+		pop di
+		push di
+
+		.copy_string:
+		lodsb
+		test al, al
+		jz .done
+		stosb
+		jmp .copy_string
+
+.dot_dot_entry		db	'..', 0x00
+.dot_entry			db	'.', 0x00
 
 function_fat_name_to_string:
 

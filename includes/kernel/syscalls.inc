@@ -190,11 +190,10 @@ cmp word [ss:(bp-2)], 0x20
 xchg sp, bp
 je timer_read
 
-
-
-
-
-
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x21
+xchg sp, bp
+je load_dir
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x22

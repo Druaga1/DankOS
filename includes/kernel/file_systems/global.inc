@@ -35,11 +35,16 @@ mov gs, ax
 mov word [gs:.TargetSegment], cx
 mov word [gs:.TargetBuffer], bx
 
-push 0x2B						; Get starting cluster and size
+xor dl, dl
+push 0x2B						; Get starting cluster and size (file)
 int 0x80
 
+test al, al
+jnz .failure					; Check for success
+
+mov ax, si
 test ax, ax
-jz .failure						; Check for success
+jz .success						; Check for empty file
 
 push cx
 
@@ -86,6 +91,73 @@ iret
 .TargetBuffer  dw 0x0000
 
 
+load_dir:
+
+; *************************************
+;     Loads a new working directory
+; *************************************
+
+; IN:
+; ds:si		-->		Directory name
+
+; OUT:
+; dl		-->		0xFF if failure, cleared on success
+
+push ax
+push bx
+push cx
+push si
+push di
+push es
+
+push dx
+
+mov ax, 0x9000
+mov es, ax
+
+mov dl, 0x01
+push 0x2B						; Get starting cluster and size (directory)
+int 0x80
+
+test al, al
+jnz .failure					; Check for success
+
+mov ax, si
+
+push 0x13						; Get current drive
+int 0x80
+
+call erase_dir_cache			; Erase the directory cache
+mov bx, CurrentDirectoryCache	; Load in the current directory cache
+
+call fat_load_chain				; Load chain into the buffer
+
+jmp .success
+
+.failure:
+
+pop dx
+
+xor dl, dl
+not dl
+jmp .done
+
+.success:
+
+pop dx
+
+xor dl, dl
+
+.done:
+
+pop es
+pop di
+pop si
+pop cx
+pop bx
+pop ax
+iret
+
 
 fat_get_metadata:
 
@@ -94,14 +166,15 @@ fat_get_metadata:
 ; *****************************************************************
 
 ; IN: DS:SI file name
+;     DL = 1 for dir, 0 for file
 
 ; OUT:
-;      AX = starting cluster, 0x0000 if not found
+;      SI = starting cluster, 0x0000 if not found
+;      AL = 0x00 if success, 0xFF if not found
 ;      BX = raw FAT time
 ;      ECX = file size
 ;      DX = raw FAT date
 
-push si
 push di
 push ds
 push es
@@ -116,6 +189,9 @@ push 0x17
 int 0x80
 
 mov ds, ax
+
+mov byte [.DirectoryFlag], dl
+mov byte [.Success], 0x00
 
 mov di, CurrentDirectoryCache
 mov word [.EntryCounter], 0x0000
@@ -141,6 +217,18 @@ jne .skip_entry
 loop .check_name_loop
 
 ; FILE FOUND!!!
+
+mov al, byte [di]
+and al, 0x10			; Directory?
+jnz .directory
+cmp byte [.DirectoryFlag], 0x00
+jne .skip_entry
+jmp .get_metadata
+.directory:
+cmp byte [.DirectoryFlag], 0x01
+jne .skip_entry
+
+.get_metadata:
 
 add di, 11				; Get raw creation time
 mov ax, word [es:di]
@@ -170,13 +258,14 @@ jmp .next_entry
 
 .not_found:
 
-mov word [.Cluster], 0x0000
+mov byte [.Success], 0xFF
 
 .done:
 
 pop eax
 
-mov ax, word [.Cluster]
+mov al, byte [.Success]
+mov si, word [.Cluster]
 mov bx, word [.RawTime]
 mov ecx, dword [.FileSize]
 mov dx, word [.RawDate]
@@ -184,15 +273,16 @@ mov dx, word [.RawDate]
 pop es
 pop ds
 pop di
-pop si
 iret
 
 
+.Success		db	0x00
 .EntryCounter	dw	0x0000
 .Cluster		dw	0x0000
 .FileSize		dd	0x00000000
 .RawDate		dw	0x0000
 .RawTime		dw	0x0000
+.DirectoryFlag	db	0x00
 .ConvertedName	times 12 db 0x00
 
 

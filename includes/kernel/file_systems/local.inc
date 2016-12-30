@@ -123,8 +123,25 @@ ret
 
 
 
+erase_dir_cache:
 
+push ax
+push es
+push di
 
+mov ax, 0x9000
+mov es, ax
+
+mov di, CurrentDirectoryCache
+mov cx, 0x2000
+xor ax, ax
+
+rep stosw
+
+pop di
+pop es
+pop ax
+ret
 
 
 
