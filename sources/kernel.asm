@@ -36,6 +36,8 @@ mov word [0x0200], system_call
 mov word [0x0202], 0x9000
 pop ds
 
+mov byte [BootDrive], dl		; Save boot drive
+
 push 0x29				; Set current drive
 int 0x80
 
@@ -88,6 +90,10 @@ int 0x80
 push 0x18
 int 0x80						; Pause
 
+mov dl, byte [BootDrive]		; Set the current drive to the boot drive
+push 0x29
+int 0x80
+
 jmp reload						; Reload shell
 
 
@@ -105,10 +111,11 @@ data:
 ShellName		db	'shell.bin', 0x00
 ProcessWarning1	db	0x0A, "Kernel: The root process has been terminated,"
 				db	0x0A, "        process exit code: ", 0x00
-ProcessWarning2	db	0x0A, "        The kernel will now reload 'init.bin'."
+ProcessWarning2	db	0x0A, "        The kernel will now reload 'shell.bin'."
 				db	0x0A, "Press a key to continue...", 0x00
 KernelRunningMsg	db	"The kernel is already loaded.", 0x0A, 0x00
 ShellSwitches	db	0x00
+BootDrive		db	0x00
 
 
 ;Includes
@@ -126,6 +133,7 @@ ShellSwitches	db	0x00
 %include 'includes/kernel/file_systems/global.inc'
 %include 'includes/kernel/file_systems/local.inc'
 %include 'includes/kernel/file_systems/fat12.inc'
+%include 'includes/kernel/file_systems/path_converter.inc'
 
 ;ASCII splash screen
 

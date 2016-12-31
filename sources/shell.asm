@@ -15,6 +15,13 @@ int 0x80
 
 prompt_loop:
 
+mov di, CurrentDir
+push 0x2E						; Get current dir
+int 0x80
+mov si, CurrentDir
+push 0x02						; Print current dir
+int 0x80
+
 mov si, prompt					; Draw prompt
 push 0x02
 int 0x80
@@ -166,6 +173,8 @@ bin_added_buffer	times 13 db 0x00
 command_line_switches	times 0x100 db 0x00
 
 bin_msg		db	'.bin', 0x00
+
+CurrentDir	times 130 db 0x00
 
 
 internal_commands:

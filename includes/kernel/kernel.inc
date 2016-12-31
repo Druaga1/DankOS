@@ -38,6 +38,7 @@ mov ax, 0x9000
 mov ds, ax
 
 mov byte [CurrentDrive], dl			; Set up the current drive variable
+mov word [CurrentDirectoryPath], 0x002F	; Set the current directory path
 
 call fat_load_root					; Load the root directory
 

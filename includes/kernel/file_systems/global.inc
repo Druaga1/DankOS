@@ -115,6 +115,8 @@ push dx
 mov ax, 0x9000
 mov es, ax
 
+mov word [es:.DirName], si
+
 mov dl, 0x01
 push 0x2B						; Get starting cluster and size (directory)
 int 0x80
@@ -152,6 +154,12 @@ jmp .done
 
 .success:
 
+mov si, word [es:.DirName]
+
+mov di, CurrentDirectoryPath		; Save current path
+push 0x2F
+int 0x80
+
 pop dx
 
 xor dl, dl
@@ -165,6 +173,37 @@ pop cx
 pop bx
 pop ax
 iret
+
+.DirName	dw	0x0000
+
+
+
+get_current_dir:
+
+; *****************************************
+;     Returns the current path in ES:DI
+; *****************************************
+
+push ax
+push si
+push ds
+
+mov ax, 0x9000
+mov ds, ax
+
+mov si, CurrentDirectoryPath
+push 0x27
+int 0x80
+
+pop ds
+pop si
+pop ax
+iret
+
+
+
+
+
 
 
 fat_get_metadata:

@@ -75,6 +75,10 @@
 ;     CL = Months
 ;     DX = Years
 
+; function_string_end:
+;   Get to the end of the string, DI will point to the terminator
+;     ES:DI string
+
 function_print_integer:
 
 	push eax
@@ -659,6 +663,21 @@ function_string_copy:
 	.done:
 		pop di
 		pop si
+		pop ax
+		iret
+
+function_string_end:
+
+	push ax
+
+	.loop:
+		mov al, byte [es:di]
+		test al, al
+		jz .done
+		inc di
+		jmp .loop
+
+	.done:
 		pop ax
 		iret
 

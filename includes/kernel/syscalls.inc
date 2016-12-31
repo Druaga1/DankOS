@@ -250,6 +250,21 @@ cmp word [ss:(bp-2)], 0x2C
 xchg sp, bp
 je function_fat_time_to_integer
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x2D
+xchg sp, bp
+je function_string_end
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x2E
+xchg sp, bp
+je get_current_dir
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x2F
+xchg sp, bp
+je fat_path_converter
+
 
 
 
