@@ -130,8 +130,16 @@ int 0x80
 call erase_dir_cache			; Erase the directory cache
 mov bx, CurrentDirectoryCache	; Load in the current directory cache
 
+test ax, ax						; Check if chain points to 0x0000 (root)
+jz .load_root
+
 call fat_load_chain				; Load chain into the buffer
 
+jmp .success
+
+.load_root:
+
+call fat_load_root
 jmp .success
 
 .failure:
