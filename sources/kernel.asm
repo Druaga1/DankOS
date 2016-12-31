@@ -24,7 +24,7 @@ mov es, ax
 mov fs, ax
 mov gs, ax
 mov ss, ax
-mov sp, 0xFFF0						; Move stack to 0xFFF0
+mov sp, 0x7FF0						; Move stack to 0x7FF0
 sti									; Enable interrupts back
 
 ; **** Bootup routines ****
@@ -76,6 +76,7 @@ mov si, ProcessWarning1			; Print warning message (part 1)
 push 0x02
 int 0x80
 
+xor cl, cl
 xor dl, dl
 push 0x06
 int 0x80						; Print exit code
