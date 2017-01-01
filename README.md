@@ -1,7 +1,5 @@
 # DankOS
-"It's dank and it's an OS"
-
-A simple, real mode, OS just for the heck of it!
+A really simple Real Mode OS, in honour of youtuber Druaga1. http://dankos.org
 
 # Building instructions
 (NASM is required)
