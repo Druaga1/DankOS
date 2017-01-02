@@ -100,6 +100,12 @@ int 0x80
 test dl, dl
 jz cd_cmd
 
+mov di, time_msg				; Time command
+push 0x08
+int 0x80
+test dl, dl
+jz time_cmd
+
 
 
 
@@ -185,6 +191,7 @@ help_msg			db	'help', 0x00
 ls_msg				db	'ls', 0x00
 cat_msg				db	'cat', 0x00
 cd_msg				db	'cd', 0x00
+time_msg			db	'time', 0x00
 
 
 
@@ -195,3 +202,4 @@ cd_msg				db	'cd', 0x00
 %include 'includes/shell/ls.inc'
 %include 'includes/shell/cat.inc'
 %include 'includes/shell/cd.inc'
+%include 'includes/shell/time.inc'
