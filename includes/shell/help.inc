@@ -18,6 +18,7 @@ db	" ls        --     Lists the files in the drive.", 0x0A
 db	" cd        --     Changes the present working directory.", 0x0A
 db	" cat       --     Displays the content of a file.", 0x0A
 db	" time      --     Displays the current time.", 0x0A
+db	" debug     --     Command to debug system calls.", 0x0A
 db	" help      --     Shows this list.", 0x0A
 db	" exit      --     Closes the shell.", 0x0A
 db	0x00

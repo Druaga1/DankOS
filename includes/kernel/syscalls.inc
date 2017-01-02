@@ -265,6 +265,11 @@ cmp word [ss:(bp-2)], 0x2F
 xchg sp, bp
 je fat_path_converter
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x30
+xchg sp, bp
+je fat_write_entry
+
 
 
 

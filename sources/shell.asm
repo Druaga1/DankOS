@@ -106,6 +106,12 @@ int 0x80
 test dl, dl
 jz time_cmd
 
+mov di, debug_msg				; Debug command
+push 0x08
+int 0x80
+test dl, dl
+jz debug_cmd
+
 
 
 
@@ -192,6 +198,7 @@ ls_msg				db	'ls', 0x00
 cat_msg				db	'cat', 0x00
 cd_msg				db	'cd', 0x00
 time_msg			db	'time', 0x00
+debug_msg			db	'debug', 0x00
 
 
 
@@ -203,3 +210,4 @@ time_msg			db	'time', 0x00
 %include 'includes/shell/cat.inc'
 %include 'includes/shell/cd.inc'
 %include 'includes/shell/time.inc'
+%include 'includes/shell/debug.inc'
