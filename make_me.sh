@@ -51,17 +51,16 @@ do
 	base_name=${base_name:8}
 	printf "Assembling '$asm_file'...\n"
     nasm "$asm_file" -f bin -o "tmp/${base_name}.bin"
+	# Did it work?
+		if [ $? == 1 ]
+		then
+		  printf "Something went wrong here...\n"
+		  printf "Please check your sources for errors.\n"
+		  exit 1
+		else
+		  printf "Success.\n"
+		fi
 done
-
-# Did it work?
-if [ $? == 1 ]
-then
-  printf "Something went wrong here...\n"
-  printf "Please check if you have nasm installed.\n"
-  exit 1
-else
-  printf "Success.\n"
-fi
 
 printf "Renaming kernel...\n"
 mv tmp/kernel.bin tmp/kernel.sys
