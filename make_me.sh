@@ -3,11 +3,13 @@
 printf "== DankOS autobuild tool ==\n\n"
 printf "Welcome! :D\n\n"
 
+# Are you root?
 if [[ $EUID -ne 0 ]]; then
-printf "Must be run as root, because of the mounts!\n"
+printf "Error: This script must be run as root, because of the mounting.\n"
 exit 1
 fi
 
+# Backup data to a "dankos.old" file.
 printf "All data previously stored in 'dankos.img' will be lost (if it exists)!\n"
 printf "A 'dankos.old' backup will be made as a failsafe.\n"
 rm dankos.old 2> /dev/null
@@ -16,8 +18,29 @@ mv dankos.img dankos.old 2> /dev/null
 printf "Assembling bootloader...\n"
 nasm bootloader/bootloader.asm -f bin -o dankos.img
 
+# Make sure the process went through
+if [ $? == 1 ]
+then
+  printf "Something went wrong here...\n"
+  printf "Please check if you have nasm installed.\n"
+  exit 1
+else
+  printf "Success.\n"
+fi
+
+# Create a image for DankOS to be stored in
 printf "Expanding image...\n"
 dd bs=512 count=2879 status=none if=/dev/zero >> dankos.img
+
+# Make sure the process went through (again)
+if [ $? == 1 ]
+then
+  printf "Something went wrong here...\n"
+  printf "Please check your disk space or check if you have dd.\n"
+  exit 1
+else
+  printf "Success.\n"
+fi
 
 printf "Creating temporary folder to store binaries...\n"
 mkdir tmp
@@ -30,6 +53,16 @@ do
 	printf "Assembling '$asm_file'...\n"
     nasm "$asm_file" -f bin -o "tmp/${base_name}.bin"
 done
+
+# Did it work?
+if [ $? == 1 ]
+then
+  printf "Something went wrong here...\n"
+  printf "Please check if you have nasm installed.\n"
+  exit 1
+else
+  printf "Success.\n"
+fi
 
 printf "Renaming kernel...\n"
 mv tmp/kernel.bin tmp/kernel.sys
