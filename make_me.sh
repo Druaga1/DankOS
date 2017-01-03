@@ -1,7 +1,6 @@
 #!/bin/bash
 
 printf "== DankOS autobuild tool ==\n\n"
-printf "Welcome! :D\n\n"
 
 # Are you root?
 if [[ $EUID -ne 0 ]]; then
