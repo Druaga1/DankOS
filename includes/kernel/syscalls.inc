@@ -270,6 +270,26 @@ cmp word [ss:(bp-2)], 0x30
 xchg sp, bp
 je fat_write_entry
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x31
+xchg sp, bp
+je floppy_write_sectors
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x32
+xchg sp, bp
+je floppy_write_byte
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x33
+xchg sp, bp
+je floppy_write_word
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x34
+xchg sp, bp
+je floppy_write_dword
+
 
 
 

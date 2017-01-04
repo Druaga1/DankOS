@@ -121,12 +121,8 @@ BootDrive		db	0x00
 
 %include 'includes/kernel/internal/fat_name_to_string.inc'
 %include 'includes/kernel/internal/fat_time_to_integer.inc'
-%include 'includes/kernel/internal/floppy_read_byte.inc'
-%include 'includes/kernel/internal/floppy_read_dword.inc'
 %include 'includes/kernel/internal/floppy_read_sector.inc'
-%include 'includes/kernel/internal/floppy_read_sectors.inc'
-%include 'includes/kernel/internal/floppy_read_word.inc'
-%include 'includes/kernel/internal/hd_mapper.inc'
+%include 'includes/kernel/internal/floppy_write_sector.inc'
 %include 'includes/kernel/internal/string_to_fat_name.inc'
 
 ;Includes (external routines)
@@ -144,6 +140,14 @@ BootDrive		db	0x00
 %include 'includes/kernel/external/string_to_integer.inc'
 %include 'includes/kernel/external/timer_read.inc'
 %include 'includes/kernel/external/upper_to_lowercase.inc'
+%include 'includes/kernel/external/floppy_read_sectors.inc'
+%include 'includes/kernel/external/floppy_read_word.inc'
+%include 'includes/kernel/external/floppy_read_byte.inc'
+%include 'includes/kernel/external/floppy_read_dword.inc'
+%include 'includes/kernel/external/floppy_write_sectors.inc'
+%include 'includes/kernel/external/floppy_write_word.inc'
+%include 'includes/kernel/external/floppy_write_byte.inc'
+%include 'includes/kernel/external/floppy_write_dword.inc'
 
 ;Includes (kernel routines and stuff)
 

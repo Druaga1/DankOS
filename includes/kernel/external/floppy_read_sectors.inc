@@ -15,10 +15,6 @@ push ax									; Save GPRs
 push bx
 push cx
 push dx
-push ds									; Save DS
-
-mov dx, 0x9000							; Point DS to kernel space
-mov ds, dx
 
 .loop:
 
@@ -31,7 +27,6 @@ add bx, 512								; Add 512 to the buffer
 loop .loop								; Loop!
 
 .done:
-pop ds
 pop dx
 pop cx									; Restore GPRs
 pop bx

@@ -1,11 +1,11 @@
-floppy_read_sector:
+floppy_write_sector:
 
-; ********************************************************************
-;     Reads a floppy sector with an LBA address (internal routine)
-; ********************************************************************
+; *********************************************************************
+;     Writes a floppy sector with an LBA address (internal routine)
+; *********************************************************************
 
 ; IN:
-; AX = LBA sector to load
+; AX = LBA sector to write
 ; DL = Drive number
 ; ES = Buffer segment
 ; BX = Buffer offset
@@ -39,8 +39,8 @@ pop bx									; Restore target buffer from stack
 
 ; Prepare registers for BIOS int 0x13
 
-mov ah, 0x02							; Read sector function
-mov al, 1								; Read 1 sector
+mov ah, 0x03							; Write sector function
+mov al, 1								; Write 1 sector
 mov ch, byte [.absolute_track]			; Use data we calculated
 mov cl, byte [.absolute_sector]
 mov dh, byte [.absolute_head]
