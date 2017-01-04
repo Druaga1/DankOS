@@ -165,5 +165,6 @@ BootDrive		db	0x00
 
 %include 'includes/kernel/file_systems/global.inc'
 %include 'includes/kernel/file_systems/local.inc'
-%include 'includes/kernel/file_systems/fat12.inc'
+%include 'includes/kernel/file_systems/fat12_load_chain.inc'
+%include 'includes/kernel/file_systems/fat12_delete_chain.inc'
 %include 'includes/kernel/file_systems/path_converter.inc'
