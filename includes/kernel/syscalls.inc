@@ -78,32 +78,32 @@ je video_new_line
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x04
 xchg sp, bp
-je function_string_to_integer
+je string_to_integer
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x05
 xchg sp, bp
-je function_print_integer_hex
+je print_integer_hex
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x06
 xchg sp, bp
-je function_print_integer
+je print_integer
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x07
 xchg sp, bp
-je function_input_integer
+je input_integer
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x08
 xchg sp, bp
-je function_compare_strings
+je compare_strings
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x09
 xchg sp, bp
-je function_string_length
+je string_length
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x0A
@@ -138,7 +138,7 @@ je video_center_print_string
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x10
 xchg sp, bp
-je function_input_string
+je input_string
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x11
@@ -163,22 +163,22 @@ je start_new_program
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x15
 xchg sp, bp
-je function_lower_to_uppercase
+je lower_to_uppercase
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x16
 xchg sp, bp
-je function_upper_to_lowercase
+je upper_to_lowercase
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x17
 xchg sp, bp
-je function_string_to_fat_name
+je string_to_fat_name
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x18
 xchg sp, bp
-je function_pause
+je pause
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x19
@@ -223,7 +223,7 @@ je floppy_read_dword
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x27
 xchg sp, bp
-je function_string_copy
+je string_copy
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x28
@@ -238,7 +238,7 @@ je set_current_drive
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x2A
 xchg sp, bp
-je function_fat_name_to_string
+je fat_name_to_string
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x2B
@@ -248,12 +248,12 @@ je fat_get_metadata
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x2C
 xchg sp, bp
-je function_fat_time_to_integer
+je fat_time_to_integer
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x2D
 xchg sp, bp
-je function_string_end
+je string_end
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x2E

@@ -117,15 +117,44 @@ KernelRunningMsg	db	"The kernel is already loaded.", 0x0A, 0x00
 ShellSwitches	db	0x00
 BootDrive		db	0x00
 
+;Includes (internal routines)
 
-;Includes
+%include 'includes/kernel/internal/fat_name_to_string.inc'
+%include 'includes/kernel/internal/fat_time_to_integer.inc'
+%include 'includes/kernel/internal/floppy_read_byte.inc'
+%include 'includes/kernel/internal/floppy_read_dword.inc'
+%include 'includes/kernel/internal/floppy_read_sector.inc'
+%include 'includes/kernel/internal/floppy_read_sectors.inc'
+%include 'includes/kernel/internal/floppy_read_word.inc'
+%include 'includes/kernel/internal/hd_mapper.inc'
+%include 'includes/kernel/internal/string_to_fat_name.inc'
+
+;Includes (external routines)
+
+%include 'includes/kernel/external/compare_strings.inc'
+%include 'includes/kernel/external/input_integer.inc'
+%include 'includes/kernel/external/input_string.inc'
+%include 'includes/kernel/external/lower_to_uppercase.inc'
+%include 'includes/kernel/external/pause.inc'
+%include 'includes/kernel/external/print_integer.inc'
+%include 'includes/kernel/external/print_integer_hex.inc'
+%include 'includes/kernel/external/string_copy.inc'
+%include 'includes/kernel/external/string_end.inc'
+%include 'includes/kernel/external/string_length.inc'
+%include 'includes/kernel/external/string_to_integer.inc'
+%include 'includes/kernel/external/timer_read.inc'
+%include 'includes/kernel/external/upper_to_lowercase.inc'
+
+;Includes (kernel routines and stuff)
 
 %include 'includes/kernel/syscalls.inc'
+%include 'includes/kernel/variables.inc'
+%include 'includes/kernel/splash.inc'
 %include 'includes/kernel/kernel.inc'
+
+; TO BE SORTED
+
 %include 'includes/kernel/video.inc'
-%include 'includes/kernel/io.inc'
-%include 'includes/kernel/disk.inc'
-%include 'includes/kernel/timer.inc'
 %include 'includes/kernel/speaker.inc'
 
 ;File systems
@@ -134,11 +163,3 @@ BootDrive		db	0x00
 %include 'includes/kernel/file_systems/local.inc'
 %include 'includes/kernel/file_systems/fat12.inc'
 %include 'includes/kernel/file_systems/path_converter.inc'
-
-;ASCII splash screen
-
-%include 'includes/kernel/splash.inc'
-
-;Global variables
-
-%include 'includes/kernel/variables.inc'
