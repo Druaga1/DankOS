@@ -126,6 +126,8 @@ jnz .failure					; Check for success
 
 mov ax, si
 
+mov word [es:CurrentDirectoryCluster], ax
+
 push 0x13						; Get current drive
 int 0x80
 

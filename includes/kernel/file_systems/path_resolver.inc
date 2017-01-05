@@ -78,8 +78,10 @@ jmp .loop
 
 .fetch_target_entry:
 mov dl, byte [es:.DirectoryFlag]
-mov dx, 0x9000
-mov ds, dx
+push ax
+mov ax, 0x9000
+mov ds, ax
+pop ax
 mov si, .FileName
 call fat_get_metadata
 
