@@ -318,7 +318,7 @@ fat_get_metadata:
 ;     Returns the metadata of an entry in the current directory
 ; *****************************************************************
 
-; IN: DS:SI file name
+; IN: DS:SI file/dir name
 ;     DL = 1 for dir, 0 for file
 
 ; OUT:
@@ -426,7 +426,7 @@ mov dx, word [.RawDate]
 pop es
 pop ds
 pop di
-iret
+ret
 
 
 .Success		db	0x00
