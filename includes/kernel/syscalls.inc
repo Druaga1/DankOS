@@ -298,6 +298,29 @@ je floppy_write_dword
 
 
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x80
+xchg sp, bp
+je enter_graphics_mode
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x81
+xchg sp, bp
+je draw_pixel
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x82
+xchg sp, bp
+je exit_graphics_mode
+
+
+
+
+
+
+
+
+
 ; *** Invalid system call exception handler
 
 mov ax, 0x9000

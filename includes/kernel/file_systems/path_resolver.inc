@@ -39,7 +39,7 @@ mov cx, 12
 .get_file_name:
 lodsb
 cmp al, '/'
-jz .fetch_entry
+je .fetch_entry
 stosb
 test al, al
 jz .fetch_target_entry

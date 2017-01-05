@@ -21,6 +21,8 @@ push dx
 push bx									; Save target buffer in stack
 push dx									; Save drive number in stack
 
+mov byte [CacheStatus], 0x00			; Invalidate cache
+
 ; LBA to CHS
 
 xor dx, dx								; XOR DX for division

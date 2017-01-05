@@ -148,6 +148,9 @@ BootDrive		db	0x00
 %include 'includes/kernel/external/floppy_write_word.inc'
 %include 'includes/kernel/external/floppy_write_byte.inc'
 %include 'includes/kernel/external/floppy_write_dword.inc'
+%include 'includes/kernel/external/enter_graphics_mode.inc'
+%include 'includes/kernel/external/exit_graphics_mode.inc'
+%include 'includes/kernel/external/draw_pixel.inc'
 
 ;Includes (kernel routines and stuff)
 
