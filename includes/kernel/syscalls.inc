@@ -316,12 +316,7 @@ je exit_graphics_mode
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x83
 xchg sp, bp
-je draw_horizontal_line
-
-xchg sp, bp
-cmp word [ss:(bp-2)], 0x84
-xchg sp, bp
-je draw_vertical_line
+je draw_line
 
 
 

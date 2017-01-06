@@ -5,17 +5,11 @@ bits 16				; 16-bit real mode code
 push 0x80			; Enter graphics mode
 int 0x80
 
-mov bh,0x00
-mov bl,0x05
+mov bx, 0x3020
 mov dl,0x2
-mov cx,0x2020
+mov cx,0x1010
 
-push 0x83			;Draw Horizontal Line
-int 0x80
-
-mov dl,0x1
-
-push 0x84			;Draw Vertical Line
+push 0x83			;Draw Line
 int 0x80
 
 
@@ -27,9 +21,4 @@ int 0x80
 
 push 0x00			; Return to the command line
 int 0x80
-
-;	IN:	DL --> Color of pixel
-;		CH --> X Position
-;		CL --> Y Position
-;		BX --> Length
 
