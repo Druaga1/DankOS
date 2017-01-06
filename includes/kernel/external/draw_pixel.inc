@@ -1,7 +1,7 @@
 ;----------------------------------------------------------------------
 ;
 ;	IN:	DL --> Color of pixel
-;		CH --> X Position
+;		BX --> X Position
 ;		CL --> Y Position
 
 draw_pixel:
@@ -17,18 +17,12 @@ draw_pixel:
 	mov     ax, 0xA000     		; Set ES to graphics screen segment
 	mov     es, ax
 
-	push cx
-
 	mov 	ax, 320    			; Multiply Y by 320 and store in DI
 	xor		ch, ch
 	mul		cx
 	mov		di, ax
 
-	pop cx
-
-	xor		cl, cl
-	shr		cx, 8
-	add     di, cx         		; Add the X coordinate
+	add     di, bx         		; Add the X coordinate
 
 	pop dx
 
@@ -41,5 +35,3 @@ draw_pixel:
 	pop bx
 	pop ax
 	iret
-
-

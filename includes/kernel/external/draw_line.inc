@@ -1,10 +1,10 @@
 ;----------------------------------------------------------------------
 ;
 ;    IN: DL --> Color of pixel
-;        CH --> X Starting position
+;        BX --> X Starting position
 ;        CL --> Y Starting position
-;        BH --> X Ending position
-;        BL --> Y Ending position
+;        AX --> X Ending position
+;        CH --> Y Ending position
 draw_line:
 	push ax
 	push bx
@@ -14,9 +14,10 @@ draw_line:
 
 ; Point DS to kernel
 
+	push ax
 	mov ax, 0x9000
 	mov ds, ax
-
+	pop ax
 
 ; Using this algorithm from https://en.wikipedia.org/wiki/Bresenham's_line_algorithm
 
@@ -40,31 +41,24 @@ draw_line:
 
 ; Get "dx"
 
-	push cx
-	push bx
-	xor bl, bl
-	shr bx, 8
-	mov word [.dx], bx
-	xor cl, cl
-	shr cx, 8
-	sub word [.dx], cx
-	pop bx
-	pop cx
+	mov word [.dx], ax
+	sub word [.dx], bx
 
 ; Get "dy"
 
 	push cx
-	push bx
-	xor bh, bh
-	mov word [.dy], bx
+	xor cl, cl
+	shr cx, 8
+	mov word [.dy], cx
+	pop cx
+	push cx
 	xor ch, ch
 	sub word [.dy], cx
-	pop bx
 	pop cx
 
 ; Get "D"
 
-	push cx
+	push ax
 	push bx
 	mov ax, word [.dy]
 	mov bx, 2
@@ -72,14 +66,14 @@ draw_line:
 	sub ax, word [.dx]
 	mov word [.D], ax
 	pop bx
-	pop cx
+	pop ax
 
 ; For x from x0 to x1
 
 	.loop:
-	cmp ch, bh
+	cmp bx, ax
 	je .done
-	inc ch
+	inc bx
 
 
 ;	    plot(x,y)
@@ -98,8 +92,8 @@ draw_line:
 ;	    end if
 ;	    D = D + dy
 
-	mov ax, word [.dy]
-	add word [.D], ax
+	mov dx, word [.dy]
+	add word [.D], dx
 	jmp .loop
 
 ;	       y = y + 1
@@ -107,9 +101,9 @@ draw_line:
 
 	.do_stuff:
 	inc cl
-	mov ax, word [.D]
-	sub ax, word [.dx]
-	mov word [.D], ax
+	mov dx, word [.D]
+	sub dx, word [.dx]
+	mov word [.D], dx
 	jmp .stuff_done
 
 

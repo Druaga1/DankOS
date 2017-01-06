@@ -10,7 +10,7 @@ int 0x80
 push 0x03
 int 0x80
 
-mov byte [x0], al
+mov word [x0], ax
 
 mov si, line2
 push 0x02
@@ -32,7 +32,7 @@ int 0x80
 push 0x03
 int 0x80
 
-mov byte [x1], al
+mov word [x1], ax
 
 mov si, line4
 push 0x02
@@ -59,10 +59,10 @@ mov byte [colour], al
 push 0x80			; Enter graphics mode
 int 0x80
 
-mov ch, byte [x0]
+mov bx, word [x0]
 mov cl, byte [y0]
-mov bh, byte [x1]
-mov bl, byte [y1]
+mov ax, word [x1]
+mov ch, byte [y1]
 mov dl, byte [colour]
 
 push 0x83			;Draw Line
@@ -89,9 +89,9 @@ line5		db	'Colour: ', 0x00
 
 
 
-x0		db	0x00
+x0		dw	0x0000
 y0		db	0x00
-x1		db	0x00
+x1		dw	0x0000
 y1		db	0x00
 colour		db	0x00
 
