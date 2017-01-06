@@ -151,6 +151,7 @@ BootDrive		db	0x00
 %include 'includes/kernel/external/enter_graphics_mode.inc'
 %include 'includes/kernel/external/exit_graphics_mode.inc'
 %include 'includes/kernel/external/draw_pixel.inc'
+%include 'includes/kernel/external/line.inc'
 
 ;Includes (kernel routines and stuff)
 

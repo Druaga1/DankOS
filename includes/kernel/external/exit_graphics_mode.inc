@@ -9,25 +9,25 @@ exit_graphics_mode:
     int 10h                    ;call graphics interrupt
 
 
-; Prepare the screen
+	; Prepare the screen
 
-mov ax, 0x1003
-mov bl, 0x00
-xor bh, bh
-int 0x10				; Disable blinking with BIOS
+	mov ax, 0x1003
+	mov bl, 0x00
+	xor bh, bh
+	int 0x10				; Disable blinking with BIOS
 
-mov dh, 24
-mov dl, 80
-mov bh, 0x00
-mov ah, 0x02
-int 0x10				; Disable BIOS cursor
+	mov dh, 24
+	mov dl, 80
+	mov bh, 0x00
+	mov ah, 0x02
+	int 0x10				; Disable BIOS cursor
 
-mov ah, 0x02
-mov al, 0x70
-push 0x11
-int 0x80				; Set palette and reset screen
-push 0x0A
-int 0x80
+	mov ah, 0x02
+	mov al, 0x70
+	push 0x11
+	int 0x80				; Set palette and reset screen
+	push 0x0A
+	int 0x80
 
 
 	pop dx

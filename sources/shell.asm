@@ -112,6 +112,12 @@ int 0x80
 test dl, dl
 jz debug_cmd
 
+mov di, image_msg				; Image command
+push 0x08
+int 0x80
+test dl, dl
+jz image_cmd
+
 
 
 
@@ -199,6 +205,7 @@ cat_msg				db	'cat', 0x00
 cd_msg				db	'cd', 0x00
 time_msg			db	'time', 0x00
 debug_msg			db	'debug', 0x00
+image_msg			db	'image', 0x00
 
 
 
@@ -211,3 +218,4 @@ debug_msg			db	'debug', 0x00
 %include 'includes/shell/cd.inc'
 %include 'includes/shell/time.inc'
 %include 'includes/shell/debug.inc'
+%include 'includes/shell/image.inc'
