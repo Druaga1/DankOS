@@ -318,6 +318,11 @@ cmp word [ss:(bp-2)], 0x83
 xchg sp, bp
 je draw_line
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x84
+xchg sp, bp
+je draw_sprite
+
 
 
 
