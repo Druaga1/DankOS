@@ -43,22 +43,10 @@ int 0x80
 
 ; Prepare the screen
 
-mov ax, 0x1003
-mov bl, 0x00
-xor bh, bh
-int 0x10				; Disable blinking with BIOS
+push 0x80
+int 0x80
 
-mov dh, 24
-mov dl, 80
-mov bh, 0x00
-mov ah, 0x02
-int 0x10				; Disable BIOS cursor
-
-mov ah, 0x02
-mov al, 0x70
-push 0x11
-int 0x80				; Set palette and reset screen
-push 0x0A
+push 0x82
 int 0x80
 
 mov si, SplashScreen	; Display SplashScreen
