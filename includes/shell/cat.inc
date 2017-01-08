@@ -7,7 +7,7 @@ cmp byte [si], 0x00
 je .missing_parameter
 
 push es				; Set up target segment:offset
-mov ax, word [CatBuffer]
+mov ax, word [FileBuffer]
 mov es, ax
 xor bx, bx
 
@@ -21,7 +21,7 @@ jnz .failure
 mov bx, cx
 
 push ds
-mov ax, word [CatBuffer]
+mov ax, word [FileBuffer]
 mov ds, ax
 
 mov byte [bx], 0x00	; Add terminator to the file
@@ -54,7 +54,3 @@ jmp prompt_loop
 
 .missing_parameter_msg	db 'Required parameter missing: file name.', 0x0A, 0x00
 .failure_msg			db 'File not found.', 0x0A, 0x00
-
-
-
-CatBuffer				dw 0x0000

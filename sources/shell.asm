@@ -4,10 +4,10 @@ org 0x0100
 
 bits 16							; 16-bit real mode
 
-mov ax, 8192					; Reserve an 8kb segment of memory for cat
+mov ax, 0xFFFF					; Reserve a 64kb segment of memory for file operations
 push 0x19
 int 0x80
-mov word [CatBuffer], cx		; Save segment
+mov word [FileBuffer], cx		; Save segment
 
 mov si, intro					; Print intro
 push 0x02
@@ -193,6 +193,8 @@ command_line_switches	times 0x100 db 0x00
 bin_msg		db	'.bin', 0x00
 
 CurrentDir	times 130 db 0x00
+
+FileBuffer				dw 0x0000
 
 
 internal_commands:

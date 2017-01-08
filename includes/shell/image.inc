@@ -7,7 +7,7 @@ image_cmd:
 	je .missing_parameter
 
 	push es				; Set up target segment:offset
-	mov ax, word [CatBuffer]
+	mov ax, word [FileBuffer]
 	mov es, ax
 	xor bx, bx
 
@@ -18,39 +18,21 @@ image_cmd:
 	test dl, dl			; Check for failure
 	jnz .failure
 
-	mov bx, cx
-
 	push ds
-	mov ax, word [CatBuffer]
+	mov ax, word [FileBuffer]
 	mov ds, ax
 
-	mov byte [bx], 0xF0	; Add terminator to the file
-	xor si, si
-	push ax
 	push 0x80		; Enter graphics mode
 	int 0x80
-	
 
-.loop:
-	;Load color
-	cmp byte [si], 0xF0					; Is 0xF0?
-	je .done						; If yes, done
-	mov dl,byte [si]
-	inc si
-	;X Position
-	mov ch,byte [si]
-	inc si
-	;Y Position
-	mov cl,byte [si]
-	
-	push 0x81						;Draw pixel
+	xor si, si
+	xor bx, bx
+	xor cl, cl
+
+	push 0x84
 	int 0x80
-	inc si
-	jmp .loop
-	
-.done:
-	pop ax
 	pop ds
+
 	push 0x18		; Pause
 	int 0x80
 
