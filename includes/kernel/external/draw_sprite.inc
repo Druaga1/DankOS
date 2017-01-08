@@ -35,6 +35,8 @@ add byte [es:.SpriteY], cl
 
 .loop:
 lodsb
+cmp al, 0xFF
+je .compression
 mov dl, al
 cmp bx, word [es:.SpriteX]
 je .next_row
@@ -53,6 +55,31 @@ int 0x80
 inc bx
 jmp .loop
 
+.compression:
+lodsw
+mov cx, ax
+lodsb
+mov dl, al
+
+.compression_loop:
+cmp bx, word [es:.SpriteX]
+je .compression_next_row
+push 0x81
+int 0x80
+inc bx
+loop .compression_loop
+jmp .loop
+
+.compression_next_row:
+mov bx, word [es:.OriginalBX]
+inc cl
+cmp cl, byte [es:.SpriteY]
+je .done
+push 0x81
+int 0x80
+inc bx
+jmp .compression_loop
+
 .done:
 
 pop es
@@ -63,7 +90,6 @@ pop bx
 pop ax
 
 iret
-
 
 
 
