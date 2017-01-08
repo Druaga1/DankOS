@@ -11,6 +11,7 @@ CurrentDirectoryCluster	dw	0x0000
 
 ; Kernel
 
+KernelSpace				equ	0xFFFF
 TopSegment				dw	0x0050
 StackPointer			dd	0x00000000
 StackSegment			dw	0x0000

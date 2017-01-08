@@ -22,7 +22,7 @@ push dx
 push si
 push es
 
-mov ax, 0x9000
+mov ax, KernelSpace
 mov es, ax
 
 mov word [es:.OriginalBX], bx

@@ -12,7 +12,7 @@ push di
 push si
 push ds
 
-mov bx, 0x9000
+mov bx, KernelSpace
 mov ds, bx				; Point to kernel space
 
 cmp dl, 1

@@ -29,7 +29,7 @@ push dx
 
 mov cx, es
 
-mov ax, 0x9000
+mov ax, KernelSpace
 mov gs, ax
 
 mov word [gs:.TargetSegment], cx
@@ -112,7 +112,7 @@ push es
 
 push dx
 
-mov ax, 0x9000
+mov ax, KernelSpace
 mov es, ax
 
 mov word [es:.DirName], si
@@ -190,7 +190,7 @@ push ax
 push si
 push ds
 
-mov ax, 0x9000
+mov ax, KernelSpace
 mov ds, ax
 
 mov si, CurrentDirectoryPath
@@ -227,7 +227,7 @@ push di
 push ds
 push es
 
-mov ax, 0x9000
+mov ax, KernelSpace
 mov es, ax
 
 mov word [es:.Cluster], di
@@ -336,7 +336,7 @@ push es
 
 push eax
 
-mov ax, 0x9000
+mov ax, KernelSpace
 mov es, ax
 
 mov di, .ConvertedName			; Convert to fat name
@@ -464,7 +464,7 @@ push di
 push ds
 push es
 
-mov bx, 0x9000
+mov bx, KernelSpace
 mov ds, bx
 
 mov word [.EntryNumber], ax

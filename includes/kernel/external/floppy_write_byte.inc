@@ -16,7 +16,7 @@ push edx
 push ds
 push es
 
-mov cx, 0x9000			; Prepare DS and ES
+mov cx, KernelSpace			; Prepare DS and ES
 mov ds, cx
 mov es, cx
 

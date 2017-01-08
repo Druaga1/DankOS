@@ -2,23 +2,23 @@
 ;     The DankOS kernel. It contains core drivers and routines.
 ; *****************************************************************
 
-org 0x0100							; Bootloader loads us here (9000:0100)
+org 0x0100							; Bootloader loads us here (0100)
 bits 16								; 16-bit Real mode
 
 ; **** Check CS using a far call to verify that we're loaded in the proper spot by the bootloader ****
 ; ** if not, use a 'terminate execution' interrupt to return to the caller
 
-call 0x9000:check_cs				; Far call to the check routine
+call KernelSpace:check_cs			; Far call to the check routine
 
 check_cs:
 
 pop ax								; Pop call offset into AX
 pop bx								; Pop call segment into BX
-cmp bx, 0x9000						; Check if CS was 0x9000
+cmp bx, KernelSpace					; Check if CS was correctly loaded
 jne start_fail						; If it wasn't, cleanely abort execution
 
-cli									; Disable interrupts and set segments to 0x9000
-mov ax, 0x9000
+cli									; Disable interrupts and set segments to kernel space
+mov ax, KernelSpace
 mov ds, ax
 mov es, ax
 mov fs, ax
@@ -33,7 +33,7 @@ push ds								; Enable the interrupt 0x80 for the system API
 xor ax, ax
 mov ds, ax
 mov word [0x0200], system_call
-mov word [0x0202], 0x9000
+mov word [0x0202], KernelSpace
 pop ds
 
 mov byte [BootDrive], dl		; Save boot drive

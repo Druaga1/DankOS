@@ -27,6 +27,19 @@ else
   printf "Success.\n"
 fi
 
+printf "Assembling stage 2...\n"
+nasm bootloader/stage2.asm -f bin -o stage2.sys
+
+# Make sure the process went through
+if [ $? == 1 ]
+then
+  printf "Something went wrong here...\n"
+  printf "Please check if you have nasm installed.\n"
+  exit 1
+else
+  printf "Success.\n"
+fi
+
 # Create a image for DankOS to be stored in
 printf "Expanding image...\n"
 dd bs=512 count=2879 status=none if=/dev/zero >> dankos.img
@@ -75,6 +88,7 @@ sleep 3
 printf "Copying files to image...\n"
 cp -r extra/* mnt/ 2> /dev/null
 cp tmp/* mnt/
+cp stage2.sys mnt/
 sleep 3
 
 printf "Unmounting image...\n"
@@ -84,6 +98,7 @@ sleep 3
 printf "Cleaning up...\n"
 rm -rf tmp
 rm -rf mnt
+rm stage2.sys
 
 printf "Done!\n\n"
 printf "If everything executed correctly, a file named 'dankos.img'\n"

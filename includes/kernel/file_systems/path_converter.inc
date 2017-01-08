@@ -15,7 +15,7 @@ push si
 push di
 push gs
 
-mov ax, 0x9000			; GS to kernel
+mov ax, KernelSpace			; GS to kernel
 mov gs, ax
 
 mov word [gs:.TargetBuffer], di			; Save address of target location
@@ -59,7 +59,7 @@ push di
 push ds
 push es
 
-mov ax, 0x9000		; Point es and ds to kernel
+mov ax, KernelSpace		; Point es and ds to kernel
 mov ds, ax
 mov es, ax
 

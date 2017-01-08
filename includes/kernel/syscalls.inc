@@ -338,7 +338,7 @@ je clear_screen
 
 ; *** Invalid system call exception handler
 
-mov ax, 0x9000
+mov ax, KernelSpace
 mov ds, ax
 mov si, .invalid_call_msg
 push 0x02

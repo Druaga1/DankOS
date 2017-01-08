@@ -18,7 +18,7 @@ push di
 push ds
 push es
 
-mov ax, 0x9000
+mov ax, KernelSpace
 mov es, ax
 
 mov byte [es:.DirectoryFlag], dl
@@ -51,7 +51,7 @@ stosb
 mov dl, 1			; We're looking for a dir
 push si
 push ds
-mov ax, 0x9000
+mov ax, KernelSpace
 mov ds, ax
 mov si, .FileName
 call fat_get_metadata
@@ -79,7 +79,7 @@ jmp .loop
 .fetch_target_entry:
 mov dl, byte [es:.DirectoryFlag]
 push ax
-mov ax, 0x9000
+mov ax, KernelSpace
 mov ds, ax
 pop ax
 mov si, .FileName

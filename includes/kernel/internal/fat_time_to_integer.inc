@@ -12,7 +12,7 @@ fat_time_to_integer:
 
 push ds
 
-mov dx, 0x9000
+mov dx, KernelSpace
 mov ds, dx
 
 mov word [.RawTime], ax

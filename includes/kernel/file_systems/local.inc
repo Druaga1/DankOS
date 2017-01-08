@@ -19,7 +19,7 @@ push edx
 push ds
 push es
 
-mov ax, 0x9000
+mov ax, KernelSpace
 mov ds, ax
 mov es, ax
 
@@ -129,7 +129,7 @@ push ax
 push es
 push di
 
-mov ax, 0x9000
+mov ax, KernelSpace
 mov es, ax
 
 mov di, CurrentDirectoryCache

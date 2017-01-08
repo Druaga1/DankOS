@@ -1,5 +1,5 @@
 ; *********************************************************
-;     DankOS BOOTLOADER:  Loads KERNEL.SYS at 9000:0100
+;     DankOS BOOTLOADER:  Loads STAGE2.SYS at 0000:0500
 ; *********************************************************
 
 org 0x7C00						; BIOS loads us here (0000:7C00)
@@ -44,17 +44,17 @@ mov ss, bx
 mov sp, 0xFFF0					; Stack at segment top (0000:FFF0)
 sti								; Restore interrupts
 
-mov ax, 0x9000					; Set destination segment (ES) to 0x9000
+xor ax, ax						; Set destination segment (ES) to 0x0000
 mov es, ax
 mov si, kernel_name				; Load stage 2 file name pointer in SI, for use by FAT12 function
-mov bx, 0x0100					; And tell function to load the kernel at es:bx (9000:0100)
+mov bx, 0x0500					; And tell function to load the stage at es:bx (0000:0500)
 								; DL is already loaded with the correct drive
 
 call fat12_load_file			; Call load file function
 
 jc loading_error				; If error (the carry flag is set), cleanely halt the system
 
-jmp 0x9000:0x0100				; Otherwise jump to the newly loaded kernel :D
+jmp 0x0000:0x0500				; Otherwise jump to the newly loaded stage 2
 
 
 loading_error:
@@ -70,6 +70,6 @@ jmp .halt
 %include 'bootloader/bootloader_functions/boot_disk_functions.inc'	; Include disk and FAT12 functions
 %include 'bootloader/bootloader_functions/boot_fat12_functions.inc'
 
-kernel_name					db 'KERNEL  SYS'	; The full FAT12 name of the kernel
+kernel_name					db 'STAGE2  SYS'	; The full FAT12 name of the kernel
 times 510-($-$$)			db 0x00				; Fill rest with 0x00
 bios_signature				dw 0xAA55			; BIOS signature

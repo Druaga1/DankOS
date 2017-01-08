@@ -11,7 +11,7 @@ push di
 push ds
 push es
 
-mov ax, 0x9000
+mov ax, KernelSpace
 mov ds, ax
 mov es, ax
 

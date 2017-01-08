@@ -14,7 +14,7 @@ push di
 push di
 push es
 
-mov ax, 0x9000
+mov ax, KernelSpace
 mov es, ax
 
 mov di, .dot_dot_entry

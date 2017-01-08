@@ -16,7 +16,7 @@ push edx
 
 push ds
 
-mov cx, 0x9000					; Point DS to kernel space
+mov cx, KernelSpace					; Point DS to kernel space
 mov ds, cx
 
 mov word [.Cluster], ax			; Save starting cluster

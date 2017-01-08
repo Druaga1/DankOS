@@ -15,7 +15,7 @@ draw_line:
 ; Point DS to kernel
 
 	push ax
-	mov ax, 0x9000
+	mov ax, KernelSpace
 	mov ds, ax
 	pop ax
 
