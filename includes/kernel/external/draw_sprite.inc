@@ -78,7 +78,8 @@ je .done
 push 0x81
 int 0x80
 inc bx
-jmp .compression_loop
+loop .compression_loop
+jmp .loop
 
 .done:
 
