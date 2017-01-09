@@ -115,6 +115,16 @@ BootDrive		db	0x00
 
 ;Includes (external routines)
 
+;Video
+
+%include 'includes/kernel/external/video/enter_graphics_mode.inc'
+%include 'includes/kernel/external/video/exit_graphics_mode.inc'
+%include 'includes/kernel/external/video/draw_pixel.inc'
+%include 'includes/kernel/external/video/draw_line.inc'
+%include 'includes/kernel/external/video/draw_sprite.inc'
+%include 'includes/kernel/external/video/clear_screen.inc'
+%include 'includes/kernel/external/video/push_frame.inc'
+
 %include 'includes/kernel/external/compare_strings.inc'
 %include 'includes/kernel/external/input_integer.inc'
 %include 'includes/kernel/external/input_string.inc'
@@ -136,12 +146,6 @@ BootDrive		db	0x00
 %include 'includes/kernel/external/floppy_write_word.inc'
 %include 'includes/kernel/external/floppy_write_byte.inc'
 %include 'includes/kernel/external/floppy_write_dword.inc'
-%include 'includes/kernel/external/enter_graphics_mode.inc'
-%include 'includes/kernel/external/exit_graphics_mode.inc'
-%include 'includes/kernel/external/draw_pixel.inc'
-%include 'includes/kernel/external/draw_line.inc'
-%include 'includes/kernel/external/draw_sprite.inc'
-%include 'includes/kernel/external/clear_screen.inc'
 
 ;Includes (kernel routines and stuff)
 

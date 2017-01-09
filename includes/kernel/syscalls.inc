@@ -328,6 +328,11 @@ cmp word [ss:(bp-2)], 0x85
 xchg sp, bp
 je clear_screen
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x86
+xchg sp, bp
+je push_frame
+
 
 
 

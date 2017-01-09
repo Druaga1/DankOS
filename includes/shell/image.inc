@@ -29,7 +29,10 @@ image_cmd:
 	xor bx, bx
 	xor cl, cl
 
-	push 0x84
+	push 0x84		; Draw sprite
+	int 0x80
+
+	push 0x86		; Push frame
 	int 0x80
 	pop ds
 

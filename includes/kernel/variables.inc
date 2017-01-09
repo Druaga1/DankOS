@@ -12,9 +12,10 @@ CurrentDirectoryCluster	dw	0x0000
 ; Kernel
 
 KernelSpace				equ	0xFFFF
-TopSegment				dw	0x0050
+TopSegment				dw	0x1050
 StackPointer			dd	0x00000000
 StackSegment			dw	0x0000
+FrameBuffer				equ	0x0050
 
 ; Disk
 

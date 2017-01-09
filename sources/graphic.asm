@@ -4,10 +4,13 @@ bits 16
 push 0x80		; Enter graphics mode
 int 0x80
 
-mov si, sprite
-mov bx, 10
-mov cl, 10
+mov si, sprite	; Draw sprite
+mov bx, 5
+mov cl, 5
 push 0x84
+int 0x80
+
+push 0x86		; Push frame
 int 0x80
 
 push 0x18		; Pause

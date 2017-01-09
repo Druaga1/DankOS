@@ -14,7 +14,7 @@ draw_pixel:
 
 	push dx
 	
-	mov     ax, 0xA000     		; Set ES to graphics screen segment
+	mov     ax, FrameBuffer		; Set ES to graphics (frame buffer) screen segment
 	mov     es, ax
 
 	mov 	ax, 320    			; Multiply Y by 320 and store in DI

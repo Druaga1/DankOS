@@ -68,6 +68,8 @@ mov dl, byte [colour]
 push 0x83			;Draw Line
 int 0x80
 
+push 0x86			; Push frame
+int 0x80
 
 push 0x18			; Pause
 int 0x80
