@@ -56,6 +56,7 @@ inc bx
 jmp .loop
 
 .compression:
+mov byte [es:.clValue], cl
 lodsw
 mov cx, ax
 lodsb
@@ -64,21 +65,30 @@ mov dl, al
 .compression_loop:
 cmp bx, word [es:.SpriteX]
 je .compression_next_row
+push cx
+mov cl, byte [es:.clValue]
 push 0x81
 int 0x80
+pop cx
 inc bx
 loop .compression_loop
+mov cl, byte [es:.clValue]
 jmp .loop
 
 .compression_next_row:
 mov bx, word [es:.OriginalBX]
-inc cl
-cmp cl, byte [es:.SpriteY]
+inc byte [es:.clValue]
+mov al, byte [es:.clValue]
+cmp byte [es:.SpriteY], al
 je .done
+push cx
+mov cl, byte [es:.clValue]
 push 0x81
 int 0x80
+pop cx
 inc bx
 loop .compression_loop
+mov cl, byte [es:.clValue]
 jmp .loop
 
 .done:
@@ -94,7 +104,7 @@ iret
 
 
 
-
+.clValue		db	0x00
 .OriginalBX		dw	0x0000
 .SpriteX		dw	0x0000
 .SpriteY		db	0x00
