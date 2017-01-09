@@ -13,7 +13,7 @@ fat12_load_file:
 ; Carry if file not found, (does not clear the carry flag if found)
 
 ; NOTES:
-; This routine assumes 9800:0000 --> A000:0000 to be a usable buffer
+; This routine assumes 1000:0000 --> 1000:FFFF to be a usable buffer
 
 push ax						; Save registers to prepare entering routine
 push bx
@@ -31,8 +31,8 @@ mov byte [.CurrentDrive], dl
 
 ;  Fetch metadata from floppy
 
-xor bx, bx					; Load in the buffer (9800:0000)
-mov ax, 0x9800
+xor bx, bx					; Load in the buffer (1000:0000)
+mov ax, 0x1000
 mov es, ax
 xor ax, ax					; Load LBA sector 0 (boot sector)
 call floppy_read_sector
@@ -148,7 +148,7 @@ mov word [.DataStart], ax
 pop es						; Restore target segment
 pop bx						; Restore target offset
 
-mov ax, 0x9800				; Now point FS to the buffer
+mov ax, 0x1000				; Now point FS to the buffer
 mov fs, ax
 
 mov ax, word [.Cluster]		; Load starting cluster
