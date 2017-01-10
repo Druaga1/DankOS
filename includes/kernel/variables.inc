@@ -2,6 +2,10 @@
 ;     This file contains all the global Kernel variables
 ; **********************************************************
 
+; VERSION NUMBER - CHANGE THIS EACH RELEASE
+
+VersionNumber			dd	0x00000008
+
 ; File system
 
 CurrentDrive			db	0x00

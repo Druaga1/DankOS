@@ -333,6 +333,11 @@ cmp word [ss:(bp-2)], 0x86
 xchg sp, bp
 je push_frame
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x87
+xchg sp, bp
+je get_version_number
+
 
 
 

@@ -118,6 +118,12 @@ int 0x80
 test dl, dl
 jz image_cmd
 
+mov di, ver_msg					; Ver command
+push 0x08
+int 0x80
+test dl, dl
+jz ver_cmd
+
 
 
 
@@ -208,6 +214,7 @@ cd_msg				db	'cd', 0x00
 time_msg			db	'time', 0x00
 debug_msg			db	'debug', 0x00
 image_msg			db	'image', 0x00
+ver_msg				db	'ver', 0x00
 
 
 
@@ -221,3 +228,4 @@ image_msg			db	'image', 0x00
 %include 'includes/shell/time.inc'
 %include 'includes/shell/debug.inc'
 %include 'includes/shell/image.inc'
+%include 'includes/shell/ver.inc'
