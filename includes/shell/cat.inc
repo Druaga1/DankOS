@@ -18,17 +18,18 @@ pop es
 test dl, dl			; Check for failure
 jnz .failure
 
-mov bx, cx
-
 push ds
 mov ax, word [FileBuffer]
 mov ds, ax
 
-mov byte [bx], 0x00	; Add terminator to the file
 xor si, si
 
-push 0x02
+.loop:
+lodsb
+push 0x01
 int 0x80
+loop .loop
+
 pop ds
 
 jmp prompt_loop
