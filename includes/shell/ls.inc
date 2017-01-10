@@ -5,6 +5,9 @@ ls_cmd:
 mov di, .FileName
 
 mov word [.EntryCounter], 0x0000
+mov	dword [.TotalSize], 0x00000000
+mov word [.FilesNumber], 0x0000
+mov word [.DirectoriesNumber], 0x0000
 
 .loop:
 
@@ -14,12 +17,24 @@ push 0x28
 int 0x80
 
 test dl, dl
-jnz prompt_loop			; If end of table, return to prompt
+jnz .summary			; If end of table, print summary
 
 inc word [.EntryCounter]
 
 mov dword [.Size], ecx	; Save size
+add dword [.TotalSize], ecx		; Increase total size
 mov byte [.Directory], dh
+
+cmp byte [.Directory], 0xFF		; Check if the entry is a directory
+jne .file_entry
+
+inc word [.DirectoriesNumber]
+jmp .convert_time
+
+.file_entry:
+inc word [.FilesNumber]
+
+.convert_time:
 
 push 0x2C				; Convert to standard time
 int 0x80
@@ -145,9 +160,54 @@ int 0x80
 
 jmp .loop
 
+.summary:
+
+mov si, .totalbytes_msg
+push 0x02
+int 0x80
+
+mov eax, dword [.TotalSize]
+xor cl, cl
+xor dl, dl
+push 0x06
+int 0x80
+
+mov si, .dot_msg
+push 0x02
+int 0x80
+
+xor eax, eax
+mov ax, word [.FilesNumber]
+xor cl, cl
+xor dl, dl
+push 0x06
+int 0x80
+
+mov si, .files_msg
+push 0x02
+int 0x80
+
+xor eax, eax
+mov ax, word [.DirectoriesNumber]
+xor cl, cl
+xor dl, dl
+push 0x06
+int 0x80
+
+mov si, .dir_msg
+push 0x02
+int 0x80
+
+jmp prompt_loop
+
+
 
 .Directory		db	0x00
 .bytes_msg		db	' bytes', 0x00
+.totalbytes_msg	db	' Total bytes: ', 0x00
+.dot_msg		db	'.   ', 0x00
+.files_msg		db	' files, ', 0x00
+.dir_msg		db	' directories.', 0x0A, 0x00
 .EntryCounter	dw	0x0000
 .Seconds		db	0x00
 .Minutes		db	0x00
@@ -156,6 +216,9 @@ jmp .loop
 .Months			db	0x00
 .Years			dw	0x0000
 .Size			dd	0x00000000
+.TotalSize		dd	0x00000000
+.DirectoriesNumber	dw	0x0000
+.FilesNumber	dw	0x0000
 .FileName		times 13 db 0x00
 
 
