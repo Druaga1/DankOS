@@ -170,11 +170,10 @@ cmp word [ss:(bp-2)], 0x16
 xchg sp, bp
 je upper_to_lowercase
 
-
-
-
-
-
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x17
+xchg sp, bp
+je get_current_palette
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x18

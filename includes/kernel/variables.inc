@@ -13,6 +13,13 @@ CurrentDirectoryCache	equ 0xC000
 CurrentDirectoryPath	times 129 db 0x00
 CurrentDirectoryCluster	dw	0x0000
 
+; Video
+
+video_cursor_location			dw 0x0000
+video_char_attributes			db 0x07
+video_cursor_attributes			db 0x70
+video_cursor_enabled			db 0x01
+
 ; Kernel
 
 KernelSpace				equ	0xFFFF

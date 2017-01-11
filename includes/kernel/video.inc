@@ -132,11 +132,6 @@ iret
 
 .tab_loop_flag					db 0x00
 
-video_cursor_location			dw 0x0000
-video_char_attributes			db 0x07
-video_cursor_attributes			db 0x70
-video_cursor_enabled			db 0x01
-
 
 video_print_string:
 
