@@ -1,4 +1,4 @@
-fat_path_converter:
+path_converter:
 
 ; *****************************************************
 ;     Converts a relative path into an absolute one
@@ -197,7 +197,7 @@ pop ax
 push 0x15			; Convert to uppercase
 int 0x80
 
-iret
+ret
 
 
 

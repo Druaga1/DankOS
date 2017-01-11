@@ -1,6 +1,6 @@
-; ********************************
-;     Resolves a relative path
-; ********************************
+; *********************************
+;     Gets metadata from a file
+; *********************************
 
 ; IN: DS:SI = Relative path
 ;     DL = 1 for dir, 0 for file
@@ -12,7 +12,7 @@
 ;      ECX = file size
 ;      DX = raw FAT date
 
-fat_path_resolver:
+ping_file:
 
 push di
 push ds
@@ -70,7 +70,7 @@ push 0x13
 int 0x80
 test ax, ax
 jz .load_root
-call fat12_load_chain
+call fat_load_chain
 jmp .loop
 .load_root:
 call fat_load_root
@@ -103,7 +103,7 @@ mov ax, word [CurrentDirectoryCluster]
 test ax, ax
 jz .load_root_end
 mov bx, CurrentDirectoryCache
-call fat12_load_chain
+call fat_load_chain
 jmp .load_dir_done
 .load_root_end:
 call fat_load_root
@@ -123,32 +123,6 @@ pop es
 pop ds
 pop di
 iret
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

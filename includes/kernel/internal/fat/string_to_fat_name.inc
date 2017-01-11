@@ -105,7 +105,7 @@ mov cl, 11
 	pop dx
 	pop cx
 	pop ax
-	iret
+	ret
 
 .ignore:
 

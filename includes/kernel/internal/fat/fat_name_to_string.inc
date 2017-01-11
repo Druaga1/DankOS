@@ -48,4 +48,4 @@ mov cx, 8		; The name is 8 characters max
 	pop si
 	pop cx
 	pop ax
-	iret
+	ret

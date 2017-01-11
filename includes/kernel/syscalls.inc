@@ -170,10 +170,11 @@ cmp word [ss:(bp-2)], 0x16
 xchg sp, bp
 je upper_to_lowercase
 
-xchg sp, bp
-cmp word [ss:(bp-2)], 0x17
-xchg sp, bp
-je string_to_fat_name
+
+
+
+
+
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x18
@@ -235,20 +236,20 @@ cmp word [ss:(bp-2)], 0x29
 xchg sp, bp
 je set_current_drive
 
-xchg sp, bp
-cmp word [ss:(bp-2)], 0x2A
-xchg sp, bp
-je fat_name_to_string
+
+
+
+
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x2B
 xchg sp, bp
-je fat_path_resolver
+je ping_file
 
-xchg sp, bp
-cmp word [ss:(bp-2)], 0x2C
-xchg sp, bp
-je fat_time_to_integer
+
+
+
+
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x2D
@@ -260,15 +261,13 @@ cmp word [ss:(bp-2)], 0x2E
 xchg sp, bp
 je get_current_dir
 
-xchg sp, bp
-cmp word [ss:(bp-2)], 0x2F
-xchg sp, bp
-je fat_path_converter
 
-xchg sp, bp
-cmp word [ss:(bp-2)], 0x30
-xchg sp, bp
-je fat_write_entry
+
+
+
+
+
+
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x31

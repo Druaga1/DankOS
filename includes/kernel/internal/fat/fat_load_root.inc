@@ -1,8 +1,3 @@
-; *************************************************************************************
-;     This file contains FAT routines that are only callable from within the kernel
-; *************************************************************************************
-
-
 fat_load_root:
 
 ; **************************************************************
@@ -104,51 +99,3 @@ ret
 .SizeOfRoot				dw	0x0000
 .RootEntries			dw	0x0000
 .BytesPerSector			dw	512
-
-
-
-
-
-
-
-fat_load_chain:
-
-; ******************************************************************************
-;     Decides whether to use the FAT12 or FAT16 routine, then passes control
-; ******************************************************************************
-
-
-call fat12_load_chain
-ret
-
-
-
-erase_dir_cache:
-
-push ax
-push es
-push di
-
-mov ax, KernelSpace
-mov es, ax
-
-mov di, CurrentDirectoryCache
-mov cx, 0x2000
-xor ax, ax
-
-rep stosw
-
-pop di
-pop es
-pop ax
-ret
-
-
-
-
-
-
-
-
-
-

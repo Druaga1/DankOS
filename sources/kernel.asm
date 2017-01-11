@@ -107,11 +107,28 @@ BootDrive		db	0x00
 
 ;Includes (internal routines)
 
-%include 'includes/kernel/internal/fat_name_to_string.inc'
-%include 'includes/kernel/internal/fat_time_to_integer.inc'
-%include 'includes/kernel/internal/floppy_read_sector.inc'
-%include 'includes/kernel/internal/floppy_write_sector.inc'
-%include 'includes/kernel/internal/string_to_fat_name.inc'
+;FAT
+
+%include 'includes/kernel/internal/fat/string_to_fat_name.inc'
+%include 'includes/kernel/internal/fat/erase_dir_cache.inc'
+%include 'includes/kernel/internal/fat/fat_delete_chain.inc'
+%include 'includes/kernel/internal/fat/fat_get_metadata.inc'
+%include 'includes/kernel/internal/fat/fat_load_chain.inc'
+%include 'includes/kernel/internal/fat/fat_load_root.inc'
+%include 'includes/kernel/internal/fat/fat_name_to_string.inc'
+%include 'includes/kernel/internal/fat/fat_time_to_integer.inc'
+%include 'includes/kernel/internal/fat/fat_write_entry.inc'
+%include 'includes/kernel/internal/fat/path_converter.inc'
+
+;FAT12
+
+%include 'includes/kernel/internal/fat/fat12/fat12_load_chain.inc'
+%include 'includes/kernel/internal/fat/fat12/fat12_delete_chain.inc'
+
+;Disk
+
+%include 'includes/kernel/internal/disk/floppy_read_sector.inc'
+%include 'includes/kernel/internal/disk/floppy_write_sector.inc'
 
 ;Includes (external routines)
 
@@ -138,6 +155,14 @@ BootDrive		db	0x00
 %include 'includes/kernel/external/disk/invalid_cache.inc'
 %include 'includes/kernel/external/disk/set_current_drive.inc'
 %include 'includes/kernel/external/disk/get_current_drive.inc'
+
+;FAT
+
+%include 'includes/kernel/external/fat/directory_scanner.inc'
+%include 'includes/kernel/external/fat/get_current_dir.inc'
+%include 'includes/kernel/external/fat/load_dir.inc'
+%include 'includes/kernel/external/fat/load_file.inc'
+%include 'includes/kernel/external/fat/ping_file.inc'
 
 ;Kernel
 
@@ -169,9 +194,3 @@ BootDrive		db	0x00
 %include 'includes/kernel/external/string_to_integer.inc'
 %include 'includes/kernel/external/timer_read.inc'
 %include 'includes/kernel/external/upper_to_lowercase.inc'
-%include 'includes/kernel/file_systems/global.inc'
-%include 'includes/kernel/file_systems/local.inc'
-%include 'includes/kernel/file_systems/fat12_load_chain.inc'
-%include 'includes/kernel/file_systems/fat12_delete_chain.inc'
-%include 'includes/kernel/file_systems/path_converter.inc'
-%include 'includes/kernel/file_systems/path_resolver.inc'
