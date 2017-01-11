@@ -116,7 +116,6 @@ BootDrive		db	0x00
 %include 'includes/kernel/internal/fat/fat_load_chain.inc'
 %include 'includes/kernel/internal/fat/fat_load_root.inc'
 %include 'includes/kernel/internal/fat/fat_name_to_string.inc'
-%include 'includes/kernel/internal/fat/fat_time_to_integer.inc'
 %include 'includes/kernel/internal/fat/fat_write_entry.inc'
 %include 'includes/kernel/internal/fat/path_converter.inc'
 
@@ -163,6 +162,7 @@ BootDrive		db	0x00
 %include 'includes/kernel/external/fat/load_dir.inc'
 %include 'includes/kernel/external/fat/load_file.inc'
 %include 'includes/kernel/external/fat/ping_file.inc'
+%include 'includes/kernel/external/fat/fat_time_to_integer.inc'
 
 ;Kernel
 

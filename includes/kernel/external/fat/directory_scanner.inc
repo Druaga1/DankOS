@@ -99,8 +99,7 @@ mov di, word [.TargetBuffer]
 mov ax, word [.TargetSegment]
 mov es, ax
 
-push 0x2A
-int 0x80
+call fat_name_to_string
 
 xor dl, dl
 

@@ -83,7 +83,7 @@ mov cl, byte [.Month]
 mov dx, word [.Year]
 
 pop ds
-ret
+iret
 
 .RawDate	dw 0x0000
 .RawTime	dw 0x0000

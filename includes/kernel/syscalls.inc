@@ -252,6 +252,11 @@ je ping_file
 
 
 xchg sp, bp
+cmp word [ss:(bp-2)], 0x2C
+xchg sp, bp
+je fat_time_to_integer
+
+xchg sp, bp
 cmp word [ss:(bp-2)], 0x2D
 xchg sp, bp
 je string_end
