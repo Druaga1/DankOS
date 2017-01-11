@@ -290,6 +290,11 @@ cmp word [ss:(bp-2)], 0x34
 xchg sp, bp
 je floppy_write_dword
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x35
+xchg sp, bp
+je invalid_cache
+
 
 
 

@@ -125,6 +125,37 @@ BootDrive		db	0x00
 %include 'includes/kernel/external/video/clear_screen.inc'
 %include 'includes/kernel/external/video/push_frame.inc'
 
+;Disk
+
+%include 'includes/kernel/external/disk/floppy_read_sectors.inc'
+%include 'includes/kernel/external/disk/floppy_read_word.inc'
+%include 'includes/kernel/external/disk/floppy_read_byte.inc'
+%include 'includes/kernel/external/disk/floppy_read_dword.inc'
+%include 'includes/kernel/external/disk/floppy_write_sectors.inc'
+%include 'includes/kernel/external/disk/floppy_write_word.inc'
+%include 'includes/kernel/external/disk/floppy_write_byte.inc'
+%include 'includes/kernel/external/disk/floppy_write_dword.inc'
+%include 'includes/kernel/external/disk/invalid_cache.inc'
+%include 'includes/kernel/external/disk/set_current_drive.inc'
+%include 'includes/kernel/external/disk/get_current_drive.inc'
+
+;Kernel
+
+%include 'includes/kernel/external/kernel/get_version_number.inc'
+%include 'includes/kernel/external/kernel/terminate_process.inc'
+%include 'includes/kernel/external/kernel/start_new_program.inc'
+%include 'includes/kernel/external/kernel/allocate_memory.inc'
+
+;Includes (global data and stuff)
+
+%include 'includes/kernel/syscalls.inc'
+%include 'includes/kernel/variables.inc'
+%include 'includes/kernel/splash.inc'
+
+; TO BE SORTED
+
+%include 'includes/kernel/video.inc'
+%include 'includes/kernel/speaker.inc'
 %include 'includes/kernel/external/compare_strings.inc'
 %include 'includes/kernel/external/input_integer.inc'
 %include 'includes/kernel/external/input_string.inc'
@@ -138,30 +169,6 @@ BootDrive		db	0x00
 %include 'includes/kernel/external/string_to_integer.inc'
 %include 'includes/kernel/external/timer_read.inc'
 %include 'includes/kernel/external/upper_to_lowercase.inc'
-%include 'includes/kernel/external/floppy_read_sectors.inc'
-%include 'includes/kernel/external/floppy_read_word.inc'
-%include 'includes/kernel/external/floppy_read_byte.inc'
-%include 'includes/kernel/external/floppy_read_dword.inc'
-%include 'includes/kernel/external/floppy_write_sectors.inc'
-%include 'includes/kernel/external/floppy_write_word.inc'
-%include 'includes/kernel/external/floppy_write_byte.inc'
-%include 'includes/kernel/external/floppy_write_dword.inc'
-%include 'includes/kernel/external/get_version_number.inc'
-
-;Includes (kernel routines and stuff)
-
-%include 'includes/kernel/syscalls.inc'
-%include 'includes/kernel/variables.inc'
-%include 'includes/kernel/splash.inc'
-%include 'includes/kernel/kernel.inc'
-
-; TO BE SORTED
-
-%include 'includes/kernel/video.inc'
-%include 'includes/kernel/speaker.inc'
-
-;File systems
-
 %include 'includes/kernel/file_systems/global.inc'
 %include 'includes/kernel/file_systems/local.inc'
 %include 'includes/kernel/file_systems/fat12_load_chain.inc'
