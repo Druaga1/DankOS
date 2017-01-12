@@ -77,6 +77,10 @@ int 0x80								; Move cursor!
 jmp .done								; Done
 
 .backspace:
+sub word [fs:CursorLocation], 2
+mov al, ' '
+push 0x01
+int 0x80
 cmp byte [fs:CursorStatus], 1
 jne .back_no_cursor
 call clear_cursor
