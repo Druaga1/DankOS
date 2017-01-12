@@ -27,8 +27,8 @@ else
   printf "Success.\n"
 fi
 
-printf "Assembling stage 2...\n"
-nasm bootloader/stage2.asm -f bin -o stage2.sys
+printf "Assembling kernel...\n"
+nasm kernel/kernel.asm -f bin -o kernel.bin
 
 # Make sure the process went through
 if [ $? == 1 ]
@@ -40,13 +40,13 @@ else
   printf "Success.\n"
 fi
 
-printf "Installing stage 2...\n"
-cat stage2.sys >> dankos.img
-rm stage2.sys
+printf "Installing kernel...\n"
+cat kernel.bin >> dankos.img
+rm kernel.bin
 
 # Create a image for DankOS to be stored in
 printf "Expanding image...\n"
-dd bs=512 count=2875 status=none if=/dev/zero >> dankos.img
+dd bs=512 count=2815 status=none if=/dev/zero >> dankos.img
 
 # Make sure the process went through (again)
 if [ $? == 1 ]
@@ -78,9 +78,6 @@ do
 		  printf "Success.\n"
 		fi
 done
-
-printf "Renaming kernel...\n"
-mv tmp/kernel.bin tmp/kernel.sys
 
 printf "Creating mount point for image...\n"
 mkdir mnt

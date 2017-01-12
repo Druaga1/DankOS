@@ -1,6 +1,6 @@
-; *******************************************************************************
-;     DankOS BOOTLOADER:  Loads STAGE2 from the reserved sectors at 0000:0500
-; *******************************************************************************
+; *************************************************************************************************
+;     DankOS BOOTLOADER:  Loads the kernel from the reserved sectors to high memory (FFFF:0100)
+; *************************************************************************************************
 
 org 0x7C00						; BIOS loads us here (0000:7C00)
 bits 16							; 16-bit real mode code
@@ -14,7 +14,7 @@ times 3-($-$$) db 0x00			; Make sure this is the start of the BPB
 bpbOEM						db 'DANK OS '
 bpbBytesPerSector			dw 512
 bpbSectorsPerCluster		db 1
-bpbReservedSectors			dw 5
+bpbReservedSectors			dw 65
 bpbNumberOfFATs				db 2
 bpbRootEntries				dw 224
 bpbTotalSectors				dw 2880
@@ -35,7 +35,7 @@ bsFileSystem				db 'FAT12   '
 
 code_start:
 
-cli								; Disable interrupts and initialise DS and SS to 0x0000
+cli								; Disable interrupts and initialise segments to 0x0000
 jmp 0x0000:initialise_cs		; Initialise CS to 0x0000 with a long jump
 initialise_cs:
 xor ax, ax
@@ -47,26 +47,48 @@ mov ss, ax
 mov sp, 0xFFF0					; Stack at segment top (0000:FFF0)
 sti								; Restore interrupts
 
-mov ah, 0x02							; Read sector function
-mov al, 4								; Read 4 sectors
-mov ch, 0								; Track 0
-mov cl, 2								; Sector 2
-mov dh, 0								; Head 0
-mov bx, 0x0500							; Load at 0000:0500
+mov si, LoadingMsg				; Print loading message using simple print (BIOS)
+call simple_print
 
-clc										; Clear carry for int 0x13 because some BIOSes may not clear it on success
+call enable_a20					; Enable the A20 address line to access high memory
+jc err							; If it fails, print an error and halt
 
-int 0x13
+mov si, KernelMsg				; Show loading kernel message
+call simple_print
 
-jc .err
+push es
+mov ax, 0xFFFF					; Point ES to high memory
+mov es, ax
+mov ax, 1						; Start from LBA sector 1
+mov bx, 0x0100					; Load to offset 0x0100
+mov cx, 64						; Load 64 sectors (32 KB)
+call read_sectors
+pop es
 
-jmp 0x0000:0x0500				; Jump to the newly loaded stage 2
+jc err							; Catch any error
 
-.err:
-mov al, '!'
-mov ah, 0x0E
-int 0x10
-jmp $
+jmp 0xFFFF:0x0100				; Jump to the newly loaded kernel
+
+err:
+mov si, ErrMsg
+call simple_print
+
+halt:
+hlt
+jmp halt
+
+;Data
+
+LoadingMsg		db 0x0D, 0x0A, 'Loading DankOS...', 0x0D, 0x0A
+				db 0x0D, 0x0A, 'Enabling A20 line...', 0x00
+KernelMsg		db '  DONE', 0x0D, 0x0A, 'Loading kernel...', 0x00
+ErrMsg			db 0x0D, 0x0A, 0x0A, 'Error, system halted.', 0x00
+
+;Includes
+
+%include 'bootloader/functions/simple_print.inc'
+%include 'bootloader/functions/disk.inc'
+%include 'bootloader/functions/a20_enabler.inc'
 
 times 510-($-$$)			db 0x00				; Fill rest with 0x00
 bios_signature				dw 0xAA55			; BIOS signature
