@@ -107,6 +107,11 @@ BootDrive		db	0x00
 
 ;Includes (internal routines)
 
+;Video
+
+%include 'includes/kernel/internal/video/draw_cursor.inc'
+%include 'includes/kernel/internal/video/clear_cursor.inc'
+
 ;FAT
 
 %include 'includes/kernel/internal/fat/string_to_fat_name.inc'
@@ -141,6 +146,16 @@ BootDrive		db	0x00
 %include 'includes/kernel/external/video/clear_screen.inc'
 %include 'includes/kernel/external/video/push_frame.inc'
 %include 'includes/kernel/external/video/get_current_palette.inc'
+%include 'includes/kernel/external/video/print_string.inc'
+%include 'includes/kernel/external/video/center_print_string.inc'
+%include 'includes/kernel/external/video/initialise_screen.inc'
+%include 'includes/kernel/external/video/set_palette.inc'
+%include 'includes/kernel/external/video/disable_cursor.inc'
+%include 'includes/kernel/external/video/enable_cursor.inc'
+%include 'includes/kernel/external/video/new_line.inc'
+%include 'includes/kernel/external/video/get_cursor_position.inc'
+%include 'includes/kernel/external/video/set_cursor_position.inc'
+%include 'includes/kernel/external/video/put_char.inc'
 
 ;Disk
 
@@ -180,7 +195,6 @@ BootDrive		db	0x00
 
 ; TO BE SORTED
 
-%include 'includes/kernel/video.inc'
 %include 'includes/kernel/speaker.inc'
 %include 'includes/kernel/external/compare_strings.inc'
 %include 'includes/kernel/external/input_integer.inc'

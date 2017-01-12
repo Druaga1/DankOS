@@ -12,8 +12,8 @@ push ds
 mov ax, KernelSpace
 mov ds, ax
 
-mov ah, byte [video_char_attributes]
-mov al, byte [video_cursor_attributes]
+mov ah, byte [CharAttributes]
+mov al, byte [CursorAttributes]
 
 pop ds
 

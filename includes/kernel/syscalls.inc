@@ -63,17 +63,17 @@ je terminate_process
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x01
 xchg sp, bp
-je video_put_char
+je put_char
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x02
 xchg sp, bp
-je video_print_string
+je print_string
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x03
 xchg sp, bp
-je video_new_line
+je new_line
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x04
@@ -108,32 +108,32 @@ je string_length
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x0A
 xchg sp, bp
-je video_initialize_screen
+je initialise_screen
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x0B
 xchg sp, bp
-je video_disable_cursor
+je disable_cursor
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x0C
 xchg sp, bp
-je video_enable_cursor
+je enable_cursor
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x0D
 xchg sp, bp
-je video_get_cursor_position
+je get_cursor_position
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x0E
 xchg sp, bp
-je video_set_cursor_position
+je set_cursor_position
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x0F
 xchg sp, bp
-je video_center_print_string
+je center_print_string
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x10
@@ -143,7 +143,7 @@ je input_string
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x11
 xchg sp, bp
-je video_set_attributes
+je set_palette
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x12
