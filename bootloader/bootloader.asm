@@ -1,5 +1,5 @@
 ; *************************************************************************************************
-;     DankOS BOOTLOADER:  Loads the kernel from the reserved sectors to high memory (FFFF:0100)
+;     DankOS BOOTLOADER:  Loads the kernel from the reserved sectors to high memory (FFFF:0010)
 ; *************************************************************************************************
 
 org 0x7C00						; BIOS loads us here (0000:7C00)
@@ -60,14 +60,14 @@ push es
 mov ax, 0xFFFF					; Point ES to high memory
 mov es, ax
 mov ax, 1						; Start from LBA sector 1
-mov bx, 0x0100					; Load to offset 0x0100
+mov bx, 0x0010					; Load to offset 0x0010
 mov cx, 64						; Load 64 sectors (32 KB)
 call read_sectors
 pop es
 
 jc err							; Catch any error
 
-jmp 0xFFFF:0x0100				; Jump to the newly loaded kernel
+jmp 0xFFFF:0x0010				; Jump to the newly loaded kernel
 
 err:
 mov si, ErrMsg

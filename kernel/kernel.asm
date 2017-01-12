@@ -2,20 +2,8 @@
 ;     The DankOS kernel. It contains core drivers and routines.
 ; *****************************************************************
 
-org 0x0100							; Bootloader loads us here (0100)
+org 0x0010							; Bootloader loads us here (FFFF:0010)
 bits 16								; 16-bit Real mode
-
-; **** Check CS using a far call to verify that we're loaded in the proper spot by the bootloader ****
-; ** if not, use a 'terminate execution' interrupt to return to the caller
-
-call KernelSpace:check_cs			; Far call to the check routine
-
-check_cs:
-
-pop ax								; Pop call offset into AX
-pop bx								; Pop call segment into BX
-cmp bx, KernelSpace					; Check if CS was correctly loaded
-jne start_fail						; If it wasn't, cleanely abort execution
 
 cli									; Disable interrupts and set segments to kernel space
 mov ax, KernelSpace
@@ -85,15 +73,6 @@ int 0x80
 jmp reload						; Reload shell
 
 
-start_fail:
-
-mov si, KernelRunningMsg		; Print error and terminate execution
-push 0x02
-int 0x80
-push 0x00
-int 0x80
-
-
 data:
 
 ShellName		db	'shell.bin', 0x00
@@ -101,7 +80,6 @@ ProcessWarning1	db	0x0A, "Kernel: The root process has been terminated,"
 				db	0x0A, "        process exit code: ", 0x00
 ProcessWarning2	db	0x0A, "        The kernel will now reload 'shell.bin'."
 				db	0x0A, "Press a key to continue...", 0x00
-KernelRunningMsg	db	"The kernel is already loaded.", 0x0A, 0x00
 ShellSwitches	db	0x00
 BootDrive		db	0x00
 
