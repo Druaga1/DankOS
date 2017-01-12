@@ -58,3 +58,5 @@ kernel_name		db 'KERNEL  SYS'
 %include 'bootloader/bootloader_functions/boot_disk_functions.inc'
 %include 'bootloader/bootloader_functions/boot_fat12_functions.inc'
 %include 'bootloader/bootloader_functions/a20_enabler.inc'
+
+times 2048-($-$$) db 0x00			; Pad the rest of the reserved sectors

@@ -40,9 +40,13 @@ else
   printf "Success.\n"
 fi
 
+printf "Installing stage 2...\n"
+cat stage2.sys >> dankos.img
+rm stage2.sys
+
 # Create a image for DankOS to be stored in
 printf "Expanding image...\n"
-dd bs=512 count=2879 status=none if=/dev/zero >> dankos.img
+dd bs=512 count=2875 status=none if=/dev/zero >> dankos.img
 
 # Make sure the process went through (again)
 if [ $? == 1 ]
@@ -88,7 +92,6 @@ sleep 3
 printf "Copying files to image...\n"
 cp -r extra/* mnt/ 2> /dev/null
 cp tmp/* mnt/
-cp stage2.sys mnt/
 sleep 3
 
 printf "Unmounting image...\n"
@@ -98,7 +101,6 @@ sleep 3
 printf "Cleaning up...\n"
 rm -rf tmp
 rm -rf mnt
-rm stage2.sys
 
 printf "Done!\n\n"
 printf "If everything executed correctly, a file named 'dankos.img'\n"
