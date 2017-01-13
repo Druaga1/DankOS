@@ -98,6 +98,7 @@ BootDrive		db	0x00
 %include 'kernel/internal/fat/fat_get_metadata.inc'
 %include 'kernel/internal/fat/fat_load_chain.inc'
 %include 'kernel/internal/fat/fat_load_root.inc'
+%include 'kernel/internal/fat/fat_write_root.inc'
 %include 'kernel/internal/fat/fat_name_to_string.inc'
 %include 'kernel/internal/fat/fat_write_entry.inc'
 %include 'kernel/internal/fat/path_converter.inc'
