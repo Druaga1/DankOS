@@ -11,10 +11,11 @@ floppy_write_word:
 
 push ax
 
+xchg al, ah
 inc ebx					; Write last to first byte, since it's little endian
 push 0x32				; Write byte call
 int 0x80
-mov al, ah
+xchg al, ah
 dec ebx					; Next byte
 push 0x32				; Write byte call
 int 0x80

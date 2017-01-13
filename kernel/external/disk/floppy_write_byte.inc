@@ -20,6 +20,8 @@ mov cx, KernelSpace			; Prepare DS and ES
 mov ds, cx
 mov es, cx
 
+mov byte [.ByteToWrite], al	; Save byte to write for later
+
 push dx					; Save target drive for later
 
 ; Calculate the sector where the byte is found
@@ -49,6 +51,7 @@ jne .cache_miss
 
 mov bx, word [.target_offset]
 add bx, DiskCache
+mov al, byte [.ByteToWrite]
 mov byte [bx], al
 jmp .write_cache
 
@@ -85,5 +88,6 @@ pop ebx
 pop eax
 iret
 
+.ByteToWrite		db	0x00
 .target_sector		dw	0x0000
 .target_offset		dw	0x0000
