@@ -34,7 +34,7 @@ dec si
 
 .loop:
 mov di, .FileName
-mov cx, 12
+mov cx, 13
 
 .get_file_name:
 lodsb
@@ -128,4 +128,4 @@ iret
 
 .DirectoryFlag		db	0x00
 .Cluster			dw	0x0000
-.FileName			times	12	db 0x00
+.FileName			times	14	db 0x00
