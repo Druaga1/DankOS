@@ -46,7 +46,7 @@ do
 	base_name=${c_file%.c}
 	base_name=${base_name:8}
 	printf "Compiling '$c_file'...\n"
-	gcc -c -m16 -nostdlib -nostartfiles -nodefaultlibs -fno-builtin "$c_file" -o "tmp/${base_name}.o" -masm=intel -fPIC
+	gcc -c -m16 -nostdlib -nostartfiles -nodefaultlibs -fno-builtin "$c_file" -o "tmp/${base_name}.o" -masm=intel
 	objcopy --only-section=.text --output-target binary "tmp/${base_name}.o" "tmp/${base_name}.tmp"
 	dd skip=256 bs=1 status=none if="tmp/${base_name}.tmp" of="tmp/${base_name}.bin"
 	rm "tmp/${base_name}.o"
