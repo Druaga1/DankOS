@@ -4,7 +4,7 @@
 
 ; VERSION NUMBER - CHANGE THIS EACH RELEASE
 
-VersionNumber			dd	0x00000008
+VersionNumber			dd	0x00000009
 
 ; File system
 
