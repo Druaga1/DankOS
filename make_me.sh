@@ -17,28 +17,8 @@ mv dankos.img dankos.old 2> /dev/null
 printf "Assembling bootloader...\n"
 nasm bootloader/bootloader.asm -f bin -o dankos.img
 
-# Make sure the process went through
-if [ $? == 1 ]
-then
-  printf "Something went wrong here...\n"
-  printf "Please check if you have nasm installed.\n"
-  exit 1
-else
-  printf "Success.\n"
-fi
-
 printf "Assembling kernel...\n"
 nasm kernel/kernel.asm -f bin -o kernel.bin
-
-# Make sure the process went through
-if [ $? == 1 ]
-then
-  printf "Something went wrong here...\n"
-  printf "Please check if you have nasm installed.\n"
-  exit 1
-else
-  printf "Success.\n"
-fi
 
 printf "Installing kernel...\n"
 cat kernel.bin >> dankos.img
@@ -47,16 +27,6 @@ rm kernel.bin
 # Create a image for DankOS to be stored in
 printf "Expanding image...\n"
 dd bs=512 count=2815 status=none if=/dev/zero >> dankos.img
-
-# Make sure the process went through (again)
-if [ $? == 1 ]
-then
-  printf "Something went wrong here...\n"
-  printf "Please check your disk space or check if you have dd.\n"
-  exit 1
-else
-  printf "Success.\n"
-fi
 
 printf "Creating temporary folder to store binaries...\n"
 mkdir tmp
@@ -68,15 +38,19 @@ do
 	base_name=${base_name:8}
 	printf "Assembling '$asm_file'...\n"
     nasm "$asm_file" -f bin -o "tmp/${base_name}.bin"
-	# Did it work?
-		if [ $? == 1 ]
-		then
-		  printf "Something went wrong here...\n"
-		  printf "Please check your sources for errors.\n"
-		  exit 1
-		else
-		  printf "Success.\n"
-		fi
+done
+
+printf "Compiling content of the C sources in the 'sources' directory...\n"
+for c_file in sources/*.c
+do
+	base_name=${c_file%.c}
+	base_name=${base_name:8}
+	printf "Compiling '$c_file'...\n"
+	gcc -c -m16 -nostdlib -nostartfiles -nodefaultlibs -fno-builtin "$c_file" -o "tmp/${base_name}.o" -masm=intel -fPIC
+	objcopy --only-section=.text --output-target binary "tmp/${base_name}.o" "tmp/${base_name}.tmp"
+	dd skip=256 bs=1 status=none if="tmp/${base_name}.tmp" of="tmp/${base_name}.bin"
+	rm "tmp/${base_name}.o"
+	rm "tmp/${base_name}.tmp"
 done
 
 printf "Creating mount point for image...\n"
