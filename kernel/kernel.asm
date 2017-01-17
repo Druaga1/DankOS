@@ -24,11 +24,15 @@ mov word [0x0200], system_call
 mov word [0x0202], KernelSpace
 pop ds
 
-;call enter_pmode
+xchg bx, bx
 
-;bits 32
+call enter_pmode
 
-;jmp $
+bits 32
+
+call exit_pmode
+
+bits 16
 
 mov byte [BootDrive], dl		; Save boot drive
 
@@ -122,6 +126,7 @@ BootDrive		db	0x00
 ;Kernel
 
 %include 'kernel/internal/kernel/enter_pmode.inc'
+%include 'kernel/internal/kernel/exit_pmode.inc'
 %include 'kernel/internal/kernel/gdt.inc'
 
 ;Includes (external routines)

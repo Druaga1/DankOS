@@ -2,9 +2,9 @@ enter_pmode:
 
 bits 16
 
-xchg bx, bx
-
 cli						; Disable interrupts
+
+push eax				; Save EAX
 
 lgdt [GDT]				; Load the GDT
 
@@ -25,7 +25,7 @@ mov fs, ax
 mov gs, ax
 mov ss, ax
 
-xchg bx, bx
+pop eax					; Restore EAX
 
 ret
 
