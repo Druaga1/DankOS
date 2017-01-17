@@ -5,9 +5,33 @@
 /* #define os_print_string_p(x) asm volatile ("mov esi, %0; push 0x02; int 0x80" : : "r" (x) : "esi"); */
 
 #define os_declare_string(s, x) asm volatile ("jmp 2f; 1: .asciz \""s"\"; 2: lea %0, 1b" : "=r" (x) : : "esi");
-#define os_declare_buffer(x, y) asm volatile ("jmp 2f; 1: .fill "y",1,0; 2: lea %0, 1b" : "=r" (x) : : "esi");
+/* #define os_declare_buffer(x, y) asm volatile ("jmp 2f; 1: .fill "y",1,0; 2: lea %0, 1b" : "=r" (x) : : "esi"); */
 #define os_input_string(x, y) asm volatile ("mov ebx, %0; mov edi, %1; push 0x10; int 0x80" : : "r" (y), "r" (x) : "ebx", "edi");
 
+#define os_declare_buffer(x) ({				\
+	int return_value;						\
+	asm volatile ("jmp 2f;"					\
+				  "1: .fill "x",1,0;"		\
+				  "2: lea %0, 1b"			\
+				   : "=r" (return_value)	\
+				   :						\
+				   : );						\
+	return_value;							\
+})
+
+#define os_compare_strings_p(x, y) ({		\
+	int return_value;						\
+	asm volatile ("mov esi, %1;"			\
+				  "mov edi, %2;"			\
+				  "xor edx, edx;"			\
+				  "push 0x08;"				\
+				  "int 0x80;"				\
+				  "mov %0, edx;"			\
+				   : "=r" (return_value)	\
+				   : "r" (x), "r" (y)		\
+				   : "edx", "esi", "edi");	\
+	return_value;							\
+})
 
 #define os_compare_strings_i(s, x) ({		\
 	int return_value;						\
