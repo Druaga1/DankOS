@@ -2,7 +2,7 @@ compare_strings:
 
 ;   Compares 2 strings (0x00 terminated).
 ;     strings in DS:SI and ES:DI
-;     returns DL = 0x00 if equal 0xFF if not
+;     returns DL = 0x01 if equal 0x00 if not
 
 push ax
 push si
@@ -19,11 +19,10 @@ push di
 
 .not_equal:
 	xor dl, dl
-	not dl
 	jmp .done
 
 .equal:
-	xor dl, dl
+	mov dl, 0x01
 
 .done:
 	pop di

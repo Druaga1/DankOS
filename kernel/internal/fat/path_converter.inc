@@ -71,16 +71,16 @@ mov di, .DotEntry
 push 0x08		; Compare strings
 int 0x80
 
-test dl, dl
-jz .dot_entry
+cmp dl, 0x01
+je .dot_entry
 
 mov di, .DotDotEntry
 
 push 0x08
 int 0x80
 
-test dl, dl
-jz .dot_dot_entry
+cmp dl, 0x01
+je .dot_dot_entry
 
 
 

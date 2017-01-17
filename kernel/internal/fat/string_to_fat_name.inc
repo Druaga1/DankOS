@@ -21,15 +21,15 @@ mov di, .dot_dot_entry
 push 0x08
 int 0x80
 
-test dl, dl
-jz .ignore
+cmp dl, 0x01
+je .ignore
 
 mov di, .dot_entry
 push 0x08
 int 0x80
 
-test dl, dl
-jz .ignore
+cmp dl, 0x01
+je .ignore
 
 pop es
 pop di

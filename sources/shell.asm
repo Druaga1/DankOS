@@ -67,62 +67,62 @@ mov si, prompt_input
 mov di, exit_msg				; Exit command
 push 0x08
 int 0x80
-test dl, dl
-jz exit_cmd
+cmp dl, 0x01
+je exit_cmd
 
 mov di, clear_msg				; Clear command
 push 0x08
 int 0x80
-test dl, dl
-jz clear_cmd
+cmp dl, 0x01
+je clear_cmd
 
 mov di, help_msg				; Help command
 push 0x08
 int 0x80
-test dl, dl
-jz help_cmd
+cmp dl, 0x01
+je help_cmd
 
 mov di, ls_msg					; Ls command
 push 0x08
 int 0x80
-test dl, dl
-jz ls_cmd
+cmp dl, 0x01
+je ls_cmd
 
 mov di, cat_msg					; Cat command
 push 0x08
 int 0x80
-test dl, dl
-jz cat_cmd
+cmp dl, 0x01
+je cat_cmd
 
 mov di, cd_msg					; Cd command
 push 0x08
 int 0x80
-test dl, dl
-jz cd_cmd
+cmp dl, 0x01
+je cd_cmd
 
 mov di, time_msg				; Time command
 push 0x08
 int 0x80
-test dl, dl
-jz time_cmd
+cmp dl, 0x01
+je time_cmd
 
 mov di, debug_msg				; Debug command
 push 0x08
 int 0x80
-test dl, dl
-jz debug_cmd
+cmp dl, 0x01
+je debug_cmd
 
 mov di, image_msg				; Image command
 push 0x08
 int 0x80
-test dl, dl
-jz image_cmd
+cmp dl, 0x01
+je image_cmd
 
 mov di, ver_msg					; Ver command
 push 0x08
 int 0x80
-test dl, dl
-jz ver_cmd
+cmp dl, 0x01
+je ver_cmd
 
 
 
