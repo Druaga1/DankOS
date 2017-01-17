@@ -1,5 +1,5 @@
 ; *************************************************************************************************
-;     DankOS BOOTLOADER:  Loads the kernel from the reserved sectors to high memory (FFFF:0010)
+;     DankOS BOOTLOADER:  Loads the kernel from the reserved sectors to memory (0000:0500)
 ; *************************************************************************************************
 
 org 0x7C00						; BIOS loads us here (0000:7C00)
@@ -35,17 +35,30 @@ bsFileSystem				db 'FAT12   '
 
 code_start:
 
-cli								; Disable interrupts and initialise segments to 0x0000
 jmp 0x0000:initialise_cs		; Initialise CS to 0x0000 with a long jump
 initialise_cs:
 xor ax, ax
 mov ds, ax
+
+; Move bootloader to 8000:7C00
+
+mov ax, 0x8000
 mov es, ax
+mov si, 0x7C00
+mov di, si
+mov cx, 512
+rep movsb
+jmp 0x8000:new_location
+
+new_location:
+
+cli
+mov ds, ax
 mov fs, ax
 mov gs, ax
 mov ss, ax
-mov sp, 0xFFF0					; Stack at segment top (0000:FFF0)
-sti								; Restore interrupts
+mov sp, 0xFFF0
+sti
 
 mov si, LoadingMsg				; Print loading message using simple print (BIOS)
 call simple_print
@@ -57,17 +70,17 @@ mov si, KernelMsg				; Show loading kernel message
 call simple_print
 
 push es
-mov ax, 0xFFFF					; Point ES to high memory
+xor ax, ax
 mov es, ax
 mov ax, 1						; Start from LBA sector 1
-mov bx, 0x0010					; Load to offset 0x0010
+mov bx, 0x0500					; Load to offset 0x0500
 mov cx, 64						; Load 64 sectors (32 KB)
 call read_sectors
 pop es
 
 jc err							; Catch any error
 
-jmp 0xFFFF:0x0010				; Jump to the newly loaded kernel
+jmp 0x0000:0x0500				; Jump to the newly loaded kernel
 
 err:
 mov si, ErrMsg

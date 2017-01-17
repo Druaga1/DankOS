@@ -2,7 +2,7 @@
 ;     The DankOS kernel. It contains core drivers and routines.
 ; *****************************************************************
 
-org 0x0010							; Bootloader loads us here (FFFF:0010)
+org 0x0500							; Bootloader loads us here (0000:0500)
 bits 16								; 16-bit Real mode
 
 cli									; Disable interrupts and set segments to kernel space
@@ -23,6 +23,12 @@ mov ds, ax
 mov word [0x0200], system_call
 mov word [0x0202], KernelSpace
 pop ds
+
+;call enter_pmode
+
+;bits 32
+
+;jmp $
 
 mov byte [BootDrive], dl		; Save boot drive
 
@@ -112,6 +118,11 @@ BootDrive		db	0x00
 
 %include 'kernel/internal/disk/floppy_read_sector.inc'
 %include 'kernel/internal/disk/floppy_write_sector.inc'
+
+;Kernel
+
+%include 'kernel/internal/kernel/enter_pmode.inc'
+%include 'kernel/internal/kernel/gdt.inc'
 
 ;Includes (external routines)
 

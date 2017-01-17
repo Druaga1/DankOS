@@ -27,7 +27,7 @@ not cx
 
 rep stosb
 
-mov ax, 0x0050			; Point ES to the frame buffer
+mov ax, FrameBuffer		; Point ES to the frame buffer
 mov es, ax
 
 xor di, di
