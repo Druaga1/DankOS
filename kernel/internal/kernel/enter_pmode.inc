@@ -6,7 +6,7 @@ cli						; Disable interrupts
 
 push eax				; Save EAX
 
-lgdt [GDT]				; Load the GDT
+lidt [IDT]				; Load the pmode IDT
 
 mov eax, cr0			; Enable bit 0 of cr0 and enter protected mode
 or eax, 00000001b

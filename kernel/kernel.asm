@@ -17,6 +17,8 @@ sti									; Enable interrupts back
 
 ; **** Bootup routines ****
 
+lgdt [GDT]				; Load the GDT
+
 push ds								; Enable the interrupt 0x80 for the system API
 xor ax, ax
 mov ds, ax
@@ -128,6 +130,7 @@ BootDrive		db	0x00
 %include 'kernel/internal/kernel/enter_pmode.inc'
 %include 'kernel/internal/kernel/exit_pmode.inc'
 %include 'kernel/internal/kernel/gdt.inc'
+%include 'kernel/internal/kernel/idt.inc'
 
 ;Includes (external routines)
 

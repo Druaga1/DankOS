@@ -4,6 +4,8 @@ bits 32
 
 push eax
 
+lidt [.RealModeIVT]			; Load the real mode IVT (base 0, limit 0x3FF)
+
 jmp 0x28:.data_segments
 
 bits 16
@@ -37,3 +39,10 @@ pop eax
 sti
 
 ret
+
+
+
+.RealModeIVT:
+
+dw 0x3FF
+dd 0x00000000
