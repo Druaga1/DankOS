@@ -4,7 +4,10 @@ bits 16
 
 cli						; Disable interrupts
 
-push eax				; Save EAX
+pop word [.ReturnOffset]	; Save return offset
+add esp, 2					; Discard return selector
+
+mov dword [.EAXValue], eax		; Save EAX
 
 lidt [IDT]				; Load the pmode IDT
 
@@ -18,15 +21,29 @@ jmp 0x08:.pmode
 
 bits 32
 
-mov ax, 0x10			; Descriptor 2 (kernel data)
+mov ax, word [CPUStatus.DS]
 mov ds, ax
+mov ax, word [CPUStatus.ES]
 mov es, ax
+mov ax, word [CPUStatus.FS]
 mov fs, ax
+mov ax, word [CPUStatus.GS]
 mov gs, ax
+mov ax, word [CPUStatus.SS]
 mov ss, ax
 
-pop eax					; Restore EAX
+mov esp, dword [CPUStatus.ESP]
 
-ret
+push 0x08
+xor eax, eax
+mov ax, word [.ReturnOffset]
+push eax
+
+mov eax, dword [.EAXValue]	; Restore EAX
+
+retf
 
 bits 16
+
+.EAXValue		dd	0x00000000
+.ReturnOffset	dw	0x0000

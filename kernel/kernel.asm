@@ -26,11 +26,13 @@ mov word [0x0200], system_call
 mov word [0x0202], KernelSpace
 pop ds
 
-call enter_pmode
+xchg bx, bx
+
+call 0x0000:enter_pmode
 
 bits 32
 
-call exit_pmode
+call 0x08:exit_pmode
 
 bits 16
 
@@ -129,6 +131,7 @@ BootDrive		db	0x00
 %include 'kernel/internal/kernel/exit_pmode.inc'
 %include 'kernel/internal/kernel/gdt.inc'
 %include 'kernel/internal/kernel/idt.inc'
+%include 'kernel/internal/kernel/cpu_status.inc'
 
 ;Includes (external routines)
 
