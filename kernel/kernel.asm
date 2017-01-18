@@ -26,8 +26,6 @@ mov word [0x0200], system_call
 mov word [0x0202], KernelSpace
 pop ds
 
-xchg bx, bx
-
 call enter_pmode
 
 bits 32
