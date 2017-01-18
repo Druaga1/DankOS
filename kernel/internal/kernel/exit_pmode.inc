@@ -5,7 +5,7 @@ bits 32
 ; Save pre-real mode CPU status
 
 pop dword [.ReturnOffset]	; Save return offset
-add esp, 2					; Discard return selector
+add esp, 4					; Discard return selector
 
 mov dword [.EAXValue], eax	; Save original EAX
 mov dword [CPUStatus.ESP], esp	; Save ESP
