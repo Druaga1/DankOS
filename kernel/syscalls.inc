@@ -186,6 +186,11 @@ xchg sp, bp
 je allocate_memory
 
 xchg sp, bp
+cmp word [ss:(bp-2)], 0x1A
+xchg sp, bp
+je cut_string
+
+xchg sp, bp
 cmp word [ss:(bp-2)], 0x20
 xchg sp, bp
 je timer_read

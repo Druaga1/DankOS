@@ -198,5 +198,6 @@ BootDrive		db	0x00
 %include 'kernel/external/string_to_integer.inc'
 %include 'kernel/external/timer_read.inc'
 %include 'kernel/external/upper_to_lowercase.inc'
+%include 'kernel/external/cut_string.inc'
 
 times 0x8000-($-$$)			db 0x00				; Pad reserved sectors with 0x00
