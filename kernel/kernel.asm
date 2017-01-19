@@ -26,16 +26,6 @@ mov word [0x0200], system_call
 mov word [0x0202], KernelSpace
 pop ds
 
-xchg bx, bx
-
-call 0x0000:enter_pmode
-
-bits 32
-
-call 0x08:exit_pmode
-
-bits 16
-
 mov byte [BootDrive], dl		; Save boot drive
 
 push 0x29				; Set current drive
