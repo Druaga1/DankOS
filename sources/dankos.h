@@ -7,6 +7,16 @@
 #define os_declare_string(s, x) asm volatile ("jmp 2f; 1: .asciz \""s"\"; 2: lea %0, 1b" : "=r" (x) : : "esi");
 /* #define os_declare_buffer(x, y) asm volatile ("jmp 2f; 1: .fill "y",1,0; 2: lea %0, 1b" : "=r" (x) : : "esi"); */
 
+#define os_initialise_screen() ({			\
+	int return_value=0;						\
+	asm volatile ("push 0x0A;"				\
+				  "int 0x80;"				\
+				   :						\
+				   :						\
+				   : );						\
+	return_value;							\
+})
+
 #define os_start_program(x, y) ({			\
 	int return_value;						\
 	asm volatile ("xor esi, esi;"			\

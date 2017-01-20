@@ -24,6 +24,7 @@ int main(void) {
 	attributes = os_cut_string(prompt_input);
 
 	if (os_compare_strings_i("exit", prompt_input)) break;
+	if (os_compare_strings_i("clear", prompt_input)) os_initialise_screen();
 
 	if (os_start_program(prompt_input, attributes) == 0xFFFFFFFF) {
 		os_print_string_i("Command or file not found: '");
