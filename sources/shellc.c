@@ -7,7 +7,7 @@ int main(void) {
 
 	/* Declare buffers */
 
-	prompt_input = os_declare_buffer("256");
+	prompt_input = os_declare_buffer("260");
 	current_dir = os_declare_buffer("128");
 
 	/* Print intro */
@@ -34,17 +34,18 @@ int main(void) {
 			os_putchar(0x0A);
 		}
 
-	/* Command calling */
+		/* Command calling */
 
-	attributes = os_cut_string(prompt_input);
+		attributes = os_cut_string(prompt_input);
 
-	if (os_compare_strings_i("exit", prompt_input)) break;
-	else if (os_compare_strings_i("clear", prompt_input)) os_initialise_screen();
+		if (os_compare_strings_i("exit", prompt_input)) break;
+		else if (os_compare_strings_i("clear", prompt_input)) os_initialise_screen();
 
-	else if (os_start_program(prompt_input, attributes) == 0xFFFFFFFF) {
-		os_print_string_i("Command or file not found: '");
-		os_print_string_p(prompt_input);
-		os_print_string_i("'.\n");
+		else if (os_start_program(prompt_input, attributes) == 0xFFFFFFFF) {
+			os_string_copy_i(".bin", os_string_end(prompt_input));
+			if (os_start_program(prompt_input, attributes) == 0xFFFFFFFF) {
+				os_print_string_i("Command or file not found.\n");
+			}
 		}
 	}
 
