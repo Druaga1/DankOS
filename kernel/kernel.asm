@@ -5,19 +5,9 @@
 org 0x0500							; Bootloader loads us here (0000:0500)
 bits 16								; 16-bit Real mode
 
-cli									; Disable interrupts and set segments to kernel space
-mov ax, KernelSpace
-mov ds, ax
-mov es, ax
-mov fs, ax
-mov gs, ax
-mov ss, ax
-mov sp, 0x7FF0						; Move stack to 0x7FF0
-sti									; Enable interrupts back
-
 ; **** Bootup routines ****
 
-lgdt [GDT]				; Load the GDT
+%include 'kernel/internal/kernel/enter_unreal.inc'		; Enter Unreal Mode and set up segments
 
 push ds								; Enable the interrupt 0x80 for the system API
 xor ax, ax
@@ -117,11 +107,7 @@ BootDrive		db	0x00
 
 ;Kernel
 
-%include 'kernel/internal/kernel/enter_pmode.inc'
-%include 'kernel/internal/kernel/exit_pmode.inc'
 %include 'kernel/internal/kernel/gdt.inc'
-%include 'kernel/internal/kernel/idt.inc'
-%include 'kernel/internal/kernel/cpu_status.inc'
 
 ;Includes (external routines)
 
