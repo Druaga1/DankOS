@@ -19,7 +19,7 @@ int main(void) {
 
 	os_putchar(0x0A);
 	os_print_string_i("DankOS shell (C edition!)\n");
-	os_print_string_i("        Welcome!\n");
+	os_print_string_i("Welcome! (use 'exit' to quit)\n");
 	os_putchar(0x0A);
 
 	/* Main loop */

@@ -19,8 +19,8 @@ xor cx, cx
 xor dx, dx
 mov di, .buffer
 .loop:
-	mov ah, 0x00
-	int 0x16
+	push 0x1C
+	int 0x80
 	cmp al, 0x08
 	je .backspace
 	cmp al, 0x0D

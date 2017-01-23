@@ -4,7 +4,11 @@
 
 ; VERSION NUMBER - CHANGE THIS EACH RELEASE
 
-VersionNumber			dd	0x00000009
+VersionNumber:
+.Alpha	db	10
+.Beta	db	0
+.Minor	db	0
+.Major	db	0
 
 ; File system
 
