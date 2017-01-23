@@ -191,6 +191,21 @@ xchg sp, bp
 je cut_string
 
 xchg sp, bp
+cmp word [ss:(bp-2)], 0x1B
+xchg sp, bp
+je ascii_dump
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x1C
+xchg sp, bp
+je get_char
+
+
+
+
+
+
+xchg sp, bp
 cmp word [ss:(bp-2)], 0x20
 xchg sp, bp
 je timer_read

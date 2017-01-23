@@ -1,21 +1,21 @@
 string_length:
 
 ;   Returns the length of a string (0x00 terminated).
-;     string in DS:SI
-;     returns length in CX
+;     string in ESI
+;     returns length in ECX
 
 push ax
-push si
+push esi
 
-xor cx, cx
+xor ecx, ecx
 .loop:
-	lodsb			; Byte from SI
+	a32 o32 lodsb	; Byte from ESI
 	test al, al		; Is 0?
 	jz .done
-	inc cx
+	inc ecx
 	jmp .loop
 
 .done:
-pop si
+pop esi
 pop ax
 iret

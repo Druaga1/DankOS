@@ -1,43 +1,45 @@
 input_string:
 
 ;   Gets a string from keyboard (0x00 terminated).
-;     maximum string length in BX
-;     buffer to save string to in ES:DI
+;     maximum string length in EBX
+;     buffer to save string to in EDI
 
 push ax
-push bx
-push cx
-push di
+push ebx
+push ecx
+push edi
 
-xor cx, cx
+xor ecx, ecx
 .loop:
-	mov ah, 0x00
-	int 0x16
+	push 0x1C
+	int 0x80
 	cmp al, 0x08
 	je .backspace
 	cmp al, 0x0D
 	je .enter
-	cmp cx, bx
+	test al, al
+	jz .loop
+	cmp ecx, ebx
 	je .loop
-	inc cx
+	inc ecx
 	push 0x01
 	int 0x80
-	stosb
+	a32 o32 stosb
 	jmp .loop
 .backspace:
-	cmp cx, 0
-	je .loop
+	test ecx, ecx
+	jz .loop
 	mov al, 0x08
 	push 0x01
 	int 0x80
-	dec di
-	dec cx
+	dec edi
+	dec ecx
 	jmp .loop
 .enter:
-	mov al, 0x00
-	stosb
-	pop di
-	pop cx
-	pop bx
+	xor al, al
+	a32 o32 stosb
+	pop edi
+	pop ecx
+	pop ebx
 	pop ax
 	iret

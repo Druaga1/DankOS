@@ -1,16 +1,16 @@
 compare_strings:
 
 ;   Compares 2 strings (0x00 terminated).
-;     strings in DS:SI and ES:DI
+;     strings in ESI and EDI
 ;     returns DL = 0x01 if equal 0x00 if not
 
 push ax
-push si
-push di
+push esi
+push edi
 .loop:
-	lodsb
-	mov ah, byte [es:di]
-	inc di
+	a32 o32 lodsb
+	mov ah, byte [edi]
+	inc edi
 	cmp al, ah
 	jne .not_equal
 	test al, al
@@ -25,7 +25,7 @@ push di
 	mov dl, 0x01
 
 .done:
-	pop di
-	pop si
+	pop edi
+	pop esi
 	pop ax
 	iret

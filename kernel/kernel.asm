@@ -131,6 +131,7 @@ BootDrive		db	0x00
 %include 'kernel/external/video/get_cursor_position.inc'
 %include 'kernel/external/video/set_cursor_position.inc'
 %include 'kernel/external/video/put_char.inc'
+%include 'kernel/external/video/ascii_dump.inc'
 
 ;Disk
 
@@ -186,5 +187,6 @@ BootDrive		db	0x00
 %include 'kernel/external/timer_read.inc'
 %include 'kernel/external/upper_to_lowercase.inc'
 %include 'kernel/external/cut_string.inc'
+%include 'kernel/external/get_char.inc'
 
 times 0x8000-($-$$)			db 0x00				; Pad reserved sectors with 0x00

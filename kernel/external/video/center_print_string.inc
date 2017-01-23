@@ -1,12 +1,12 @@
-; *************************************************************************
-;     Prints a 0x00 terminated string in DS:SI at the center of the row
-; *************************************************************************
+; ***********************************************************************
+;     Prints a 0x00 terminated string in ESI at the center of the row
+; ***********************************************************************
 
 center_print_string:
 
 push ax
 push bx
-push cx
+push ecx
 push dx
 
 push 0x09
@@ -29,7 +29,7 @@ int 0x80
 .done:
 
 pop dx
-pop cx
+pop ecx
 pop bx
 pop ax
 iret

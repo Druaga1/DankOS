@@ -1,15 +1,15 @@
-; ************************************************
-;     Prints a 0x00 terminated string in DS:SI
-; ************************************************
+; **********************************************
+;     Prints a 0x00 terminated string in ESI
+; **********************************************
 
 print_string:
 
 push ax
-push si
+push esi
 
 .loop:
 
-lodsb							; Byte from SI
+a32 o32 lodsb					; Byte from ESI
 test al, al						; Is 0x00?
 jz .done						; If yes, done
 push 0x01
@@ -18,6 +18,6 @@ jmp .loop						; Loop
 
 .done:
 
-pop si
+pop esi
 pop ax
 iret

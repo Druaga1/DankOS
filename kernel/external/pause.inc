@@ -4,8 +4,8 @@ pause:
 
 push ax
 
-xor ah, ah
-int 0x16
+push 0x1C
+int 0x80
 
 pop ax
 iret
