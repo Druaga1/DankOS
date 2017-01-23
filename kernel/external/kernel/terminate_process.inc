@@ -21,6 +21,7 @@ pop dword [gs:StackPointer]	; Restore older stack in RAM
 pop word [gs:StackSegment]
 
 pop word [gs:TopSegment]	; Restore last top segment
+pop dword [gs:TopMemory]	; Restore last top memory
 
 pop gs					; Restore segment registers
 pop fs

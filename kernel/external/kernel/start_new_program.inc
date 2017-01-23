@@ -24,6 +24,7 @@ push gs
 mov ax, KernelSpace				; Point GS to kernel
 mov gs, ax
 
+push dword [gs:TopMemory]	; Save extended memory top
 push word [gs:TopSegment]	; Save last top of memory in stack
 push word [gs:StackSegment]	; Save last stack segment in stack
 push dword [gs:StackPointer]	; Save last stack pointer in stack
