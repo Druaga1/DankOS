@@ -353,6 +353,14 @@ je get_version_number
 
 
 
+; 32-bit calls
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0xA0
+xchg sp, bp
+je allocate_mem32
+
+
 
 
 

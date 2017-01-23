@@ -161,6 +161,7 @@ BootDrive		db	0x00
 %include 'kernel/external/kernel/terminate_process.inc'
 %include 'kernel/external/kernel/start_new_program.inc'
 %include 'kernel/external/kernel/allocate_memory.inc'
+%include 'kernel/external/kernel/allocate_mem32.inc'
 
 ;Includes (global data and stuff)
 

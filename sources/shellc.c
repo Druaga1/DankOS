@@ -4,11 +4,16 @@ int main(void) {
 	int prompt_input;
 	int attributes;
 	int current_dir;
+	int file_buffer;
 
 	/* Declare buffers */
 
 	prompt_input = os_declare_buffer("260");
 	current_dir = os_declare_buffer("128");
+
+	/* Allocate file buffer */
+
+	file_buffer = os_allocate_memory(0x2000);
 
 	/* Print intro */
 

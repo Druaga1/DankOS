@@ -24,6 +24,7 @@ CursorStatus			db 0x01
 
 KernelSpace				equ	0x0000
 TopSegment				dw	0x2000
+TopMemory				dd	0x00100000
 StackPointer			dd	0x00000000
 StackSegment			dw	0x0000
 FrameBuffer				equ	0x1000
