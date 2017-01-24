@@ -41,7 +41,7 @@ int main(void) {
 
 		/* Command calling */
 
-		attributes = os_cut_string(prompt_input);
+		attributes = os_cut_string(prompt_input, ' ');
 
 		if (os_compare_strings_i("exit", prompt_input)) break;
 		else if (os_compare_strings_i("clear", prompt_input)) os_initialise_screen();

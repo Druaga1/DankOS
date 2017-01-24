@@ -1,21 +1,21 @@
 string_copy:
 
 ;   Copies a string
-;     Input string in DS:SI, copies into ES:DI (0x00 terminated)
+;     Input string in DS:ESI, copies into ES:EDI (0x00 terminated)
 
 push ax
-push si
-push di
+push esi
+push edi
 
 .loop:
-	lodsb
-	stosb
+	a32 o32 lodsb
+	a32 o32 stosb
 	test al, al
 	jz .done
 	jmp .loop
 
 .done:
-	pop di
-	pop si
+	pop edi
+	pop esi
 	pop ax
 	iret

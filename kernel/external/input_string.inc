@@ -2,7 +2,7 @@ input_string:
 
 ;   Gets a string from keyboard (0x00 terminated).
 ;     maximum string length in EBX
-;     buffer to save string to in EDI
+;     buffer to save string to in ES:EDI
 
 push ax
 push ebx

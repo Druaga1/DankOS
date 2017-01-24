@@ -1,29 +1,29 @@
 lower_to_uppercase:
 
 ;   Transform string to UPPERCASE (0x00 terminated).
-;     string in ES:DI
+;     string in ES:EDI
 
 push ax
-push di
+push edi
 
 .loop:
-	mov al, byte [es:di]	; Byte from DI
+	mov al, byte [es:edi]	; Byte from EDI
 	cmp al, 0x60
 	jg .convert
 	cmp al, 0x00
 	je .done
 .no_convert:
-	inc di
+	inc edi
 	jmp .loop
 
 .convert:
 	cmp al, 0x7A
 	jg .no_convert
 	sub al, 0x20
-	stosb
+	a32 o32 stosb
 	jmp .loop
 
 .done:
-	pop di
+	pop edi
 	pop ax
 	iret

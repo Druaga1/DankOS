@@ -1,15 +1,15 @@
 string_end:
 
-;   Get to the end of the string, DI will point to the terminator
-;     ES:DI string
+;   Get to the end of the string, ES:EDI will point to the terminator
+;     ES:EDI string
 
 push ax
 
 .loop:
-	mov al, byte [es:di]
+	mov al, byte [es:edi]
 	test al, al
 	jz .done
-	inc di
+	inc edi
 	jmp .loop
 
 .done:

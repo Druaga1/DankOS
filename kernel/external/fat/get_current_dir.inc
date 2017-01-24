@@ -1,21 +1,19 @@
 get_current_dir:
 
-; *****************************************
-;     Returns the current path in ES:DI
-; *****************************************
+; ******************************************
+;     Returns the current path in ES:EDI
+; ******************************************
 
-push ax
-push si
+push esi
 push ds
 
-mov ax, KernelSpace
-mov ds, ax
+mov si, KernelSpace
+mov ds, si
 
-mov si, CurrentDirectoryPath
+mov esi, CurrentDirectoryPath
 push 0x27
 int 0x80
 
 pop ds
-pop si
-pop ax
+pop esi
 iret

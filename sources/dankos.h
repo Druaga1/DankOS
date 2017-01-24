@@ -35,8 +35,7 @@
 
 #define os_string_end(s) ({					\
 	int return_value;						\
-	asm volatile ("xor edi, edi;"			\
-				  "mov edi, %1;"			\
+	asm volatile ("mov edi, %1;"			\
 				  "push 0x2D;"				\
 				  "int 0x80;"				\
 				  "mov %0, edi;"			\
@@ -48,8 +47,7 @@
 
 #define os_get_current_dir(s) ({			\
 	int return_value=0;						\
-	asm volatile ("xor edi, edi;"			\
-				  "mov edi, %0;"			\
+	asm volatile ("mov edi, %0;"			\
 				  "push 0x2E;"				\
 				  "int 0x80;"				\
 				   :						\
@@ -83,15 +81,15 @@
 	return_value;							\
 })
 
-#define os_cut_string(s) ({					\
+#define os_cut_string(s, c) ({				\
 	int return_value;						\
-	asm volatile ("xor ebx, ebx;"			\
-				  "mov esi, %1;"			\
+	asm volatile ("mov esi, %1;"			\
+				  "mov ebx, %2;"			\
 				  "push 0x1A;"				\
 				  "int 0x80;"				\
 				  "mov %0, ebx;"			\
 				   : "=r" (return_value)	\
-				   : "r" (s)				\
+				   : "r" (s), "r" (c)		\
 				   : "ebx", "esi");			\
 	return_value;							\
 })

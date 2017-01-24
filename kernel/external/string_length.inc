@@ -1,7 +1,7 @@
 string_length:
 
 ;   Returns the length of a string (0x00 terminated).
-;     string in ESI
+;     string in DS:ESI
 ;     returns length in ECX
 
 push ax

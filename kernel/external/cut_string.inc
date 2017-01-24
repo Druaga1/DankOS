@@ -1,35 +1,36 @@
 cut_string:
 
-; Cuts a string at the first space (0x20), and adds a terminator
+; Cuts a string at the desired spot, and adds a terminator
 
-; IN:		DS:SI = string to cut
+; IN:		DS:ESI = string to cut
+;			BL = character to cut at
 
-; OUT:		DS:SI = string cut
-;			DS:BX = starting position of the second part of the string
+; OUT:		DS:ESI = string cut
+;			DS:EBX = starting position of the second part of the string
 
 push ax
-push si
+push esi
 
 .loop:
-lodsb
-cmp al, ' '
+a32 o32 lodsb
+cmp al, bl
 je .cut_string
 test al, al
 jz .fail
 jmp .loop
 
 .cut_string:
-dec si
+dec esi
 xor al, al
-mov byte [ds:si], al
-inc si
+mov byte [ds:esi], al
+inc esi
 jmp .done
 
 .fail:
-dec si
+dec esi
 
 .done:
-mov bx, si
-pop si
+mov ebx, esi
+pop esi
 pop ax
 iret
