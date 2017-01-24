@@ -5,7 +5,7 @@
 ; VERSION NUMBER - CHANGE THIS EACH RELEASE
 
 VersionNumber:
-.Alpha	db	10
+.Alpha	db	11
 .Beta	db	0
 .Minor	db	0
 .Major	db	0
