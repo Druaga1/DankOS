@@ -2,12 +2,32 @@
 ;     The DankOS kernel. It contains core drivers and routines.
 ; *****************************************************************
 
-org 0x0500							; Bootloader loads us here (0000:0500)
+org 0x0010							; Bootloader loads us here (FFFF:0010)
 bits 16								; 16-bit Real mode
 
 ; **** Bootup routines ****
 
-%include 'kernel/internal/kernel/enter_unreal.inc'		; Enter Unreal Mode and set up segments
+; Flush registers
+
+xor eax, eax
+xor ebx, ebx
+xor ecx, ecx
+and edx, 0x000000FF		; (save boot drive)
+xor esi, esi
+xor edi, edi
+xor ebp, ebp
+
+; Setup segments
+
+cli
+mov ax, KernelSpace
+mov ds, ax
+mov es, ax
+mov fs, ax
+mov gs, ax
+mov ss, ax
+mov sp, 0x7FF0
+sti
 
 push ds								; Enable the interrupt 0x80 for the system API
 xor ax, ax
@@ -23,13 +43,13 @@ int 0x80
 
 ; Prepare the screen
 
-push 0x80
+push 0x80				; Enter graphics mode
 int 0x80
 
-push 0x82
+push 0x82				; Leave graphics mode (this should fix a bug on some machines)
 int 0x80
 
-mov si, SplashScreen	; Display SplashScreen
+mov si, SplashScreen	; Display SplashScreen (to be replaced with a graphical splash)
 push 0x02
 int 0x80
 
@@ -104,10 +124,6 @@ BootDrive		db	0x00
 
 %include 'kernel/internal/disk/floppy_read_sector.inc'
 %include 'kernel/internal/disk/floppy_write_sector.inc'
-
-;Kernel
-
-%include 'kernel/internal/kernel/gdt.inc'
 
 ;Includes (external routines)
 

@@ -26,7 +26,7 @@ rm kernel.bin
 
 # Create a image for DankOS to be stored in
 printf "Expanding image...\n"
-dd bs=512 count=2815 status=none if=/dev/zero >> dankos.img
+dd bs=512 count=2812 status=none if=/dev/zero >> dankos.img
 
 printf "Creating temporary folder to store binaries...\n"
 mkdir tmp

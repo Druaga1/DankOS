@@ -2,9 +2,6 @@ enter_unreal:
 
 cli						; Disable interrupts
 
-xor ax, ax				; Setup DS
-mov ds, ax
-
 lgdt [GDT]				; Load the GDT
 
 mov eax, cr0			; Enable bit 0 of cr0 and enter protected mode
@@ -35,7 +32,8 @@ mov ds, ax
 mov es, ax
 mov fs, ax
 mov gs, ax
+mov ax, 0x1000
 mov ss, ax
-mov sp, 0x7FF0			; Move stack to 0x7FF0
+mov sp, 0xFFF0
 
 sti						; Enable interrupts
