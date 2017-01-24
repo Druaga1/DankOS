@@ -2,6 +2,8 @@ system_call:
 
 ;		** int 0x80 has been called **
 
+sti			; Enable back interrupts
+
 ; CURRENT STACK: function number|flags|return offset|return segment
 
 push bp
@@ -199,6 +201,11 @@ xchg sp, bp
 cmp word [ss:(bp-2)], 0x1C
 xchg sp, bp
 je get_char
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x1D
+xchg sp, bp
+je sleep
 
 
 

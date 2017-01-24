@@ -27,14 +27,21 @@ mov fs, ax
 mov gs, ax
 mov ss, ax
 mov sp, 0x7FF0
-sti
 
-push ds								; Enable the interrupt 0x80 for the system API
+push ds
+
 xor ax, ax
 mov ds, ax
-mov word [0x0200], system_call
+
+mov word [0x0200], system_call		; Enable the interrupt 0x80 for the system API
 mov word [0x0202], KernelSpace
+
+mov word [0x0070], timer_int		; Hook the timer interrupt
+mov word [0x0072], KernelSpace
+
 pop ds
+
+sti
 
 mov byte [BootDrive], dl		; Save boot drive
 
@@ -96,6 +103,8 @@ ShellSwitches	db	0x00
 BootDrive		db	0x00
 
 ;Includes (internal routines)
+
+%include 'kernel/internal/timer_int.inc'
 
 ;Video
 
@@ -204,5 +213,6 @@ BootDrive		db	0x00
 %include 'kernel/external/upper_to_lowercase.inc'
 %include 'kernel/external/cut_string.inc'
 %include 'kernel/external/get_char.inc'
+%include 'kernel/external/sleep.inc'
 
 times 0x8000-($-$$)			db 0x00				; Pad reserved sectors with 0x00
