@@ -8,27 +8,58 @@ floppy_read_sectors:
 ; AX = LBA starting sector
 ; DL = Drive number
 ; ES = Buffer segment
-; BX = Buffer offset
+; EBX = Buffer offset
 ; CX = Sectors count
 
-push ax									; Save GPRs
-push bx
-push cx
-push dx
+push eax									; Save GPRs
+push ebx
+push ecx
+push edx
+push esi
+push edi
+push ds
+
+mov si, KernelSpace
+mov ds, si
 
 .loop:
 
+push es
+push ebx
+
+mov si, KernelSpace
+mov es, si
+
+mov byte [CacheStatus], 0xFF
+mov byte [DriveInCache], dl
+mov word [SectorInCache], ax
+mov bx, DiskCache
+
 call floppy_read_sector					; Read sector
+
+pop ebx
+pop es
+
 jc .done								; If carry, exit routine
 
+mov edi, ebx
+mov esi, DiskCache
+push ecx
+mov ecx, 512
+a32 o32 rep movsb
+pop ecx
+
 inc ax									; Increment sector
-add bx, 512								; Add 512 to the buffer
+add ebx, 512							; Increment buffer
 
 loop .loop								; Loop!
 
 .done:
-pop dx
-pop cx									; Restore GPRs
-pop bx
-pop ax
+pop ds
+pop edi
+pop esi
+pop edx
+pop ecx									; Restore GPRs
+pop ebx
+pop eax
 iret									; Exit routine
