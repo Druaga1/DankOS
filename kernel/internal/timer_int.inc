@@ -31,18 +31,16 @@ iret
 
 .playmusic:
 
-push ecx
+push cx
 push esi
 push ds
 
-mov si, word [gs:MusicSegment]
-mov ds, si
-
-.playmusic_main:
+mov cx, word [gs:MusicSegment]
+mov ds, cx
 
 mov esi, dword [gs:MusicCurrentNote]
 
-xor ecx, ecx
+xor cx, cx
 mov cl, byte [ds:esi]
 
 test cl, cl
@@ -53,18 +51,11 @@ je .next_note
 
 inc byte [gs:NoteLengthCounter]
 
-mov cx, word [ds:esi+1]
-test cx, cx
-jz .music_pause
-
-push 0x22
-int 0x80
-
 .playmusic_done:
 
 pop ds
 pop esi
-pop ecx
+pop cx
 jmp .done
 
 
@@ -73,7 +64,16 @@ jmp .done
 add dword [gs:MusicCurrentNote], 3
 mov byte [gs:NoteLengthCounter], 0
 
-jmp .playmusic_main
+mov esi, dword [gs:MusicCurrentNote]
+
+mov cx, word [ds:esi+1]
+test cx, cx
+jz .music_pause
+
+push 0x22
+int 0x80
+
+jmp .playmusic_done
 
 
 .music_end:
