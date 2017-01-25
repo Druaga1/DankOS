@@ -4,8 +4,8 @@ start_new_program:
 ;     Handles the start of a new process
 ; ******************************************
 
-; IN: DS:SI --> Name of new program
-;     DS:DI --> Command line switches
+; IN: DS:ESI --> Name of new program
+;     DS:EDI --> Command line switches
 
 ; OUT: EAX = 0xFFFFFFFF if error or not found
 
@@ -35,7 +35,7 @@ mov dword [gs:StackPointer], esp	; Save new stack pointer in RAM
 
 mov ax, word [gs:TopSegment]		; Prepare to load program
 mov es, ax
-mov bx, 0x0100					; Load at offset 0x0100
+mov ebx, 0x0100					; Load at offset es:00000100
 push 0x12
 int 0x80						; Load program
 cmp dl, 0xFF
@@ -48,16 +48,16 @@ shr cx, 4						; Shift CX right by 4 bits to get size in 16 bytes blocks
 inc cx							; Adjust CX
 add word [gs:TopSegment], cx		; Reduce available memory
 
-mov si, di						; DS:DI in DS:SI
-xor di, di						; Prepare ES:DI to the string copy
+mov esi, edi					; DS:EDI in DS:ESI
+xor edi, edi					; Prepare ES:EDI to the string copy
 
 push 0x27						; Copy string
 int 0x80
 
-cli								; Disable interrupts
 mov cx, word [gs:TopSegment]		; Prepare the stack segment
 mov ss, cx
 mov esp, 0x1f0						; Prepare the stack pointer
+
 sti								; Restore interrupts
 
 add word [gs:TopSegment], 0x20		; Allocate 512 more bytes for the stack
@@ -77,7 +77,7 @@ xor esi, esi
 xor edi, edi
 xor ebp, ebp
 
-retf							; Launch program :D
+retf							; Retf to the program
 
 .drop_out:
 

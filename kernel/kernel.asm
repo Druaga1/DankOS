@@ -36,6 +36,9 @@ mov ds, ax
 mov word [0x0200], system_call		; Enable the interrupt 0x80 for the system API
 mov word [0x0202], KernelSpace
 
+mov word [0x006C], break_int		; Hook the break interrupt
+mov word [0x006E], KernelSpace
+
 mov word [0x0070], timer_int		; Hook the timer interrupt
 mov word [0x0072], KernelSpace
 
@@ -105,6 +108,7 @@ BootDrive		db	0x00
 ;Includes (internal routines)
 
 %include 'kernel/internal/timer_int.inc'
+%include 'kernel/internal/break_int.inc'
 
 ;Video
 

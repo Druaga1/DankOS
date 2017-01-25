@@ -6,16 +6,12 @@ terminate_process:
 
 ; IN: EAX --> exit code of the process
 
-cli							; Disable interrupts
-
 mov bx, KernelSpace				; Point GS to kernel
 mov gs, bx
 
 mov bx, word [gs:StackSegment]	; Restore last stack
 mov ss, bx
 mov esp, dword [gs:StackPointer]
-
-sti							; Restore interrupts
 
 pop dword [gs:StackPointer]	; Restore older stack in RAM
 pop word [gs:StackSegment]

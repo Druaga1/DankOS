@@ -2,6 +2,21 @@ system_call:
 
 ;		** int 0x80 has been called **
 
+; ** check for break flag **
+
+push ax
+push gs
+
+mov ax, KernelSpace
+mov gs, ax
+
+cmp byte [gs:BreakFlag], 0x01
+
+pop gs
+pop ax
+
+je .break_execution
+
 ; CURRENT STACK: function number|flags|return offset|return segment
 
 push bp
@@ -394,10 +409,18 @@ mov ds, ax
 mov si, .invalid_call_msg
 push 0x02
 int 0x80
-
 push 0x00
 int 0x80
 
 
 .invalid_call_msg		db	0x0A, "Kernel: An invalid system call has been issued by the program."
 						db	0x0A, "        Execution aborted.", 0x0A, 0x00
+
+.break_execution:
+
+mov ax, KernelSpace
+mov ds, ax
+mov byte [BreakFlag], 0x00
+mov eax, 0xFFFFFFFE
+push 0x00
+int 0x80
