@@ -225,6 +225,11 @@ cmp word [ss:(bp-2)], 0x1E
 xchg sp, bp
 je stop_beep
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x1F
+xchg sp, bp
+je play_music
+
 
 
 
