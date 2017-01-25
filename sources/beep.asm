@@ -1,6 +1,8 @@
 org 0x100
 bits 16
 
+%include 'includes/music.inc'
+
 mov esi, music
 push 0x1F
 int 0x80
@@ -16,16 +18,49 @@ music:
 ; idk some music
 
 
-db 20			; Duration
-dw 440			; Note
+db 5
+dw C_oct_below
 
 db 5
-dw 880
+dw D_oct_below
 
 db 5
-dw 0			; This is a pause
+dw E_oct_below
 
-db 10
-dw 440
+db 5
+dw F_oct_below
 
-dw 0			; Song end marker
+db 5
+dw G_oct_below
+
+db 5
+dw A
+
+db 5
+dw B
+
+db 5
+dw C
+
+db 5
+dw B
+
+db 5
+dw A
+
+db 5
+dw G_oct_below
+
+db 5
+dw F_oct_below
+
+db 5
+dw E_oct_below
+
+db 5
+dw D_oct_below
+
+db 20
+dw C_oct_below
+
+db 0
