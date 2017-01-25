@@ -3,12 +3,13 @@ sleep:
 ; IN: ECX: Number of ticks of inactivity
 
 push ax
+push ecx
 push ds
 
 mov ax, KernelSpace
 mov ds, ax
 
-mov dword [ClockTicks], 0		; Reset tick counter
+add ecx, dword [ClockTicks]		; Find target tick
 
 .loop:
 
@@ -19,5 +20,6 @@ jmp .loop
 .done:
 
 pop ds
+pop ecx
 pop ax
 iret
