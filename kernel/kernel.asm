@@ -201,7 +201,8 @@ BootDrive		db	0x00
 
 ; TO BE SORTED
 
-%include 'kernel/speaker.inc'
+%include 'kernel/external/beep.inc'
+%include 'kernel/external/stop_beep.inc'
 %include 'kernel/external/compare_strings.inc'
 %include 'kernel/external/input_integer.inc'
 %include 'kernel/external/input_string.inc'

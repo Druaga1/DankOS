@@ -220,6 +220,11 @@ cmp word [ss:(bp-2)], 0x1D
 xchg sp, bp
 je sleep
 
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x1E
+xchg sp, bp
+je stop_beep
+
 
 
 
@@ -238,7 +243,7 @@ je load_dir
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x22
 xchg sp, bp
-je speaker_beep_frequency
+je beep
 
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x23
