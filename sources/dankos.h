@@ -1,11 +1,58 @@
 #define os_putchar(c) asm volatile ("mov eax, %0; push 0x01; int 0x80" : : "r" (c) : "eax");
 #define os_print_integer(x, y) asm volatile ("mov eax, %0; mov ecx, %1; xor edx, edx; push 0x06; int 0x80" : : "r" (x), "r" (y) : "eax", "ecx", "edx");
-#define os_get_integer(x) asm volatile ("push 0x07; int 0x80; mov %0, eax" : "=r" (x) : : "eax");
+
 #define os_print_string_i(s) asm volatile ("jmp 2f; 1: .asciz \""s"\"; 2: lea esi, 1b; push 0x02; int 0x80" : : : "esi");
-/* #define os_print_string_p(x) asm volatile ("mov esi, %0; push 0x02; int 0x80" : : "r" (x) : "esi"); */
 
 #define os_declare_string(s, x) asm volatile ("jmp 2f; 1: .asciz \""s"\"; 2: lea %0, 1b" : "=r" (x) : : "esi");
-/* #define os_declare_buffer(x, y) asm volatile ("jmp 2f; 1: .fill "y",1,0; 2: lea %0, 1b" : "=r" (x) : : "esi"); */
+
+#define os_set_cursor_pos(x, y) ({			\
+	int return_value=0;						\
+	asm volatile ("mov eax, %0;"			\
+				  "shl eax, 8;"				\
+				  "or eax, %1;"				\
+				  "push 0x0E;"				\
+				  "int 0x80;"				\
+				   :						\
+				   : "r" (x), "r" (y)		\
+				   : "eax");				\
+	return_value;							\
+})
+
+#define os_get_cursor_y() ({				\
+	int return_value;						\
+	asm volatile ("push 0x0D;"				\
+				  "int 0x80;"				\
+				  "and eax, 0x000000FF;"	\
+				  "mov %0, eax;"			\
+				   : "=r" (return_value)	\
+				   :						\
+				   : "eax");				\
+	return_value;							\
+})
+
+#define os_get_cursor_x() ({				\
+	int return_value;						\
+	asm volatile ("push 0x0D;"				\
+				  "int 0x80;"				\
+				  "and eax, 0x0000FF00;"	\
+				  "shr eax, 8;"				\
+				  "mov %0, eax;"			\
+				   : "=r" (return_value)	\
+				   :						\
+				   : "eax");				\
+	return_value;							\
+})
+
+#define os_get_integer() ({					\
+	int return_value;						\
+	asm volatile ("push 0x07;"				\
+				  "int 0x80;"				\
+				  "mov %0, eax;"			\
+				   : "=r" (return_value)	\
+				   :						\
+				   : "eax");				\
+	return_value;							\
+})
 
 #define os_sleep(x) ({						\
 	int return_value=0;						\

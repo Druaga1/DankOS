@@ -2,8 +2,6 @@ system_call:
 
 ;		** int 0x80 has been called **
 
-sti			; Enable back interrupts
-
 ; CURRENT STACK: function number|flags|return offset|return segment
 
 push bp

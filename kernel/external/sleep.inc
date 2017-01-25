@@ -2,6 +2,11 @@ sleep:
 
 ; IN: ECX: Number of ticks of inactivity
 
+test ecx, ecx
+jz .quick_exit
+
+sti			; Enable back interrupts
+
 push ax
 push ecx
 push ds
@@ -22,4 +27,8 @@ jmp .loop
 pop ds
 pop ecx
 pop ax
+
+cli
+
+.quick_exit:
 iret
