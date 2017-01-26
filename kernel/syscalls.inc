@@ -230,11 +230,6 @@ cmp word [ss:(bp-2)], 0x1F
 xchg sp, bp
 je play_music
 
-
-
-
-
-
 xchg sp, bp
 cmp word [ss:(bp-2)], 0x20
 xchg sp, bp
@@ -284,6 +279,11 @@ xchg sp, bp
 cmp word [ss:(bp-2)], 0x29
 xchg sp, bp
 je set_current_drive
+
+xchg sp, bp
+cmp word [ss:(bp-2)], 0x2A
+xchg sp, bp
+je stop_music
 
 
 
