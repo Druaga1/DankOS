@@ -5,33 +5,37 @@
 ;		CL --> Y Position
 
 draw_pixel:
-	push ax
-	push bx
-	push cx
-	push dx
+	push eax
+	push ebx
+	push ecx
+	push edx
 	push es
-	push di
+	push edi
 
 	push dx
 	
-	mov     ax, FrameBuffer		; Set ES to graphics (frame buffer) screen segment
+	xor     eax, eax			; Point ES to a flat segment
 	mov     es, ax
 
-	mov 	ax, 320    			; Multiply Y by 320 and store in DI
+	mov		edi, FrameBuffer	; Point EDI to frame buffer
+
+	mov 	ax, 320    			; Multiply Y by 320
 	xor		ch, ch
 	mul		cx
-	mov		di, ax
+	add		edi, eax			; Add to frame buffer location
 
-	add     di, bx         		; Add the X coordinate
+	and		ebx, 0x0000FFFF
+
+	add     edi, ebx       		; Add the X coordinate
 
 	pop dx
 
-	mov     byte [es:di], dl   	; Set the pixel to the color specified
+	mov     byte [es:edi], dl  	; Set the pixel to the color specified
 
-	pop di
+	pop edi
 	pop es
-	pop dx
-	pop cx
-	pop bx
-	pop ax
+	pop edx
+	pop ecx
+	pop ebx
+	pop eax
 	iret

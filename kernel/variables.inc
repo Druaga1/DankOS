@@ -27,11 +27,11 @@ CursorStatus			db 0x01
 ; Kernel
 
 KernelSpace				equ	0xFFFF
-TopSegment				dw	0x1050
-TopMemory				dd	0x00100000
+TopSegment				dw	0x0050
+TopMemory				dd	0x00500000
 StackPointer			dd	0x00000000
 StackSegment			dw	0x0000
-FrameBuffer				equ	0x0050
+FrameBuffer				equ	0x00110000
 ClockTicks				dd	0x00000000
 BreakFlag				db	0x00
 

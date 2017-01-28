@@ -2,28 +2,26 @@ push_frame:
 
 push ds
 push es
-push ax
-push si
-push di
-push cx
-
-mov ax, FrameBuffer
-mov ds, ax
-mov ax, 0xA000
-mov es, ax
-
-xor si, si
-xor di, di
+push esi
+push edi
+push ecx
 
 xor cx, cx
+mov ds, cx
+mov cx, 0xA000
+mov es, cx
+
+mov esi, FrameBuffer
+xor edi, edi
+
+xor ecx, ecx
 not cx
 
-rep movsb
+a32 o32 rep movsb
 
-pop cx
-pop di
-pop si
-pop ax
+pop ecx
+pop edi
+pop esi
 pop es
 pop ds
 iret

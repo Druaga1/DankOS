@@ -147,7 +147,7 @@ BootDrive		db	0x00
 %include 'kernel/external/video/draw_pixel.inc'
 %include 'kernel/external/video/draw_line.inc'
 %include 'kernel/external/video/draw_sprite.inc'
-%include 'kernel/external/video/clear_screen.inc'
+%include 'kernel/external/video/clear_frame_buffer.inc'
 %include 'kernel/external/video/push_frame.inc'
 %include 'kernel/external/video/get_current_palette.inc'
 %include 'kernel/external/video/print_string.inc'
