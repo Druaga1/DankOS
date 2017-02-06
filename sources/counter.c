@@ -1,6 +1,6 @@
 #include "dankos.h"
 
-int main(void) {
+int _start(void) {
 	int x;
 	int y=0;
 	int sleep;

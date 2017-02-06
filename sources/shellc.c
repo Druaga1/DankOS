@@ -1,6 +1,6 @@
 #include "dankos.h"
 
-int main(void) {
+int _start(void) {
 	int prompt_input;
 	int attributes;
 	int current_dir;
