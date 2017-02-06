@@ -224,7 +224,6 @@
 })
 
 asm(".code16");
-asm(".org 0x100");
 asm("call program_begin");
 asm("push 0x00; int 0x80");
 
