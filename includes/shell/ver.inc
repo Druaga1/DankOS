@@ -2,46 +2,18 @@
 
 ver_cmd:
 
+mov edi, .version
+
 push 0x87		; Get version number
 int 0x80
 
-xor cl, cl
-xor dl, dl
+mov esi, .version
 
-push eax
-shr eax, 24
-push 0x06
+push 0x02
 int 0x80
-mov al, '.'
-push 0x01
-int 0x80
-pop eax
-
-push eax
-shr eax, 16
-and eax, 0x000000FF
-push 0x06
-int 0x80
-mov al, '.'
-push 0x01
-int 0x80
-pop eax
-
-push eax
-shr eax, 8
-and eax, 0x000000FF
-push 0x06
-int 0x80
-mov al, '.'
-push 0x01
-int 0x80
-pop eax
-
-and eax, 0x000000FF
-push 0x06
-int 0x80
-
 push 0x03
 int 0x80
 
 jmp prompt_loop			; Return to prompt
+
+.version times 16 db 0x00

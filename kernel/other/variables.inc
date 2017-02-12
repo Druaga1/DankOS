@@ -4,11 +4,7 @@
 
 ; VERSION NUMBER - CHANGE THIS EACH RELEASE
 
-VersionNumber:
-.Alpha	db	12
-.Beta	db	0
-.Minor	db	0
-.Major	db	0
+Version		db	'0.0.0.12-alpha', 0x00
 
 ; File system
 

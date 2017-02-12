@@ -2,16 +2,21 @@
 ;     Returns the version of the kernel
 ; *****************************************
 
-; OUT: EAX --> version number 0x00/00/00/00
+; OUT: ES:EDI --> version number string in ASCII
 
 get_version_number:
 
+push esi
 push ds
 
-mov ax, KernelSpace
-mov ds, ax
+mov si, KernelSpace
+mov ds, si
 
-mov eax, dword [VersionNumber]
+mov esi, Version
+
+push 0x27
+int 0x80
 
 pop ds
+pop esi
 iret
