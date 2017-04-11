@@ -50,7 +50,7 @@ do
 	base_name=${base_name:8}
 	printf "Compiling '$c_file'...\n"
 	$CC -c -m16 -nostdlib -nostartfiles -nodefaultlibs -fno-builtin "$c_file" -o "tmp/${base_name}.o" -masm=intel
-	ld -Ttext 0x100 --oformat binary -melf_i386 "tmp/${base_name}.o" -o "tmp/${base_name}.tmp"
+	ld -T linker_script --oformat binary -melf_i386 "tmp/${base_name}.o" -o "tmp/${base_name}.tmp"
 	sed 's/\xC9\xC3/\x66\x67\xC9\xC3/g' "tmp/${base_name}.tmp" > "tmp/${base_name}.bin"			# Bodge for leave instruction
 	rm "tmp/${base_name}.o"
 	rm "tmp/${base_name}.tmp"
