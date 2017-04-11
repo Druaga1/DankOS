@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# compiler path
+export CC="path-to-compiler"
+
 printf "== DankOS autobuild tool ==\n\n"
 
 # Are you root?
@@ -46,7 +49,7 @@ do
 	base_name=${c_file%.c}
 	base_name=${base_name:8}
 	printf "Compiling '$c_file'...\n"
-	gcc -c -m16 -nostdlib -nostartfiles -nodefaultlibs -fno-builtin "$c_file" -o "tmp/${base_name}.o" -masm=intel
+	$CC -c -m16 -nostdlib -nostartfiles -nodefaultlibs -fno-builtin "$c_file" -o "tmp/${base_name}.o" -masm=intel
 	ld -Ttext 0x100 --oformat binary -melf_i386 "tmp/${base_name}.o" -o "tmp/${base_name}.tmp"
 	sed 's/\xC9\xC3/\x66\x67\xC9\xC3/g' "tmp/${base_name}.tmp" > "tmp/${base_name}.bin"			# Bodge for leave instruction
 	rm "tmp/${base_name}.o"
@@ -58,16 +61,15 @@ mkdir mnt
 
 printf "Mounting image...\n"
 mount dankos.img ./mnt
-sleep 3
 
 printf "Copying files to image...\n"
 cp -r extra/* mnt/ 2> /dev/null
 cp tmp/* mnt/
-sleep 3
+cp LICENSE.md mnt/license.txt
 
 printf "Unmounting image...\n"
+sync
 umount ./mnt
-sleep 3
 
 printf "Cleaning up...\n"
 rm -rf tmp
