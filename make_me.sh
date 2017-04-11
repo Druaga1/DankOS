@@ -1,7 +1,7 @@
 #!/bin/bash -e
 
 # compiler path
-export CC="cc"
+export CC=${CC:-cc}
 
 printf "== DankOS autobuild tool ==\n\n"
 
