@@ -1,21 +1,27 @@
-#!/bin/bash
+#!/bin/bash -e
 
 # compiler path
-export CC="path-to-compiler"
+export CC=${CC:-gcc}
 
 printf "== DankOS autobuild tool ==\n\n"
 
-# Are you root?
+[[ $(type -P $CC) ]] || ( printf "Error: $CC could not be found.\n" ; exit 1 )
+
 if [[ $EUID -ne 0 ]]; then
-printf "Error: This script must be run as root, because of the mounting.\n"
-exit 1
+printf "This script requires access to root privileges for mounting the image file.\n"
+sudo true
 fi
+
+# Some systems might not have sudo. If we're here without it, we already
+# have root rights, so just set it as an alias for eval.
+
+[[ $(type -P "sudo") ]] || alias sudo=eval
 
 # Backup data to a "dankos.old" file.
 printf "All data previously stored in 'dankos.img' will be lost (if it exists)!\n"
 printf "A 'dankos.old' backup will be made as a failsafe.\n"
-rm dankos.old 2> /dev/null
-mv dankos.img dankos.old 2> /dev/null
+rm dankos.old 2> /dev/null || true
+mv dankos.img dankos.old 2> /dev/null || true
 
 printf "Assembling bootloader...\n"
 nasm bootloader/bootloader.asm -f bin -o dankos.img
@@ -49,7 +55,7 @@ do
 	base_name=${c_file%.c}
 	base_name=${base_name:8}
 	printf "Compiling '$c_file'...\n"
-	$CC -c -m16 -nostdlib -nostartfiles -nodefaultlibs -fno-builtin "$c_file" -o "tmp/${base_name}.o" -masm=intel
+	$CC -c -m16 -nostdlib -nostartfiles -nodefaultlibs -fno-builtin "$c_file" -o "tmp/${base_name}.o" -masm=intel -D __DANKOS__
 	ld -T linker_script --oformat binary -melf_i386 "tmp/${base_name}.o" -o "tmp/${base_name}.tmp"
 	sed 's/\xC9\xC3/\x66\x67\xC9\xC3/g' "tmp/${base_name}.tmp" > "tmp/${base_name}.bin"			# Bodge for leave instruction
 	rm "tmp/${base_name}.o"
@@ -59,21 +65,22 @@ done
 printf "Creating mount point for image...\n"
 mkdir mnt
 
-printf "Mounting image...\n"
-mount dankos.img ./mnt
+sudo -s eval '
+printf "Mounting image...\n";
+mount dankos.img ./mnt;
 
-printf "Copying files to image...\n"
-cp -r extra/* mnt/ 2> /dev/null
-cp tmp/* mnt/
-cp LICENSE.md mnt/license.txt
+printf "Copying files to image...\n";
+cp -r extra/* mnt/ 2> /dev/null;
+cp tmp/* mnt/;
+cp LICENSE.md mnt/license.txt;
 
-printf "Unmounting image...\n"
-sync
-umount ./mnt
+printf "Unmounting image...\n";
+sync;
+umount ./mnt;'
 
 printf "Cleaning up...\n"
 rm -rf tmp
-rm -rf mnt
+rmdir mnt
 
 printf "Done!\n\n"
 printf "If everything executed correctly, a file named 'dankos.img'\n"
