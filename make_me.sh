@@ -1,9 +1,11 @@
 #!/bin/bash -e
 
 # compiler path
-export CC=${CC:-cc}
+export CC=${CC:-gcc}
 
 printf "== DankOS autobuild tool ==\n\n"
+
+[[ $(type -P $CC) ]] || ( printf "Error: $CC could not be found.\n" ; exit 1 )
 
 if [[ $EUID -ne 0 ]]; then
 printf "This script requires access to root privileges for mounting the image file.\n"
