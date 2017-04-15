@@ -2,11 +2,12 @@
 A really simple Real Mode OS, in honour of youtuber Druaga1. http://dankos.org
 
 # Building requirements
-Currently, there is no Windows make script, so this only builds on GNU/Linux systems.
+Currently, there is no Windows make script, so this only builds on GNU/Linux
+and FreeBSD systems.
 
 In order to successfully build the OS, these packages should be installed:
 
-- bash
+- bash (to run the make_me script)
 - nasm
 - gcc
 

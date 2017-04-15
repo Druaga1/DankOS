@@ -6,7 +6,7 @@ export CC=
 printf "== DankOS autobuild tool ==\n\n"
 
 if [[ $EUID -ne 0 ]]; then
-printf "This script requires access to root privileges for mounting the image file.\n"
+printf "This script requires root privileges. Run with 'sudo' or as root.\n"
 exit 1
 fi
 
@@ -32,7 +32,7 @@ rm kernel.bin
 
 # Create a image for DankOS to be stored in
 printf "Expanding image...\n"
-dd bs=512 count=2812 status=none if=/dev/zero >> dankos.img
+dd bs=512 count=2812 if=/dev/zero >> dankos.img 2> /dev/null
 
 printf "Creating temporary folder to store binaries...\n"
 mkdir tmp
@@ -68,7 +68,15 @@ printf "Creating mount point for image...\n"
 mkdir mnt
 
 printf "Mounting image...\n"
+
+if [[ "`uname`" == "Linux" ]]; then
 mount dankos.img ./mnt
+fi
+
+if [[ "`uname`" == "FreeBSD" ]]; then
+mdconfig -a -t vnode -f dankos.img -u 0
+mount_msdosfs /dev/md0 ./mnt
+fi
 
 printf "Copying files to image...\n"
 cp -r extra/* mnt/ 2> /dev/null
@@ -78,6 +86,10 @@ cp LICENSE.md mnt/license.txt
 printf "Unmounting image...\n"
 sync
 umount ./mnt
+
+if [[ `uname` == "FreeBSD" ]]; then
+mdconfig -du md0
+fi
 
 printf "Cleaning up...\n"
 rm -rf tmp
