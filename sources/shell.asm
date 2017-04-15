@@ -88,6 +88,12 @@ int 0x80
 cmp dl, 0x01
 je ls_cmd
 
+mov di, dir_msg					; Dir (alias) command
+push 0x08
+int 0x80
+cmp dl, 0x01
+je ls_cmd
+
 mov di, cat_msg					; Cat command
 push 0x08
 int 0x80
@@ -215,6 +221,7 @@ time_msg			db	'time', 0x00
 debug_msg			db	'debug', 0x00
 image_msg			db	'image', 0x00
 ver_msg				db	'ver', 0x00
+dir_msg				db	'dir', 0x00
 
 
 
