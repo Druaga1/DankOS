@@ -9,14 +9,10 @@ In order to successfully build the OS, these packages should be installed:
 
 - bash (to run the make_me script)
 - nasm
-- gcc
 
 # Building instructions
-The 'make_me.sh' bash script automatically builds the image, and compiles all the
-sources from the 'sources' directory (C and Assembly).
-
-In order to correctly build the C sources, modify the path of your C compiler in
-'make_me.sh'.
+The 'make_me.sh' bash script automatically builds the image, and assembles all
+the sources from the 'sources' directory.
 
 All files/dirs from the 'extra' directory will also be copied onto the image.
 

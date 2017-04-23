@@ -1,17 +1,10 @@
 #!/bin/bash
 
-# path to the cross compiler
-export CC=
-
 printf "== DankOS autobuild tool ==\n\n"
 
 if [[ $EUID -ne 0 ]]; then
 printf "This script requires root privileges. Run with 'sudo' or as root.\n"
 exit 1
-fi
-
-if [[ "$CC" = "" ]]; then
-printf "C compiler not specified, skipping C sources.\n"
 fi
 
 # Backup data to a "dankos.old" file.
@@ -45,24 +38,6 @@ do
 	printf "Assembling '$asm_file'...\n"
     nasm "$asm_file" -f bin -o "tmp/${base_name}.bin"
 done
-
-if [[ "$CC" != "" ]]; then
-
-printf "Compiling content of the C sources in the 'sources' directory...\n"
-for c_file in sources/*.c
-do
-	base_name=${c_file%.c}
-	base_name=${base_name:8}
-	printf "Compiling '$c_file'...\n"
-	$CC -c -m16 -nostdlib -nostartfiles -nodefaultlibs -fno-builtin "$c_file" -o "tmp/${base_name}.o" -masm=intel
-	ld -T linker_script --oformat binary -melf_i386 "tmp/${base_name}.o" -o "tmp/${base_name}.tmp"
-	# Bodge for leave instruction
-	sed 's/\xC9\xC3/\x66\x67\xC9\xC3/g' "tmp/${base_name}.tmp" > "tmp/${base_name}.bin"
-	rm "tmp/${base_name}.o"
-	rm "tmp/${base_name}.tmp"
-done
-
-fi
 
 printf "Creating mount point for image...\n"
 mkdir mnt
