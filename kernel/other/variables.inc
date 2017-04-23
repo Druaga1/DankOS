@@ -4,7 +4,7 @@
 
 ; VERSION NUMBER - CHANGE THIS EACH RELEASE
 
-Version		db	'0.0.0.12-alpha', 0x00
+Version		db	'0.0.0.20-alpha', 0x00
 
 ; File system
 

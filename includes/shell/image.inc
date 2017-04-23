@@ -5,6 +5,12 @@ image_cmd:
 	mov si, command_line_switches
 	cmp byte [si], 0x00
 	je .missing_parameter
+	
+	; save old palette
+	
+	push 0x17
+	int 0x80
+	mov word [.old_palette], ax
 
 	push es				; Set up target segment:offset
 	mov ax, word [FileBuffer]
@@ -41,6 +47,14 @@ image_cmd:
 
 	push 0x82		; Exit graphics mode
 	int 0x80
+	
+	mov ax, word [.old_palette]     ; restore old palette
+	push 0x11
+	int 0x80
+	
+	push 0x0A       ; Reinitialise
+	int 0x80
+	
 	jmp prompt_loop
 	
 .missing_parameter:
@@ -59,7 +73,7 @@ image_cmd:
 
 
 
-
+.old_palette            dw 0x0000
 
 .missing_parameter_msg	db 'Required parameter missing: file name.', 0x0A, 0x00
 .failure_msg			db 'File not found.', 0x0A, 0x00

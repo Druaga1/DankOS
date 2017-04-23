@@ -130,6 +130,18 @@ int 0x80
 cmp dl, 0x01
 je ver_cmd
 
+mov di, colour_msg				; Colour command
+push 0x08
+int 0x80
+cmp dl, 0x01
+je colour_cmd
+
+mov di, color_msg				; Color (alias) command
+push 0x08
+int 0x80
+cmp dl, 0x01
+je colour_cmd
+
 
 
 
@@ -223,6 +235,8 @@ debug_msg			db	'debug', 0x00
 image_msg			db	'image', 0x00
 ver_msg				db	'ver', 0x00
 dir_msg				db	'dir', 0x00
+colour_msg			db	'colour', 0x00
+color_msg			db	'color', 0x00
 
 
 
@@ -237,3 +251,4 @@ dir_msg				db	'dir', 0x00
 %include 'includes/shell/debug.inc'
 %include 'includes/shell/image.inc'
 %include 'includes/shell/ver.inc'
+%include 'includes/shell/colour.inc'

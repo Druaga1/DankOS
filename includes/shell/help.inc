@@ -19,6 +19,7 @@ db	" cd        --     Changes the present working directory.", 0x0A
 db	" cat       --     Displays the content of a file.", 0x0A
 db	" time      --     Displays the current time.", 0x0A
 db	" image     --     Displays the content of a DankOS formatted image file.", 0x0A
+db  " colour    --     Sets the text mode palette. (Use 'clear' to apply).", 0x0A
 db	" ver       --     Shows the current version of the kernel.", 0x0A
 db	" help      --     Shows this list.", 0x0A
 db	" exit      --     Closes the shell.", 0x0A
