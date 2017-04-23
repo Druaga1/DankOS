@@ -189,8 +189,9 @@ jmp prompt_loop
 
 data:
 
-intro		db	0x0A, 'DankOS shell, welcome!'
-			db	0x0A, 0x0A, 0x00
+intro		db	0x0A, "DankOS shell, welcome!", 0x0A
+			db	0x0A, "Type 'help' to get started.", 0x0A
+			db  0x0A, 0x00
 
 prompt		db	'# ', 0x00
 

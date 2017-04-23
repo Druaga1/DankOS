@@ -119,6 +119,7 @@ BootDrive		db	0x00
 %include 'kernel/internal/fat12_delete_chain.inc'
 %include 'kernel/internal/floppy_read_sector.inc'
 %include 'kernel/internal/floppy_write_sector.inc'
+%include 'kernel/internal/check_bin_extension.inc'
 
 ; ----- EXTERNAL ROUTINES -----
 

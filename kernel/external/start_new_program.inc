@@ -43,6 +43,11 @@ je .drop_out					; If file not found, drop out
 cmp ecx, 0x0000FFFF				; Test if program is too big (> 64KB)
 jg .drop_out					; If it is, drop out
 
+; -- FINALLY: check if the program ends with ".bin", exit if it doesn't --
+
+call check_bin_extension
+jc .drop_out
+
 add cx, 0x0100					; Add the kernel reserved space to the file size
 shr cx, 4						; Shift CX right by 4 bits to get size in 16 bytes blocks
 inc cx							; Adjust CX
