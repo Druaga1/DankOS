@@ -15,6 +15,21 @@ int 0x80
 
 prompt_loop:
 
+mov al, '['                     ; Draw prompt
+push 0x01
+int 0x80
+push 0x13                       ; Get current drive
+int 0x80
+xor eax, eax
+mov al, dl
+xor cl, cl
+xor dl, dl
+push 0x06                       ; Print drive number
+int 0x80
+mov al, ']'                     ; Close bracket
+push 0x01
+int 0x80
+
 mov di, CurrentDir
 push 0x2E						; Get current dir
 int 0x80
@@ -142,6 +157,12 @@ int 0x80
 cmp dl, 0x01
 je colour_cmd
 
+mov di, root_msg				; Root command
+push 0x08
+int 0x80
+cmp dl, 0x01
+je root_cmd
+
 
 
 
@@ -237,6 +258,7 @@ ver_msg				db	'ver', 0x00
 dir_msg				db	'dir', 0x00
 colour_msg			db	'colour', 0x00
 color_msg			db	'color', 0x00
+root_msg			db	'root', 0x00
 
 
 
@@ -252,3 +274,4 @@ color_msg			db	'color', 0x00
 %include 'includes/shell/image.inc'
 %include 'includes/shell/ver.inc'
 %include 'includes/shell/colour.inc'
+%include 'includes/shell/root.inc'
