@@ -1,5 +1,5 @@
 # DankOS
-A really simple Real Mode OS, in honour of youtuber Druaga1. http://dankos.org
+A really simple Real Mode OS, in honour of youtuber Druaga1.
 
 # Building requirements
 Currently, there is no Windows make script, so this only builds on GNU/Linux
