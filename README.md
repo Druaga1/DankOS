@@ -16,6 +16,3 @@ the sources from the 'sources' directory.
 
 All files/dirs from the 'extra' directory will also be copied onto the image.
 
-# Support
-To receive support, contribute, report bugs and more, feel free to join our
-developement Discord server: https://discord.gg/vYDDbNY
